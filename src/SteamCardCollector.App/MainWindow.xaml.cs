@@ -1,7 +1,10 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Threading;
 using SteamCardCollector.Core;
 using SteamCardCollector.Steam;
@@ -12,6 +15,7 @@ public partial class MainWindow : Window
 {
     public ObservableCollection<CardGame> Games { get; } = new();
     public ObservableCollection<OwnedGame> Library { get; } = new();
+    public ObservableCollection<string> StatusLog { get; } = new();
     private readonly CancellationTokenSource lifetime = new();
     private SteamSession? session;
     private readonly LocalSteamPlayer localPlayer = new();
@@ -24,10 +28,37 @@ public partial class MainWindow : Window
     private bool busy;
     private bool closing;
     private bool closeReady;
+    private bool preferLogin;
+    private bool navSync;
+    private static readonly CultureInfo Turkish = new("tr-TR");
+    private static readonly SolidColorBrush OnlineDot = Freeze(Color.FromRgb(0x7D, 0xCB, 0x3B));
+    private static readonly SolidColorBrush OfflineDot = Freeze(Color.FromRgb(0x6A, 0x73, 0x7C));
+    private static readonly SolidColorBrush MatchGreen = Freeze(Color.FromRgb(0xA4, 0xD0, 0x07));
+    private static readonly SolidColorBrush MatchAmber = Freeze(Color.FromRgb(0xE0, 0xA1, 0x4A));
+
+    public static readonly DependencyProperty IsFarmingProperty =
+        DependencyProperty.Register(nameof(IsFarming), typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+    public bool IsFarming
+    {
+        get => (bool)GetValue(IsFarmingProperty);
+        set => SetValue(IsFarmingProperty, value);
+    }
+
+    public static readonly DependencyProperty CurrentFarmAppIdProperty =
+        DependencyProperty.Register(nameof(CurrentFarmAppId), typeof(uint?), typeof(MainWindow), new PropertyMetadata(null));
+    public uint? CurrentFarmAppId
+    {
+        get => (uint?)GetValue(CurrentFarmAppIdProperty);
+        set => SetValue(CurrentFarmAppIdProperty, value);
+    }
 
     public MainWindow()
     {
-        InitializeComponent(); DataContext = this;
+        InitializeComponent();
+        DataContext = this;
+        DependencyPropertyDescriptor.FromProperty(TextBlock.TextProperty, typeof(TextBlock))
+            .AddValueChanged(StatusLabel, (_, _) => MirrorStatus(log: true));
+        MirrorStatus(log: false);
         localPlayer.Interrupted += message => Dispatcher.BeginInvoke(new Action(() =>
         {
             if (closing || farmTask is not { IsCompleted: false }) return;
@@ -39,6 +70,11 @@ public partial class MainWindow : Window
         identityTimer.Tick += (_, _) => UpdateButtons();
         identityTimer.Start();
         UpdateButtons();
+    }
+
+    internal void SetGuardOverlay(bool visible)
+    {
+        GuardOverlay.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
     }
 
     internal void VerifyInitialUi()
@@ -58,6 +94,7 @@ public partial class MainWindow : Window
         busy = true; UpdateButtons();
         operation = ConnectAsync(Username.Text.Trim(), password);
         await operation;
+        if (session?.IsConnected == true) preferLogin = false;
         busy = false; UpdateButtons();
         if (!closing && session?.IsConnected == true && AutoStart.IsChecked == true && Games.Count > 0) StartFarming();
     }
@@ -81,9 +118,9 @@ public partial class MainWindow : Window
                 if (!current.IsConnected) AccountLabel.Text = "Steam bağlantısı kesildi";
                 UpdateButtons();
             }));
-            StatusLabel.Text = "Steam'e bağlanılıyor. Gerekirse telefonundan giriş onayını ver.";
+            StatusLabel.Text = "Steam'e bağlanılıyor…";
             await current.LoginAsync(username, password, new WindowAuthenticator(this, loginTimeout.Token), loginTimeout.Token);
-            AccountLabel.Text = $"Web hesabı: {current.AccountName} · Steam ID: {current.SteamId}";
+            AccountLabel.Text = $"Web Steam ID: {current.SteamId}";
             foreach (var game in current.Library) Library.Add(game);
         }
         catch (OperationCanceledException) { StatusLabel.Text = "Bağlantı iptal edildi veya giriş süresi doldu."; await DiscardSessionAsync(); }
@@ -131,6 +168,7 @@ public partial class MainWindow : Window
         CountLabel.Text = $"{Library.Count} oyun · {Games.Count} kart hakkı olan oyun · {Games.Sum(g => g.RemainingDrops)} kalan kart hakkı";
         if (session?.UnresolvedAppIds.Count > 0)
             CountLabel.Text += $" · Okunamadı: {session.UnresolvedAppIds.Count} oyun (App ID: {string.Join(", ", session.UnresolvedAppIds.Take(5))}{(session.UnresolvedAppIds.Count > 5 ? ", …" : "")})";
+        UpdateStats();
     }
     private void Start_Click(object sender, RoutedEventArgs e) => StartFarming();
     private void StartFarming()
@@ -152,6 +190,8 @@ public partial class MainWindow : Window
             {
                 if (closing || token.IsCancellationRequested) return;
                 StatusLabel.Text = status.CurrentGame is null ? status.Message : $"{status.CurrentGame.Name} · {status.Message}";
+                if (status.CurrentGame is { } game) CurrentFarmAppId = game.AppId;
+                else ClearValue(CurrentFarmAppIdProperty);
                 if (status.Games is not null) SetGames(status.Games);
             });
             var localSession = new LocalFarmingSession(current, localPlayer);
@@ -175,7 +215,10 @@ public partial class MainWindow : Window
         try
         {
             var local = localPlayer.ReadIdentity();
-            LocalAccountLabel.Text = $"Yerel Steam · Steam ID: {local.SteamId}";
+            LocalAccountLabel.Text = $"Steam ID: {local.SteamId}";
+            DashboardLocalId.Text = $"Yerel Steam ID: {local.SteamId}";
+            LocalChipTitle.Text = "Yerel Steam bağlı";
+            LocalChipDot.Fill = OnlineDot;
             accountsMatch = session?.IsConnected == true && session.SteamId == local.SteamId;
             MatchLabel.Text = session?.IsConnected != true ? "Kart haklarını okumak için aynı hesabın web girişini yap."
                 : accountsMatch ? "Hesaplar eşleşiyor. Oynanıyor durumu yerel Steam üzerinden gönderilecek."
@@ -183,7 +226,10 @@ public partial class MainWindow : Window
         }
         catch (Exception ex) when (ex is InvalidOperationException or IOException or System.ComponentModel.Win32Exception or UnauthorizedAccessException or System.Security.SecurityException)
         {
-            LocalAccountLabel.Text = "Yerel Steam: oturum bulunamadı";
+            LocalAccountLabel.Text = "Oturum bulunamadı";
+            DashboardLocalId.Text = "Yerel Steam ID: oturum yok";
+            LocalChipTitle.Text = "Yerel Steam kapalı";
+            LocalChipDot.Fill = OfflineDot;
             MatchLabel.Text = "Steam'i bu Windows kullanıcısında açıp çevrimiçi giriş yap. Toplama engellendi.";
         }
         var farming = farmTask is { IsCompleted: false };
@@ -193,6 +239,72 @@ public partial class MainWindow : Window
         RefreshButton.IsEnabled = !closing && !busy && !farming && connected;
         StartButton.IsEnabled = !closing && !busy && !farming && connected && accountsMatch && Games.Count > 0;
         StopButton.IsEnabled = !closing && farming && farmCancellation?.IsCancellationRequested == false;
+        IsFarming = farming;
+        if (!farming) ClearValue(CurrentFarmAppIdProperty);
+        if (!connected) preferLogin = false;
+        var showDashboard = connected && !preferLogin;
+        LoginView.Visibility = showDashboard ? Visibility.Collapsed : Visibility.Visible;
+        DashboardView.Visibility = showDashboard ? Visibility.Visible : Visibility.Collapsed;
+        ReturnButton.Visibility = connected && preferLogin ? Visibility.Visible : Visibility.Collapsed;
+        ConnectButton.IsDefault = !showDashboard;
+        ReturnButton.IsEnabled = !busy && !farming;
+        SwitchAccountButton.IsEnabled = connected && !closing && !busy && !farming;
+        SessionTitle.Text = accountsMatch ? "Kart toplama hazır" : connected ? "Hesaplar eşleşmiyor" : "Oturum";
+        if (connected && accountsMatch)
+        {
+            MatchBadge.Text = "Hesaplar eşleşiyor";
+            MatchBadge.Foreground = MatchGreen;
+            MatchDot.Fill = OnlineDot;
+            MatchDot.Visibility = Visibility.Visible;
+        }
+        else if (connected)
+        {
+            MatchBadge.Text = "Hesaplar eşleşmiyor";
+            MatchBadge.Foreground = MatchAmber;
+            MatchDot.Fill = MatchAmber;
+            MatchDot.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            MatchBadge.Text = "";
+            MatchDot.Visibility = Visibility.Collapsed;
+        }
+        var account = session?.AccountName;
+        SidebarName.Text = string.IsNullOrWhiteSpace(account) ? "Steam" : account;
+        SidebarPresence.Text = !connected ? "çevrimdışı" : accountsMatch ? "çevrimiçi" : "bağlı";
+        var trimmed = SidebarName.Text.Trim();
+        AvatarLetter.Text = trimmed.Length == 0 ? "?" : trimmed[..1].ToUpper(Turkish);
+        UpdateStats();
+    }
+    private void UpdateStats()
+    {
+        LibraryStat.Text = Library.Count.ToString();
+        CardStat.Text = Games.Count.ToString();
+        DropStat.Text = Games.Sum(static g => g.RemainingDrops).ToString();
+        GamesEmpty.Visibility = Games.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        LibraryEmpty.Visibility = Library.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        var text = CountLabel.Text ?? "";
+        var warning = text.Contains("Okunamadı", StringComparison.Ordinal)
+            || text.Contains("doğrulanmadı", StringComparison.Ordinal)
+            || text.Contains("güncel değil", StringComparison.Ordinal);
+        CountLabel.Visibility = warning ? Visibility.Visible : Visibility.Collapsed;
+    }
+    private void MirrorStatus(bool log)
+    {
+        var text = StatusLabel.Text ?? "";
+        if (DashboardStatus is not null) DashboardStatus.Text = text;
+        if (!log || string.IsNullOrWhiteSpace(text)) return;
+        if (StatusLog.Count > 0)
+        {
+            var last = StatusLog[^1];
+            var split = last.IndexOf("  ", StringComparison.Ordinal);
+            var previous = split >= 0 ? last[(split + 2)..] : last;
+            if (previous == text) return;
+        }
+        StatusLog.Add($"{DateTime.Now:HH:mm:ss}  {text}");
+        while (StatusLog.Count > 300) StatusLog.RemoveAt(0);
+        if (LogEmpty is not null) LogEmpty.Visibility = Visibility.Collapsed;
+        if (LogList is { Items.Count: > 0 }) LogList.ScrollIntoView(LogList.Items[^1]);
     }
     private void ShowError(Exception ex)
     {
@@ -225,5 +337,61 @@ public partial class MainWindow : Window
             // Cleanup can finish synchronously. Re-enter Close only after this Closing event returns.
             _ = Dispatcher.BeginInvoke(new Action(Close));
         }
+    }
+
+    private void Minimize_Click(object sender, RoutedEventArgs e) => SystemCommands.MinimizeWindow(this);
+    private void Maximize_Click(object sender, RoutedEventArgs e)
+    {
+        if (WindowState == WindowState.Maximized) SystemCommands.RestoreWindow(this);
+        else SystemCommands.MaximizeWindow(this);
+    }
+    private void Close_Click(object sender, RoutedEventArgs e) => SystemCommands.CloseWindow(this);
+    private void Window_StateChanged(object? sender, EventArgs e)
+    {
+        if (MaximizeGlyph is null) return;
+        MaximizeGlyph.Text = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
+    }
+    private void SwitchAccount_Click(object sender, RoutedEventArgs e)
+    {
+        preferLogin = true;
+        UpdateButtons();
+        Username.Focus();
+    }
+    private void ReturnToDashboard_Click(object sender, RoutedEventArgs e)
+    {
+        preferLogin = false;
+        UpdateButtons();
+    }
+    private void DashboardNav_Checked(object sender, RoutedEventArgs e)
+    {
+        if (navSync || sender is not RadioButton { Tag: string page } || DropsView is null) return;
+        ShowDashboardPage(page);
+    }
+    private void ShowDashboardPage(string page)
+    {
+        if (DropsView is null || LibraryView is null || LogView is null || ContentTabs is null ||
+            NavDrops is null || NavLibrary is null || NavLog is null || TabDrops is null || TabLibrary is null)
+            return;
+        navSync = true;
+        try
+        {
+            DropsView.Visibility = page == "drops" ? Visibility.Visible : Visibility.Collapsed;
+            LibraryView.Visibility = page == "library" ? Visibility.Visible : Visibility.Collapsed;
+            LogView.Visibility = page == "log" ? Visibility.Visible : Visibility.Collapsed;
+            ContentTabs.Visibility = page == "log" ? Visibility.Collapsed : Visibility.Visible;
+            NavDrops.IsChecked = page == "drops";
+            NavLibrary.IsChecked = page == "library";
+            NavLog.IsChecked = page == "log";
+            TabDrops.IsChecked = page == "drops";
+            TabLibrary.IsChecked = page == "library";
+        }
+        finally { navSync = false; }
+    }
+
+    private static SolidColorBrush Freeze(Color color)
+    {
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
     }
 }
