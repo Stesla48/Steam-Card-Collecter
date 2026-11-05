@@ -28,7 +28,7 @@
       </Grid>
       <TextBlock Grid.Row="1" Text="Doğrulama kodu" FontSize="22" FontWeight="SemiBold" Margin="0,14,0,8"/>
       <TextBlock x:Name="MessageText" Grid.Row="2" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="13" LineHeight="18" Margin="0,0,0,14"/>
-      <TextBox x:Name="CodeBox" Grid.Row="3" MaxLength="12" FontSize="20" Height="42" TextAlignment="Center" Background="#3A4A5A"/>
+      <PasswordBox x:Name="CodeBox" Grid.Row="3" MaxLength="12" FontSize="20" Height="42" HorizontalContentAlignment="Center" Background="#3A4A5A" PasswordChar="●"/>
       <Button Grid.Row="4" Content="ONAYLA" Style="{StaticResource GreenButton}" HorizontalAlignment="Right" MinWidth="148" Height="40" FontSize="13" Margin="0,16,0,0" IsDefault="True" Click="Confirm_Click"/>
     </Grid>
   </Border>
