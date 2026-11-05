@@ -1,5 +1,6 @@
 <Window x:Class="SteamCardCollector.App.GuardWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:i="clr-namespace:SteamCardCollector.Core;assembly=SteamCardCollector.Core"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Steam Guard"
         Width="440"
@@ -24,12 +25,12 @@
       </Grid.RowDefinitions>
       <Grid>
         <TextBlock Text="STEAM GUARD" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
-        <Button Content="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10" Style="{StaticResource DialogCloseButton}" HorizontalAlignment="Right" IsCancel="True" ToolTip="İptal"/>
+        <Button Content="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10" Style="{StaticResource DialogCloseButton}" HorizontalAlignment="Right" IsCancel="True" ToolTip="{x:Static i:Strings.Cancel}"/>
       </Grid>
-      <TextBlock Grid.Row="1" Text="Doğrulama kodu" FontSize="22" FontWeight="SemiBold" Margin="0,14,0,8"/>
+      <TextBlock Grid.Row="1" Text="{x:Static i:Strings.VerificationCode}" FontSize="22" FontWeight="SemiBold" Margin="0,14,0,8"/>
       <TextBlock x:Name="MessageText" Grid.Row="2" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="13" LineHeight="18" Margin="0,0,0,14"/>
-      <TextBox x:Name="CodeBox" Grid.Row="3" MaxLength="12" FontSize="20" Height="42" TextAlignment="Center" Background="#3A4A5A"/>
-      <Button Grid.Row="4" Content="ONAYLA" Style="{StaticResource GreenButton}" HorizontalAlignment="Right" MinWidth="148" Height="40" FontSize="13" Margin="0,16,0,0" IsDefault="True" Click="Confirm_Click"/>
+      <PasswordBox x:Name="CodeBox" Grid.Row="3" MaxLength="12" FontSize="20" Height="42" HorizontalContentAlignment="Center" Background="#3A4A5A" PasswordChar="●"/>
+      <Button Grid.Row="4" Content="{x:Static i:Strings.Confirm}" Style="{StaticResource GreenButton}" HorizontalAlignment="Right" MinWidth="148" Height="40" FontSize="13" Margin="0,16,0,0" IsDefault="True" Click="Confirm_Click"/>
     </Grid>
   </Border>
 </Window>

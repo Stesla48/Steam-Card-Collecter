@@ -1,3 +1,4 @@
+using System.Text;
 using SteamCardCollector.Core;
 using SteamCardCollector.Steam;
 
@@ -118,6 +119,24 @@ Check(changedLocal.Started.Count == 1 && changedLocal.Stops == 1, "An account sw
 var invalidCount = BadgePageParser.Parse(Page(Row(10, "99999999999999999999999 card drops remaining") + Row(20, "2 card drops remaining")), steamId);
 Check(invalidCount.Games.Single().AppId == 20 && invalidCount.UnresolvedAppIds.SequenceEqual(new uint[] { 10 }), "An overflowing counter must not block valid games or be treated as zero.");
 Console.WriteLine("PASS: valid local queue survives missing/overflowed counters; account change stops active farming.");
+
+Check(SteamWeb.IsBadgePage(new Uri("https://steamcommunity.com/profiles/76561198000000000/badges/?l=english&p=2")), "The Steam badge page must be accepted.");
+Check(!SteamWeb.IsBadgePage(new Uri("http://steamcommunity.com/profiles/76561198000000000/badges/")), "Badge reads must stay on HTTPS.");
+Check(!SteamWeb.IsBadgePage(new Uri("https://example.com/badges/")), "Badge reads must stay on steamcommunity.com.");
+Check(!SteamWeb.IsBadgePage(new Uri("https://steamcommunity.com.example/badges/")), "A lookalike badge host must be rejected.");
+Check(!SteamWeb.IsBadgePage(new Uri("https://help.steamcommunity.com/badges/")), "A badge subdomain must be rejected.");
+Check(!SteamWeb.IsBadgePage(new Uri("https://user:secret@steamcommunity.com/badges/")), "A badge URL must not carry user info.");
+Check(!SteamWeb.IsBadgePage(new Uri("https://steamcommunity.com:444/badges/")), "A badge URL must use the default HTTPS port.");
+Check(!SteamWeb.IsBadgePage(new Uri("https://steamcommunity.com/login/home/")), "A non-badge Steam path must be rejected.");
+var smallBody = await SteamWeb.ReadBoundedTextAsync(new MemoryStream(Encoding.UTF8.GetBytes("ok")), 8, CancellationToken.None);
+Check(smallBody == "ok", "A small badge body must be kept.");
+try
+{
+    await SteamWeb.ReadBoundedTextAsync(new MemoryStream(Encoding.UTF8.GetBytes(new string('x', 32))), 8, CancellationToken.None);
+    throw new Exception("An oversized badge body was accepted.");
+}
+catch (InvalidDataException) { Check(true, "An oversized badge body must be rejected."); }
+Console.WriteLine("PASS: badge reads stay on HTTPS steamcommunity.com and reject an oversized body.");
 Console.WriteLine($"TOTAL: {checkCount} assertions passed. No real Steam login or game initialization.");
 
 sealed class FakeCards : ICardSource

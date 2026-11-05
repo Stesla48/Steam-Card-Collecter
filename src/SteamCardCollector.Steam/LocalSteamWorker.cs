@@ -1,3 +1,4 @@
+using SteamCardCollector.Core;
 using System.Globalization;
 using System.Text.Json;
 using Steamworks;
@@ -20,35 +21,35 @@ public static class LocalSteamWorker
                 !uint.TryParse(args[1], out appId) || appId == 0 ||
                 !ulong.TryParse(args[2], out expectedId) || expectedId == 0 ||
                 !int.TryParse(args[3], out var expectedPid) || expectedPid <= 0)
-                throw new InvalidOperationException("Geçersiz yerel Steam isteği.");
+                throw new InvalidOperationException(Strings.InvalidLocalSteamRequest);
 
             using var sessionLock = new Mutex(false, @"Local\SteamCardCollector.Playing");
             bool acquired;
             try { acquired = sessionLock.WaitOne(0); }
             catch (AbandonedMutexException) { acquired = true; }
-            if (!acquired) throw new InvalidOperationException("Başka bir Steam Card Collector toplama işlemi açık.");
+            if (!acquired) throw new InvalidOperationException(Strings.AnotherCollectorIsAlreadyRunning);
             try
             {
                 var expected = new LocalSteamIdentity(expectedId, expectedPid);
                 // Do not initialize a game for a different or missing local account.
                 if (LocalSteamAccount.Read() != expected)
-                    throw new InvalidOperationException("Yerel Steam ve web hesabı eşleşmiyor veya Steam yeniden başlatıldı.");
+                    throw new InvalidOperationException(Strings.WorkerSessionMismatch);
                 SteamNativeRuntime.Validate();
                 Environment.SetEnvironmentVariable("SteamAppId", appId.ToString(CultureInfo.InvariantCulture));
                 Environment.SetEnvironmentVariable("SteamGameId", appId.ToString(CultureInfo.InvariantCulture));
                 if (!SteamAPI.Init())
-                    throw new InvalidOperationException("Yerel Steam bağlantısı kurulamadı. Steam çevrimiçi olmalı ve oyun bu hesaba ait olmalı.");
+                    throw new InvalidOperationException(Strings.LocalConnectionFailed);
                 initialized = true;
 
                 void VerifySession()
                 {
                     if (LocalSteamAccount.Read() != expected || !SteamUser.BLoggedOn() ||
                         SteamUser.GetSteamID().m_SteamID != expectedId || SteamUtils.GetAppID().m_AppId != appId)
-                        throw new InvalidOperationException("Yerel Steam hesabı değişti veya bağlantı kesildi. Toplama durduruldu.");
+                        throw new InvalidOperationException(Strings.WorkerSessionLost);
                 }
                 VerifySession();
                 if (!SteamApps.BIsSubscribed())
-                    throw new InvalidOperationException("Yerel Steam bu oyun için sahiplik doğrulamadı.");
+                    throw new InvalidOperationException(Strings.GameOwnershipUnverified);
 
                 var lastPing = Environment.TickCount64;
                 var stopped = 0;
@@ -64,7 +65,7 @@ public static class LocalSteamWorker
                     }
                     finally { Volatile.Write(ref stopped, 1); }
                 });
-                Reply(new(true, appId, expectedId, "Yerel Steam bağlantısı doğrulandı."));
+                Reply(new(true, appId, expectedId, Strings.LocalSteamConnectionVerified));
                 while (Volatile.Read(ref stopped) == 0 && Environment.TickCount64 - Interlocked.Read(ref lastPing) < 5000)
                 {
                     SteamAPI.RunCallbacks();
@@ -82,7 +83,7 @@ public static class LocalSteamWorker
         catch (Exception ex)
         {
             var message = ex is IOException or InvalidOperationException ? ex.Message :
-                $"Yerel Steam bileşeni başlatılamadı ({ex.GetType().Name}). Windows paketinin tamamını çıkarın.";
+                string.Format(Strings.NativeComponentStartupFailed, ex.GetType().Name);
             Reply(new(false, appId, expectedId, message));
             return 1;
         }

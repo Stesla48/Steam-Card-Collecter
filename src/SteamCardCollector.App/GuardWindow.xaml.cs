@@ -11,10 +11,15 @@ public partial class GuardWindow : Window
         Loaded += (_, _) => CodeBox.Focus();
     }
 
-    public string Code => CodeBox.Text.Trim();
+    public string TakeCode()
+    {
+        var code = CodeBox.Password.Trim();
+        CodeBox.Clear();
+        return code;
+    }
 
     private void Confirm_Click(object sender, RoutedEventArgs e)
     {
-        if (!string.IsNullOrWhiteSpace(CodeBox.Text)) DialogResult = true;
+        if (!string.IsNullOrWhiteSpace(CodeBox.Password)) DialogResult = true;
     }
 }

@@ -30,7 +30,8 @@ public partial class MainWindow : Window
     private bool closeReady;
     private bool preferLogin;
     private bool navSync;
-    private static readonly CultureInfo Turkish = new("tr-TR");
+    private bool hasCountWarning;
+
     private static readonly SolidColorBrush OnlineDot = Freeze(Color.FromRgb(0x7D, 0xCB, 0x3B));
     private static readonly SolidColorBrush OfflineDot = Freeze(Color.FromRgb(0x6A, 0x73, 0x7C));
     private static readonly SolidColorBrush MatchGreen = Freeze(Color.FromRgb(0xA4, 0xD0, 0x07));
@@ -52,8 +53,13 @@ public partial class MainWindow : Window
         set => SetValue(CurrentFarmAppIdProperty, value);
     }
 
-    public MainWindow()
+    private Preferences preferences;
+    private readonly string preferencesPath;
+
+    internal MainWindow(Preferences preferences, string preferencesPath)
     {
+        this.preferences = preferences;
+        this.preferencesPath = preferencesPath;
         InitializeComponent();
         DataContext = this;
         DependencyPropertyDescriptor.FromProperty(TextBlock.TextProperty, typeof(TextBlock))
@@ -72,6 +78,27 @@ public partial class MainWindow : Window
         UpdateButtons();
     }
 
+    internal void ShowInitialGuide()
+    {
+        if (!preferences.LoginGuideSeen && WelcomeWindow.ShowGuide(this, WelcomePage.LoginGuide))
+            SavePreferences(preferences with { LoginGuideSeen = true });
+    }
+
+    private void SavePreferences(Preferences next)
+    {
+        try { next.Save(preferencesPath); preferences = next; }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        { MessageBox.Show(this, Strings.SaveFailed, Strings.Settings); }
+    }
+
+    private void Settings_Click(object sender, RoutedEventArgs e)
+    {
+        var settings = new WelcomeWindow(WelcomePage.Settings, preferences.Language)
+        { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner, ShowInTaskbar = false };
+        if (settings.ShowDialog() == true)
+            SavePreferences(preferences with { Language = settings.SelectedLanguage });
+    }
+
     internal void SetGuardOverlay(bool visible)
     {
         GuardOverlay.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
@@ -87,26 +114,30 @@ public partial class MainWindow : Window
 
     private async void Connect_Click(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(Username.Text) || string.IsNullOrEmpty(Password.Password))
-        { StatusLabel.Text = "Steam kullanıcı adı ve şifreni gir."; return; }
-        var password = Password.Password;
-        Password.Clear();
+        if (string.IsNullOrWhiteSpace(Username.Text) || Password.Password.Length == 0)
+        { StatusLabel.Text = Strings.EnterYourSteamAccountNameAndPassword; return; }
+        var username = Username.Text.Trim();
         busy = true; UpdateButtons();
-        operation = ConnectAsync(Username.Text.Trim(), password);
+        operation = ConnectAsync(username);
         await operation;
         if (session?.IsConnected == true) preferLogin = false;
         busy = false; UpdateButtons();
+        if (!closing && session?.IsConnected == true && !preferences.DashboardGuideSeen &&
+            WelcomeWindow.ShowGuide(this, WelcomePage.DashboardGuide))
+            SavePreferences(preferences with { DashboardGuideSeen = true });
         if (!closing && session?.IsConnected == true && AutoStart.IsChecked == true && Games.Count > 0) StartFarming();
     }
-    private async Task ConnectAsync(string username, string password)
+    private async Task ConnectAsync(string username)
     {
         using var loginTimeout = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token);
         loginTimeout.CancelAfter(TimeSpan.FromMinutes(5));
+        string? password = Password.Password;
+        Password.Clear();
         try
         {
             await localPlayer.StopAsync(CancellationToken.None);
             if (session is not null) await session.DisposeAsync();
-            Games.Clear(); Library.Clear(); CountLabel.Text = "";
+            Games.Clear(); Library.Clear(); CountLabel.Text = ""; hasCountWarning = false;
             session = new SteamSession();
             var current = session;
             current.Interrupted += message => Dispatcher.BeginInvoke(new Action(() =>
@@ -115,16 +146,18 @@ public partial class MainWindow : Window
                 interruption = message;
                 farmCancellation?.Cancel();
                 StatusLabel.Text = message;
-                if (!current.IsConnected) AccountLabel.Text = "Steam bağlantısı kesildi";
+                if (!current.IsConnected) AccountLabel.Text = Strings.SteamDisconnected;
                 UpdateButtons();
             }));
-            StatusLabel.Text = "Steam'e bağlanılıyor…";
-            await current.LoginAsync(username, password, new WindowAuthenticator(this, loginTimeout.Token), loginTimeout.Token);
+            StatusLabel.Text = Strings.ConnectingToSteam;
+            var login = current.LoginAsync(username, password, new WindowAuthenticator(this, loginTimeout.Token), loginTimeout.Token);
+            password = null;
+            await login;
             AccountLabel.Text = $"Web Steam ID: {current.SteamId}";
             foreach (var game in current.Library) Library.Add(game);
         }
-        catch (OperationCanceledException) { StatusLabel.Text = "Bağlantı iptal edildi veya giriş süresi doldu."; await DiscardSessionAsync(); }
-        catch (Exception ex) { ShowError(ex); await DiscardSessionAsync(); }
+        catch (OperationCanceledException) { password = null; StatusLabel.Text = Strings.SigninCanceledOrTimedOut; await DiscardSessionAsync(); }
+        catch (Exception ex) { password = null; ShowError(ex); await DiscardSessionAsync(); }
         // Card-page errors must not destroy a successful Steam login or its library.
         if (session?.IsConnected == true && !lifetime.IsCancellationRequested)
             await RefreshWithErrorsAsync();
@@ -133,19 +166,19 @@ public partial class MainWindow : Window
     {
         if (session is not null) await session.DisposeAsync();
         session = null;
-        Games.Clear(); Library.Clear(); CountLabel.Text = "";
-        AccountLabel.Text = "Web hesabı: bağlı değil";
+        Games.Clear(); Library.Clear(); CountLabel.Text = ""; hasCountWarning = false;
+        AccountLabel.Text = Strings.WebAccountDisconnected;
     }
     private async Task RefreshAsync()
     {
         if (session is null) return;
-        StatusLabel.Text = "Oyunların kalan kart hakları kontrol ediliyor…";
+        StatusLabel.Text = Strings.CheckingRemainingCardDrops;
         var snapshot = await session.GetCardGamesAsync(lifetime.Token);
         SetGames(snapshot);
         UpdateButtons();
-        StatusLabel.Text = Games.Count > 0 ? accountsMatch ? "Hazır. Başlat ile yerel Steam üzerinden topla." : "Kart hakları okundu. Toplama için yerel ve web hesaplarını eşleştir."
-            : session.UnresolvedAppIds.Count > 0 ? "Kart hakkı doğrulanabilen oyun bulunamadı. Okunamayan oyunlar var; kart hakları bitmiş sayılmadı."
-            : "Kart düşürme hakkı kalan oyun yok.";
+        StatusLabel.Text = Games.Count > 0 ? accountsMatch ? Strings.ReadyToStart : Strings.MatchAccountsToCollect
+            : session.UnresolvedAppIds.Count > 0 ? Strings.NoVerifiedEligibleGames
+            : Strings.NoGamesHaveCardDropsRemaining;
     }
     private async void Refresh_Click(object sender, RoutedEventArgs e)
     {
@@ -158,16 +191,18 @@ public partial class MainWindow : Window
     {
         try { await RefreshAsync(); }
         catch (OperationCanceledException) when (lifetime.IsCancellationRequested) { }
-        catch (OperationCanceledException) { StatusLabel.Text = "Steam kart hakları sorgusu zaman aşımına uğradı. Oyun listen korunuyor; Yenile ile tekrar dene."; Games.Clear(); CountLabel.Text = "Kart hakları henüz doğrulanmadı."; }
-        catch (Exception ex) { ShowError(ex); Games.Clear(); CountLabel.Text = "Kart bilgisi güncel değil; yeniden kontrol edin."; }
+        catch (OperationCanceledException) { StatusLabel.Text = Strings.CardQueryTimedOut; Games.Clear(); hasCountWarning = true; CountLabel.Text = Strings.CardCountsAreUnverified; }
+        catch (Exception ex) { ShowError(ex); Games.Clear(); hasCountWarning = true; CountLabel.Text = Strings.CardCountsOutOfDate; }
     }
     private void SetGames(IReadOnlyList<CardGame> games)
     {
         Games.Clear();
         foreach (var game in games) Games.Add(game);
-        CountLabel.Text = $"{Library.Count} oyun · {Games.Count} kart hakkı olan oyun · {Games.Sum(g => g.RemainingDrops)} kalan kart hakkı";
-        if (session?.UnresolvedAppIds.Count > 0)
-            CountLabel.Text += $" · Okunamadı: {session.UnresolvedAppIds.Count} oyun (App ID: {string.Join(", ", session.UnresolvedAppIds.Take(5))}{(session.UnresolvedAppIds.Count > 5 ? ", …" : "")})";
+        CountLabel.Text = string.Format(Strings.GamesEligibleRemainingDrops, Library.Count, Games.Count, Games.Sum(g => g.RemainingDrops));
+        hasCountWarning = session?.UnresolvedAppIds.Count > 0;
+        if (session is { UnresolvedAppIds.Count: > 0 })
+            CountLabel.Text += string.Format(Strings.UnknownGamesAppId, session.UnresolvedAppIds.Count,
+                string.Join(", ", session.UnresolvedAppIds.Take(5)) + (session.UnresolvedAppIds.Count > 5 ? ", …" : ""));
         UpdateStats();
     }
     private void Start_Click(object sender, RoutedEventArgs e) => StartFarming();
@@ -175,7 +210,7 @@ public partial class MainWindow : Window
     {
         UpdateButtons();
         if (busy || closing || session?.IsConnected != true || farmTask is { IsCompleted: false }) return;
-        if (!accountsMatch) { StatusLabel.Text = "Toplama başlatılmadı: yerel Steam oturumu ile web Steam ID eşleşmeli."; return; }
+        if (!accountsMatch) { StatusLabel.Text = Strings.MatchingIdsRequired; return; }
         farmCancellation?.Dispose();
         farmCancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token);
         interruption = null;
@@ -198,7 +233,7 @@ public partial class MainWindow : Window
             localSession.EnsureSameAccount();
             await new CardFarmer(localSession).RunAsync(progress, token);
         }
-        catch (OperationCanceledException) { StatusLabel.Text = interruption ?? "Kart toplama durduruldu."; }
+        catch (OperationCanceledException) { StatusLabel.Text = interruption ?? Strings.CollectionStopped; }
         catch (Exception ex) { ShowError(ex); }
         finally { _ = Dispatcher.BeginInvoke(new Action(UpdateButtons)); }
     }
@@ -216,24 +251,25 @@ public partial class MainWindow : Window
         {
             var local = localPlayer.ReadIdentity();
             LocalAccountLabel.Text = $"Steam ID: {local.SteamId}";
-            DashboardLocalId.Text = $"Yerel Steam ID: {local.SteamId}";
-            LocalChipTitle.Text = "Yerel Steam bağlı";
+            DashboardLocalId.Text = string.Format(Strings.LocalSteamIdLabel, local.SteamId);
+            LocalChipTitle.Text = Strings.LocalSteamConnected;
             LocalChipDot.Fill = OnlineDot;
             accountsMatch = session?.IsConnected == true && session.SteamId == local.SteamId;
-            MatchLabel.Text = session?.IsConnected != true ? "Kart haklarını okumak için aynı hesabın web girişini yap."
-                : accountsMatch ? "Hesaplar eşleşiyor. Oynanıyor durumu yerel Steam üzerinden gönderilecek."
-                : "Hesaplar farklı. Toplama engellendi; aynı hesapla yeniden bağlan.";
+            MatchLabel.Text = session?.IsConnected != true ? Strings.SignInToTheSameWebAccount
+                : accountsMatch ? Strings.PresenceAccountVerified
+                : Strings.ReconnectWithMatchingAccount;
         }
         catch (Exception ex) when (ex is InvalidOperationException or IOException or System.ComponentModel.Win32Exception or UnauthorizedAccessException or System.Security.SecurityException)
         {
-            LocalAccountLabel.Text = "Oturum bulunamadı";
-            DashboardLocalId.Text = "Yerel Steam ID: oturum yok";
-            LocalChipTitle.Text = "Yerel Steam kapalı";
+            LocalAccountLabel.Text = Strings.NoSessionFound;
+            DashboardLocalId.Text = Strings.LocalSteamIdNoSession;
+            LocalChipTitle.Text = Strings.LocalSteamOffline;
             LocalChipDot.Fill = OfflineDot;
-            MatchLabel.Text = "Steam'i bu Windows kullanıcısında açıp çevrimiçi giriş yap. Toplama engellendi.";
+            MatchLabel.Text = Strings.LocalSteamRequired;
         }
         var farming = farmTask is { IsCompleted: false };
         var connected = session?.IsConnected == true;
+        SettingsButton.IsEnabled = !closing && !busy;
         ConnectButton.IsEnabled = !closing && !busy && !farming;
         Username.IsEnabled = Password.IsEnabled = ConnectButton.IsEnabled;
         RefreshButton.IsEnabled = !closing && !busy && !farming && connected;
@@ -249,17 +285,17 @@ public partial class MainWindow : Window
         ConnectButton.IsDefault = !showDashboard;
         ReturnButton.IsEnabled = !busy && !farming;
         SwitchAccountButton.IsEnabled = connected && !closing && !busy && !farming;
-        SessionTitle.Text = accountsMatch ? "Kart toplama hazır" : connected ? "Hesaplar eşleşmiyor" : "Oturum";
+        SessionTitle.Text = accountsMatch ? Strings.ReadyToCollect : connected ? Strings.AccountsDiffer : Strings.Session;
         if (connected && accountsMatch)
         {
-            MatchBadge.Text = "Hesaplar eşleşiyor";
+            MatchBadge.Text = Strings.AccountsMatch;
             MatchBadge.Foreground = MatchGreen;
             MatchDot.Fill = OnlineDot;
             MatchDot.Visibility = Visibility.Visible;
         }
         else if (connected)
         {
-            MatchBadge.Text = "Hesaplar eşleşmiyor";
+            MatchBadge.Text = Strings.AccountsDiffer;
             MatchBadge.Foreground = MatchAmber;
             MatchDot.Fill = MatchAmber;
             MatchDot.Visibility = Visibility.Visible;
@@ -271,9 +307,9 @@ public partial class MainWindow : Window
         }
         var account = session?.AccountName;
         SidebarName.Text = string.IsNullOrWhiteSpace(account) ? "Steam" : account;
-        SidebarPresence.Text = !connected ? "çevrimdışı" : accountsMatch ? "çevrimiçi" : "bağlı";
+        SidebarPresence.Text = !connected ? Strings.Offline : accountsMatch ? Strings.Online : Strings.Connected;
         var trimmed = SidebarName.Text.Trim();
-        AvatarLetter.Text = trimmed.Length == 0 ? "?" : trimmed[..1].ToUpper(Turkish);
+        AvatarLetter.Text = trimmed.Length == 0 ? "?" : trimmed[..1].ToUpper(CultureInfo.CurrentUICulture);
         UpdateStats();
     }
     private void UpdateStats()
@@ -283,11 +319,7 @@ public partial class MainWindow : Window
         DropStat.Text = Games.Sum(static g => g.RemainingDrops).ToString();
         GamesEmpty.Visibility = Games.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         LibraryEmpty.Visibility = Library.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        var text = CountLabel.Text ?? "";
-        var warning = text.Contains("Okunamadı", StringComparison.Ordinal)
-            || text.Contains("doğrulanmadı", StringComparison.Ordinal)
-            || text.Contains("güncel değil", StringComparison.Ordinal);
-        CountLabel.Visibility = warning ? Visibility.Visible : Visibility.Collapsed;
+        CountLabel.Visibility = hasCountWarning ? Visibility.Visible : Visibility.Collapsed;
     }
     private void MirrorStatus(bool log)
     {
@@ -310,11 +342,11 @@ public partial class MainWindow : Window
     {
         StatusLabel.Text = ex switch
         {
-            SteamKit2.Authentication.AuthenticationException => "Steam girişi doğrulanamadı. Bilgilerini ve Steam Guard onayını kontrol et.",
-            System.Net.Http.HttpRequestException => "Steam web bağlantısı başarısız. İnternet bağlantını kontrol edip tekrar dene.",
-            InvalidDataException => "Kart hakları okunamadı: " + ex.Message + " Oyun listen korunuyor; Yenile ile tekrar deneyebilirsin.",
+            SteamKit2.Authentication.AuthenticationException => Strings.CheckCredentialsAndGuard,
+            System.Net.Http.HttpRequestException => Strings.CheckInternetConnection,
+            InvalidDataException => Strings.CouldNotReadCardCounts + ex.Message + Strings.RefreshRetryHint,
             IOException or InvalidOperationException => ex.Message,
-            _ => $"İşlem tamamlanamadı ({ex.GetType().Name}). Ekrandaki hata türünü paylaşabilirsin."
+            _ => string.Format(Strings.OperationFailed, ex.GetType().Name)
         };
     }
     private async void Window_Closing(object? sender, CancelEventArgs e)

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="SteamDisconnectedSignInAgain" xml:space="preserve"><value>Steam 已断开连接。请重新登录。</value></data>
+  <data name="SteamSignedOutSignInAgain" xml:space="preserve"><value>Steam 已退出登录。请重新登录。</value></data>
+  <data name="ThisSessionHasAlreadyStarted" xml:space="preserve"><value>此会话已启动。</value></data>
+  <data name="SteamStoppedRespondingSignInAgain" xml:space="preserve"><value>Steam 无响应。请重新登录。</value></data>
+  <data name="SteamSigninFailed" xml:space="preserve"><value>Steam 登录失败：{0}</value></data>
+  <data name="CouldNotReadTheSteamAccountId" xml:space="preserve"><value>无法读取 Steam 账号 ID。</value></data>
+  <data name="CouldNotReadTheSteamLibrary" xml:space="preserve"><value>无法读取 Steam 库：{0}</value></data>
+  <data name="CouldNotOpenTheSteamBadgesPage" xml:space="preserve"><value>无法打开 Steam 徽章页面。请重新登录。</value></data>
+  <data name="SteamIsDisconnectedSignInAgain" xml:space="preserve"><value>Steam 未连接。请重新登录。</value></data>
+  <data name="InvalidNativeLibrary" xml:space="preserve"><value>Steam DLL 验证失败。请重新解压完整的 Windows 软件包。</value></data>
+  <data name="InvalidLocalSteamRequest" xml:space="preserve"><value>本地 Steam 请求无效。</value></data>
+  <data name="AnotherCollectorIsAlreadyRunning" xml:space="preserve"><value>另一个收集进程正在运行。</value></data>
+  <data name="WorkerSessionMismatch" xml:space="preserve"><value>Steam 账号不匹配，或本地客户端已重启。</value></data>
+  <data name="LocalConnectionFailed" xml:space="preserve"><value>无法连接本地 Steam。请使用拥有此游戏的账号上线。</value></data>
+  <data name="WorkerSessionLost" xml:space="preserve"><value>本地账号已切换或断开连接。收集已停止。</value></data>
+  <data name="GameOwnershipUnverified" xml:space="preserve"><value>Steam 无法确认此账号拥有该游戏。</value></data>
+  <data name="LocalSteamConnectionVerified" xml:space="preserve"><value>本地 Steam 连接已验证。</value></data>
+  <data name="NativeComponentStartupFailed" xml:space="preserve"><value>无法启动 Steam 组件（{0}）。请解压完整的 Windows 软件包。</value></data>
+  <data name="TheLocalAndWebSteamAccountsDiffer" xml:space="preserve"><value>本地 Steam 账号与网页账号不匹配。</value></data>
+  <data name="InvalidGameId" xml:space="preserve"><value>游戏 ID 无效。</value></data>
+  <data name="CouldNotLocateTheApplicationExecutable" xml:space="preserve"><value>找不到应用程序的可执行文件。</value></data>
+  <data name="CouldNotStartTheLocalSteamProcess" xml:space="preserve"><value>无法启动本地 Steam 进程。</value></data>
+  <data name="WorkerHandshakeFailed" xml:space="preserve"><value>本地 Steam 进程未确认连接。</value></data>
+  <data name="TheLocalSteamSessionChanged" xml:space="preserve"><value>本地 Steam 会话已更改。</value></data>
+  <data name="TheLocalSteamProcessClosedCollectionStopped" xml:space="preserve"><value>本地 Steam 进程已关闭。收集已停止。</value></data>
+  <data name="SessionChangedReconnect" xml:space="preserve"><value>本地 Steam 会话已更改。请重新登录。</value></data>
+  <data name="LocalSignInRequired" xml:space="preserve"><value>请打开此电脑上的 Steam 并在线登录。</value></data>
+  <data name="TheLocalSteamClientIsOffline" xml:space="preserve"><value>本地 Steam 客户端已离线。</value></data>
+  <data name="LocalClientClosed" xml:space="preserve"><value>本地 Steam 客户端已关闭。请重新打开 Steam。</value></data>
+  <data name="AccountMismatchDetails" xml:space="preserve"><value>账号不匹配。本地 Steam：{0} · 网页：{1}。请使用同一账号登录。</value></data>
+  <data name="CardEligibilityIsUnverifiedSelectRefreshFirst" xml:space="preserve"><value>尚未验证掉卡资格。请先选择刷新。</value></data>
+  <data name="CouldNotVerifyTheSteamWebSession" xml:space="preserve"><value>无法验证 Steam 网页会话。请重新登录。</value></data>
+  <data name="BadgePageUnreadable" xml:space="preserve"><value>无法读取徽章页面。收集已停止。</value></data>
+  <data name="UnexpectedNumberOfBadgePages" xml:space="preserve"><value>徽章页数异常。</value></data>
+  <data name="CollectionIsAlreadyRunning" xml:space="preserve"><value>收集已在进行中。</value></data>
+  <data name="UnresolvedQueueSummary" xml:space="preserve"><value>已验证队列为空。{0} 款游戏的掉卡数未知。请选择刷新。</value></data>
+  <data name="NoGamesHaveCardDropsRemaining" xml:space="preserve"><value>没有游戏还有可掉落的卡牌。</value></data>
+  <data name="WaitingForACardDrop" xml:space="preserve"><value>正在等待卡牌掉落。</value></data>
+  <data name="DeviceCodeRejected" xml:space="preserve"><value>验证码被拒绝。请输入当前 Steam 令牌验证码。</value></data>
+  <data name="DeviceApprovalPrompt" xml:space="preserve"><value>请输入 Steam 手机应用中的当前验证码，或在手机上批准请求。</value></data>
+  <data name="EmailCodeRejected" xml:space="preserve"><value>验证码被拒绝。请输入最新邮件中的验证码。</value></data>
+  <data name="EmailCodePrompt" xml:space="preserve"><value>请输入发送至 {0} 的 Steam 令牌验证码。</value></data>
+  <data name="SteamGuardSigninCanceled" xml:space="preserve"><value>Steam 令牌登录已取消。</value></data>
+  <data name="Playing" xml:space="preserve"><value>游戏中</value></data>
+  <data name="Queued" xml:space="preserve"><value>排队中</value></data>
+  <data name="EnterYourSteamAccountNameAndPassword" xml:space="preserve"><value>请输入 Steam 账号名称和密码。</value></data>
+  <data name="SteamDisconnected" xml:space="preserve"><value>Steam 已断开</value></data>
+  <data name="ConnectingToSteam" xml:space="preserve"><value>正在连接 Steam…</value></data>
+  <data name="SigninCanceledOrTimedOut" xml:space="preserve"><value>登录已取消或超时。</value></data>
+  <data name="WebAccountDisconnected" xml:space="preserve"><value>网页账号：未连接</value></data>
+  <data name="CheckingRemainingCardDrops" xml:space="preserve"><value>正在检查剩余掉卡数…</value></data>
+  <data name="ReadyToStart" xml:space="preserve"><value>已就绪。请选择开始，通过本地 Steam 收集卡牌。</value></data>
+  <data name="MatchAccountsToCollect" xml:space="preserve"><value>已读取掉卡数。请在两处登录同一账号以开始收集。</value></data>
+  <data name="NoVerifiedEligibleGames" xml:space="preserve"><value>未找到已验证可掉卡的游戏。部分游戏的掉卡数未知。</value></data>
+  <data name="CardQueryTimedOut" xml:space="preserve"><value>请求超时。仍可查看游戏库。请选择刷新重试。</value></data>
+  <data name="CardCountsAreUnverified" xml:space="preserve"><value>掉卡数尚未验证。</value></data>
+  <data name="CardCountsOutOfDate" xml:space="preserve"><value>掉卡数据已过期。请选择刷新。</value></data>
+  <data name="GamesEligibleRemainingDrops" xml:space="preserve"><value>{0} 款游戏 · {1} 款可掉卡 · 剩余 {2} 张</value></data>
+  <data name="UnknownGamesAppId" xml:space="preserve"><value> · 未知：{0} 款游戏（App ID：{1}）</value></data>
+  <data name="MatchingIdsRequired" xml:space="preserve"><value>本地与网页 Steam ID 必须一致才能开始收集。</value></data>
+  <data name="CollectionStopped" xml:space="preserve"><value>收集已停止。</value></data>
+  <data name="LocalSteamConnected" xml:space="preserve"><value>本地 Steam 已连接</value></data>
+  <data name="SignInToTheSameWebAccount" xml:space="preserve"><value>请使用同一账号登录网页版以查看掉卡数。</value></data>
+  <data name="PresenceAccountVerified" xml:space="preserve"><value>账号一致。本地 Steam 将显示正在玩当前游戏。</value></data>
+  <data name="ReconnectWithMatchingAccount" xml:space="preserve"><value>账号不匹配。请重新登录同一账号以收集卡牌。</value></data>
+  <data name="NoSessionFound" xml:space="preserve"><value>未找到会话</value></data>
+  <data name="LocalSteamOffline" xml:space="preserve"><value>本地 Steam 已离线</value></data>
+  <data name="LocalSteamRequired" xml:space="preserve"><value>请在当前 Windows 用户下打开 Steam 并在线登录，以收集卡牌。</value></data>
+  <data name="ReadyToCollect" xml:space="preserve"><value>可以开始收集</value></data>
+  <data name="AccountsDiffer" xml:space="preserve"><value>账号不匹配</value></data>
+  <data name="Session" xml:space="preserve"><value>会话</value></data>
+  <data name="AccountsMatch" xml:space="preserve"><value>账号一致</value></data>
+  <data name="Offline" xml:space="preserve"><value>离线</value></data>
+  <data name="Online" xml:space="preserve"><value>在线</value></data>
+  <data name="Connected" xml:space="preserve"><value>已连接</value></data>
+  <data name="CheckCredentialsAndGuard" xml:space="preserve"><value>Steam 登录失败。请检查账号信息及 Steam 令牌授权。</value></data>
+  <data name="CheckInternetConnection" xml:space="preserve"><value>Steam 网页连接失败。请检查网络后重试。</value></data>
+  <data name="CouldNotReadCardCounts" xml:space="preserve"><value>无法读取掉卡数：</value></data>
+  <data name="OperationFailed" xml:space="preserve"><value>操作失败（{0}）。</value></data>
+  <data name="Minimize" xml:space="preserve"><value>最小化</value></data>
+  <data name="Maximize" xml:space="preserve"><value>最大化</value></data>
+  <data name="Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="CollectYour" xml:space="preserve"><value>收集你的</value></data>
+  <data name="TradingCards" xml:space="preserve"><value>集换式卡牌。</value></data>
+  <data name="LoginIntro" xml:space="preserve"><value>登录即可查看游戏库和剩余掉卡数。此电脑上的 Steam 客户端会显示正在玩的游戏。</value></data>
+  <data name="CredentialsInMemory" xml:space="preserve"><value>密码和会话令牌仅保存在内存中。</value></data>
+  <data name="AccountMatchRule" xml:space="preserve"><value>本地与网页 Steam ID 一致后才能开始收集。</value></data>
+  <data name="AnIndependentCardCollectorForSteamAccounts" xml:space="preserve"><value>适用于 Steam 账号的第三方卡牌收集工具。</value></data>
+  <data name="LocalSteam" xml:space="preserve"><value>本地 Steam</value></data>
+  <data name="CheckingLocalSteam" xml:space="preserve"><value>正在检查本地 Steam…</value></data>
+  <data name="BackToDashboard" xml:space="preserve"><value>← 返回面板</value></data>
+  <data name="SignInToSteam" xml:space="preserve"><value>登录 Steam</value></data>
+  <data name="SignInInstructions" xml:space="preserve"><value>请使用和桌面 Steam 相同的账号。如果出现提示，请输入 Steam 令牌验证码或在手机上批准请求。</value></data>
+  <data name="SteamAccountName" xml:space="preserve"><value>STEAM 账号名称</value></data>
+  <data name="Password" xml:space="preserve"><value>密码</value></data>
+  <data name="StartAutomaticallyWhenAccountsMatch" xml:space="preserve"><value>账号一致时自动开始</value></data>
+  <data name="SignIn" xml:space="preserve"><value>登录</value></data>
+  <data name="LocalClientPrivilegesHint" xml:space="preserve"><value>请在当前 Windows 用户下保持 Steam 在线。两个应用应使用相同权限运行。</value></data>
+  <data name="EligibleGames" xml:space="preserve"><value>可掉卡游戏</value></data>
+  <data name="AllGames" xml:space="preserve"><value>所有游戏</value></data>
+  <data name="ActivityLog" xml:space="preserve"><value>活动日志</value></data>
+  <data name="SwitchAccount" xml:space="preserve"><value>切换账号</value></data>
+  <data name="SessionLabel" xml:space="preserve"><value>会话</value></data>
+  <data name="LocalSteamId" xml:space="preserve"><value>本地 Steam ID：—</value></data>
+  <data name="LibraryGames" xml:space="preserve"><value>库中游戏</value></data>
+  <data name="EligibleGamesLabel" xml:space="preserve"><value>可掉卡游戏</value></data>
+  <data name="RemainingDrops" xml:space="preserve"><value>剩余掉卡数</value></data>
+  <data name="Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Start" xml:space="preserve"><value>开始</value></data>
+  <data name="Stop" xml:space="preserve"><value>停止</value></data>
+  <data name="NoGamesWithDropsRemaining" xml:space="preserve"><value>没有游戏还有剩余掉卡次数。</value></data>
+  <data name="YourLibraryIsEmpty" xml:space="preserve"><value>游戏库为空。</value></data>
+  <data name="NoActivityYet" xml:space="preserve"><value>暂无活动。</value></data>
+  <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>密码仅保存在内存中。</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>每次运行一款游戏 · 每 3 分钟刷新掉卡数</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="VerificationCode" xml:space="preserve"><value>验证码</value></data>
+  <data name="Confirm" xml:space="preserve"><value>确认</value></data>
+  <data name="LocalSteamSession" xml:space="preserve"><value>本地 STEAM 会话</value></data>
+  <data name="LocalSteamIdLabel" xml:space="preserve"><value>本地 Steam ID：{0}</value></data>
+  <data name="LocalSteamIdNoSession" xml:space="preserve"><value>本地 Steam ID：无会话</value></data>
+  <data name="RefreshRetryHint" xml:space="preserve"><value> 仍可查看游戏库。请选择刷新重试。</value></data>
+  <data name="WindowsIsRequired" xml:space="preserve"><value>需要 Windows。</value></data>
+  <data name="WindowsX64Required" xml:space="preserve"><value>需要 64 位 Windows。</value></data>
+  <data name="Game" xml:space="preserve"><value>游戏 {0}</value></data>
+  <data name="DropsLeft" xml:space="preserve"><value>剩余 {0} 张</value></data>
+  <data name="Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Language" xml:space="preserve"><value>语言</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>语言更改将在下次启动应用时生效。</value></data>
+  <data name="Guides" xml:space="preserve"><value>指南</value></data>
+  <data name="LoginGuide" xml:space="preserve"><value>登录指南</value></data>
+  <data name="DashboardGuide" xml:space="preserve"><value>收集指南</value></data>
+  <data name="Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Back" xml:space="preserve"><value>上一步</value></data>
+  <data name="Next" xml:space="preserve"><value>下一步</value></data>
+  <data name="Done" xml:space="preserve"><value>完成</value></data>
+  <data name="Skip" xml:space="preserve"><value>跳过指南</value></data>
+  <data name="LoginSteamTitle" xml:space="preserve"><value>打开桌面 Steam</value></data>
+  <data name="LoginSteamBody" xml:space="preserve"><value>在此电脑上登录 Steam 并上线。在本地 Steam 面板查看你的 Steam ID。</value></data>
+  <data name="LoginWebTitle" xml:space="preserve"><value>使用同一 Steam 账号</value></data>
+  <data name="LoginWebBody" xml:space="preserve"><value>输入 Steam 账号名称和密码，然后选择登录。应用即可读取游戏库和徽章页面。</value></data>
+  <data name="LoginGuardTitle" xml:space="preserve"><value>完成 Steam 令牌验证</value></data>
+  <data name="LoginGuardBody" xml:space="preserve"><value>如 Steam 提示，请在手机上批准请求或输入验证码。登录后确认本地与网页 Steam ID 一致。</value></data>
+  <data name="DashGamesTitle" xml:space="preserve"><value>查看可掉卡游戏</value></data>
+  <data name="DashGamesBody" xml:space="preserve"><value>可掉卡游戏列表显示已确认有剩余掉卡次数的游戏。选择刷新可重新检查。掉卡数未知的游戏不会阻止其他游戏运行。</value></data>
+  <data name="DashStartTitle" xml:space="preserve"><value>开始收集</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>当 ID 一致且有可掉卡游戏时，选择开始。应用将逐个运行游戏，请保持桌面 Steam 在线。</value></data>
+  <data name="DashLogTitle" xml:space="preserve"><value>查看进度</value></data>
+  <data name="DashLogBody" xml:space="preserve"><value>打开活动日志查看进度。选择停止可结束收集。在设置中可重新打开任一指南。</value></data>
+  <data name="SaveFailed" xml:space="preserve"><value>无法保存偏好设置。请检查本地应用数据文件夹的写入权限。</value></data>
+  <data name="BadgePageTooLarge" xml:space="preserve"><value>Steam 徽章页面超出大小限制。</value></data>
+</root>
