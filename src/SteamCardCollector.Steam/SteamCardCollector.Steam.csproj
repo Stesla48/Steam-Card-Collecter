@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+ <ItemGroup>
+  <ProjectReference Include="../SteamCardCollector.Core/SteamCardCollector.Core.csproj"/>
+  <PackageReference Include="SteamKit2" Version="3.4.0"/>
+  <PackageReference Include="AngleSharp" Version="1.5.0"/>
+  <PackageReference Include="Steamworks.NET" Version="20.2.0"/>
+ </ItemGroup>
+ <ItemGroup><None Include="../../lib/steam_api64.dll" Link="lib/steam_api64.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+</Project>

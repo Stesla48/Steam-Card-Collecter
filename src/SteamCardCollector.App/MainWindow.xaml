@@ -1,0 +1,37 @@
+<Window x:Class="SteamCardCollector.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Steam Card Collector · 0.2.0" Width="920" Height="740" MinWidth="740" MinHeight="650" Background="#F4F6F8" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+ <Grid Margin="24">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel><TextBlock Text="Steam Card Collector" FontSize="26" FontWeight="SemiBold"/><TextBlock Text="Kart hakkı kalan oyunları sırayla ve otomatik işle." Margin="0,6,0,16" Foreground="#526070"/></StackPanel>
+  <Border Grid.Row="1" Background="White" Padding="16" CornerRadius="8" Margin="0,0,0,16">
+   <StackPanel>
+    <TextBlock x:Name="LocalAccountLabel" Text="Yerel Steam kontrol ediliyor…" FontWeight="SemiBold" Margin="0,0,0,6" TextWrapping="Wrap"/>
+    <TextBlock x:Name="AccountLabel" Text="Web hesabı: bağlı değil" Margin="0,0,0,6" TextWrapping="Wrap"/>
+    <TextBlock x:Name="MatchLabel" Text="Toplama için yerel ve web Steam ID eşleşmeli." Foreground="#526070" Margin="0,0,0,12" TextWrapping="Wrap"/>
+    <WrapPanel>
+     <StackPanel Margin="0,0,12,0"><TextBlock Text="Steam kullanıcı adı"/><TextBox x:Name="Username" Width="200" Padding="6" Margin="0,4,0,0"/></StackPanel>
+     <StackPanel Margin="0,0,12,0"><TextBlock Text="Şifre (kaydedilmez)"/><PasswordBox x:Name="Password" Width="200" Padding="6" Margin="0,4,0,0"/></StackPanel>
+     <Button x:Name="ConnectButton" Content="Web'e bağlan" Click="Connect_Click" Padding="14,8" VerticalAlignment="Bottom"/>
+     <Button x:Name="RefreshButton" Content="Yenile" Click="Refresh_Click" IsEnabled="False" Padding="14,8" Margin="8,0,0,0" VerticalAlignment="Bottom"/>
+    </WrapPanel>
+    <CheckBox x:Name="AutoStart" Content="Hesaplar eşleşince kart toplamayı otomatik başlat" IsChecked="False" Margin="0,14,0,6"/>
+    <TextBlock Text="Steam bilgisayarında açık ve çevrimiçi olmalı. Bu giriş yalnızca kütüphane ve kart haklarını okumak içindir. Steam Guard istenirse kodu gir veya telefonundan onayla." TextWrapping="Wrap" Foreground="#526070"/>
+   </StackPanel>
+  </Border>
+  <TabControl Grid.Row="2">
+   <TabItem Header="Kart hakkı kalanlar">
+    <DataGrid ItemsSource="{Binding Games}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column" Background="White">
+     <DataGrid.Columns><DataGridTextColumn Header="Oyun" Binding="{Binding Name}" Width="*"/><DataGridTextColumn Header="App ID" Binding="{Binding AppId}" Width="90"/><DataGridTextColumn Header="Kalan kart hakkı" Binding="{Binding RemainingDrops}" Width="140"/></DataGrid.Columns>
+    </DataGrid>
+   </TabItem>
+   <TabItem Header="Tüm oyunlar">
+    <DataGrid ItemsSource="{Binding Library}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column" Background="White">
+     <DataGrid.Columns><DataGridTextColumn Header="Oyun" Binding="{Binding Name}" Width="*"/><DataGridTextColumn Header="App ID" Binding="{Binding AppId}" Width="100"/></DataGrid.Columns>
+    </DataGrid>
+   </TabItem>
+  </TabControl>
+  <Grid Grid.Row="3" Margin="0,16,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+   <StackPanel Margin="0,0,10,0"><TextBlock x:Name="StatusLabel" Text="Bağlantı bekleniyor." TextWrapping="Wrap"/><TextBlock x:Name="CountLabel" Margin="0,5,0,0" Foreground="#526070" TextWrapping="Wrap"/></StackPanel>
+   <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"><Button x:Name="StartButton" Content="Başlat" Click="Start_Click" IsEnabled="False" Padding="18,9"/><Button x:Name="StopButton" Content="Durdur" Click="Stop_Click" IsEnabled="False" Padding="18,9" Margin="8,0,0,0"/></StackPanel>
+  </Grid>
+ </Grid>
+</Window>
