@@ -37,7 +37,14 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
     {
         user = client.GetHandler<SteamUser>()!;
         callbacks = new(client);
-        http = new(new HttpClientHandler { CookieContainer = cookies, AutomaticDecompression = DecompressionMethods.All }) { Timeout = TimeSpan.FromSeconds(45) };
+        http = new(new HttpClientHandler
+        {
+            CookieContainer = cookies,
+            AutomaticDecompression = DecompressionMethods.All,
+            AllowAutoRedirect = false,
+            UseCookies = true,
+            CheckCertificateRevocationList = true
+        }) { Timeout = TimeSpan.FromSeconds(45) };
         http.DefaultRequestHeaders.UserAgent.ParseAdd("SteamCardCollector/0.1");
         subscriptions.Add(callbacks.Subscribe<SteamClient.ConnectedCallback>(_ => connected.TrySetResult()));
         subscriptions.Add(callbacks.Subscribe<SteamUser.LoggedOnCallback>(c => loggedOn.TrySetResult(c)));
@@ -45,8 +52,10 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         subscriptions.Add(callbacks.Subscribe<SteamUser.LoggedOffCallback>(_ => Fail(Strings.SteamSignedOutSignInAgain)));
     }
 
-    public async Task LoginAsync(string username, string password, IAuthenticator authenticator, CancellationToken cancellationToken)
+    public async Task LoginAsync(string username, string? password, IAuthenticator authenticator, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrEmpty(password))
+            throw new InvalidOperationException(Strings.EnterYourSteamAccountNameAndPassword);
         if (callbackTask is not null) throw new InvalidOperationException(Strings.ThisSessionHasAlreadyStarted);
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, lifetime.Token);
         timeout.CancelAfter(TimeSpan.FromMinutes(5));
@@ -58,10 +67,13 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         });
         client.Connect();
         await connected.Task.WaitAsync(token);
-        var auth = await client.Authentication.BeginAuthSessionViaCredentialsAsync(new AuthSessionDetails
+        var details = new AuthSessionDetails
         {
             Username = username, Password = password, IsPersistentSession = false, Authenticator = authenticator
-        }).WaitAsync(token);
+        };
+        password = null;
+        var auth = await client.Authentication.BeginAuthSessionViaCredentialsAsync(details).WaitAsync(token);
+        details.Password = "";
         var result = await auth.PollingWaitForResultAsync(token);
         refreshToken = result.RefreshToken;
         AccountName = result.AccountName;
@@ -105,12 +117,7 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
             var last = 1;
             for (var page = 1; page <= last; page++)
             {
-                using var response = await http.GetAsync($"https://steamcommunity.com/profiles/{SteamId}/badges/?l=english&p={page}", cancellationToken);
-                response.EnsureSuccessStatusCode();
-                var uri = response.RequestMessage?.RequestUri;
-                if (uri?.Host != "steamcommunity.com" || !uri.AbsolutePath.EndsWith("/badges/", StringComparison.Ordinal))
-                    throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
-                var parsed = BadgePageParser.Parse(await response.Content.ReadAsStringAsync(cancellationToken), SteamId, ownedIds);
+                var parsed = BadgePageParser.Parse(await GetBadgeHtmlAsync(page, cancellationToken), SteamId, ownedIds);
                 last = Math.Max(last, parsed.LastPage);
                 foreach (var game in parsed.Games) games[game.AppId] = game;
                 unresolved.UnionWith(parsed.UnresolvedAppIds);
@@ -126,6 +133,33 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         finally { webGate.Release(); }
     }
 
+    private async Task<string> GetBadgeHtmlAsync(int page, CancellationToken cancellationToken)
+    {
+        var current = new Uri($"https://steamcommunity.com/profiles/{SteamId}/badges/?l=english&p={page}");
+        for (var hop = 0; hop < 5; hop++)
+        {
+            if (!SteamWeb.IsBadgePage(current))
+                throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
+            using var request = new HttpRequestMessage(HttpMethod.Get, current);
+            using var response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            if ((int)response.StatusCode is >= 300 and < 400)
+            {
+                var next = response.Headers.Location ?? throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
+                current = next.IsAbsoluteUri ? next : new Uri(current, next);
+                continue;
+            }
+            response.EnsureSuccessStatusCode();
+            if (!SteamWeb.IsBadgePage(response.RequestMessage?.RequestUri ?? current))
+                throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
+            var length = response.Content.Headers.ContentLength;
+            if (length is > SteamWeb.MaxBadgePageChars)
+                throw new InvalidDataException(Strings.BadgePageTooLarge);
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            return await SteamWeb.ReadBoundedTextAsync(stream, SteamWeb.MaxBadgePageChars, cancellationToken);
+        }
+        throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
+    }
+
     private void UpdateCookie(string accessToken)
     {
         cookies.Add(new Cookie("steamLoginSecure", Uri.EscapeDataString($"{SteamId}||{accessToken}"), "/", "steamcommunity.com") { Secure = true, HttpOnly = true });
@@ -136,9 +170,23 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
     {
         if (!IsConnected) throw new IOException(Strings.SteamIsDisconnectedSignInAgain);
     }
+    private void ClearSecrets()
+    {
+        refreshToken = "";
+        try
+        {
+            foreach (Cookie cookie in cookies.GetCookies(new Uri("https://steamcommunity.com/")))
+            {
+                cookie.Value = "";
+                cookie.Expired = true;
+            }
+        }
+        catch (Exception) { }
+    }
     private void Fail(string message)
     {
         authenticated = false;
+        ClearSecrets();
         connected.TrySetException(new IOException(message));
         loggedOn.TrySetException(new IOException(message));
         if (!disposed) Interrupted?.Invoke(message);
@@ -156,7 +204,7 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         {
             client.Disconnect();
             authenticated = false;
-            refreshToken = "";
+            ClearSecrets();
             lifetime.Cancel();
             if (callbackTask is not null) await callbackTask;
             foreach (var subscription in subscriptions) subscription.Dispose();

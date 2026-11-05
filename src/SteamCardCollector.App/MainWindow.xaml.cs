@@ -114,12 +114,11 @@ public partial class MainWindow : Window
 
     private async void Connect_Click(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(Username.Text) || string.IsNullOrEmpty(Password.Password))
+        if (string.IsNullOrWhiteSpace(Username.Text) || Password.Password.Length == 0)
         { StatusLabel.Text = Strings.EnterYourSteamAccountNameAndPassword; return; }
-        var password = Password.Password;
-        Password.Clear();
+        var username = Username.Text.Trim();
         busy = true; UpdateButtons();
-        operation = ConnectAsync(Username.Text.Trim(), password);
+        operation = ConnectAsync(username);
         await operation;
         if (session?.IsConnected == true) preferLogin = false;
         busy = false; UpdateButtons();
@@ -128,10 +127,12 @@ public partial class MainWindow : Window
             SavePreferences(preferences with { DashboardGuideSeen = true });
         if (!closing && session?.IsConnected == true && AutoStart.IsChecked == true && Games.Count > 0) StartFarming();
     }
-    private async Task ConnectAsync(string username, string password)
+    private async Task ConnectAsync(string username)
     {
         using var loginTimeout = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token);
         loginTimeout.CancelAfter(TimeSpan.FromMinutes(5));
+        string? password = Password.Password;
+        Password.Clear();
         try
         {
             await localPlayer.StopAsync(CancellationToken.None);
@@ -149,12 +150,14 @@ public partial class MainWindow : Window
                 UpdateButtons();
             }));
             StatusLabel.Text = Strings.ConnectingToSteam;
-            await current.LoginAsync(username, password, new WindowAuthenticator(this, loginTimeout.Token), loginTimeout.Token);
+            var login = current.LoginAsync(username, password, new WindowAuthenticator(this, loginTimeout.Token), loginTimeout.Token);
+            password = null;
+            await login;
             AccountLabel.Text = $"Web Steam ID: {current.SteamId}";
             foreach (var game in current.Library) Library.Add(game);
         }
-        catch (OperationCanceledException) { StatusLabel.Text = Strings.SigninCanceledOrTimedOut; await DiscardSessionAsync(); }
-        catch (Exception ex) { ShowError(ex); await DiscardSessionAsync(); }
+        catch (OperationCanceledException) { password = null; StatusLabel.Text = Strings.SigninCanceledOrTimedOut; await DiscardSessionAsync(); }
+        catch (Exception ex) { password = null; ShowError(ex); await DiscardSessionAsync(); }
         // Card-page errors must not destroy a successful Steam login or its library.
         if (session?.IsConnected == true && !lifetime.IsCancellationRequested)
             await RefreshWithErrorsAsync();

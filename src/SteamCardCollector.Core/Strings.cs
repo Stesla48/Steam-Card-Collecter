@@ -133,6 +133,7 @@ public static class Strings
     public static string WindowsX64Required => Get(nameof(WindowsX64Required));
     public static string Game => Get(nameof(Game));
     public static string DropsLeft => Get(nameof(DropsLeft));
+    public static string BadgePageTooLarge => Get(nameof(BadgePageTooLarge));
     public static string Settings => Get(nameof(Settings));
     public static string Language => Get(nameof(Language));
     public static string LanguageHint => Get(nameof(LanguageHint));

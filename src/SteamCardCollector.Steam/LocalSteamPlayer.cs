@@ -2,6 +2,7 @@ using SteamCardCollector.Core;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 
 namespace SteamCardCollector.Steam;
@@ -49,16 +50,16 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
             info.Environment["SteamAppId"] = appId.ToString(CultureInfo.InvariantCulture);
             info.Environment["SteamGameId"] = appId.ToString(CultureInfo.InvariantCulture);
             worker = Process.Start(info) ?? throw new IOException(Strings.CouldNotStartTheLocalSteamProcess);
-            var stderr = worker.StandardError.ReadToEndAsync();
+            var stderr = DrainAsync(worker.StandardError);
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(TimeSpan.FromSeconds(20));
             await worker.StandardInput.WriteLineAsync("ping".AsMemory(), timeout.Token);
             var line = await worker.StandardOutput.ReadLineAsync(timeout.Token);
-            var reply = line is null ? null : JsonSerializer.Deserialize<WorkerReply>(line);
+            var reply = ReadReply(line);
             if (reply is null || !reply.Ready || reply.AppId != appId || reply.SteamId != expectedSteamId)
                 throw new InvalidOperationException(reply?.Message ?? Strings.WorkerHandshakeFailed);
             if (ReadIdentity() != identity) throw new InvalidOperationException(Strings.TheLocalSteamSessionChanged);
-            var remainingOutput = worker.StandardOutput.ReadToEndAsync();
+            var remainingOutput = ReadTailAsync(worker.StandardOutput, MaxWorkerReplyChars);
             monitorCancellation = new();
             monitor = MonitorAsync(worker, identity, remainingOutput, stderr, monitorCancellation.Token);
         }
@@ -66,7 +67,7 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
         finally { gate.Release(); }
     }
 
-    private async Task MonitorAsync(Process process, LocalSteamIdentity identity, Task<string> output, Task<string> stderr, CancellationToken token)
+    private async Task MonitorAsync(Process process, LocalSteamIdentity identity, Task<string> output, Task stderr, CancellationToken token)
     {
         string? failure = null;
         try
@@ -76,8 +77,7 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
                 await Task.Delay(500, token);
                 if (process.HasExited)
                 {
-                    var text = await output;
-                    var reply = string.IsNullOrWhiteSpace(text) ? null : JsonSerializer.Deserialize<WorkerReply>(text.Trim());
+                    var reply = ReadReply(await output);
                     throw new IOException(reply?.Message ?? Strings.TheLocalSteamProcessClosedCollectionStopped);
                 }
                 if (ReadIdentity() != identity) throw new IOException(Strings.SessionChangedReconnect);
@@ -117,6 +117,46 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
             catch (IOException) { }
             catch (UnauthorizedAccessException) { }
             workDirectory = null;
+        }
+    }
+
+    private const int MaxWorkerReplyChars = 4096;
+    private static readonly JsonSerializerOptions WorkerReplyJson = new() { MaxDepth = 8 };
+
+    private static WorkerReply? ReadReply(string? line)
+    {
+        if (string.IsNullOrWhiteSpace(line) || line.Length > MaxWorkerReplyChars) return null;
+        try { return JsonSerializer.Deserialize<WorkerReply>(line, WorkerReplyJson); }
+        catch (JsonException) { return null; }
+    }
+
+    private static async Task<string> ReadTailAsync(StreamReader reader, int maxChars)
+    {
+        var buffer = new char[1024];
+        var kept = new StringBuilder();
+        while (true)
+        {
+            int read;
+            try { read = await reader.ReadAsync(buffer); }
+            catch (IOException) { break; }
+            catch (ObjectDisposedException) { break; }
+            if (read == 0) break;
+            var room = maxChars - kept.Length;
+            if (room > 0) kept.Append(buffer, 0, Math.Min(read, room));
+        }
+        return kept.ToString();
+    }
+
+    private static async Task DrainAsync(StreamReader reader)
+    {
+        var buffer = new char[1024];
+        while (true)
+        {
+            int read;
+            try { read = await reader.ReadAsync(buffer); }
+            catch (IOException) { return; }
+            catch (ObjectDisposedException) { return; }
+            if (read == 0) return;
         }
     }
 

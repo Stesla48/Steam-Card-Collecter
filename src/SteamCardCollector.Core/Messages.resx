@@ -154,4 +154,5 @@
   <data name="DashLogTitle" xml:space="preserve"><value>Follow progress</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>Open Activity log to see updates. Select Stop to end the session. You can reopen either guide from Settings.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Could not save your preferences. Check write access to your local application data folder.</value></data>
+  <data name="BadgePageTooLarge" xml:space="preserve"><value>The Steam badge page exceeds the size limit.</value></data>
 </root>

@@ -154,4 +154,5 @@
   <data name="DashLogTitle" xml:space="preserve"><value>İlerlemeyi takip et</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>Durum günlüğünden gelişmeleri takip et. Toplamayı bitirmek için Durdur’a bas. İki rehberi de Ayarlar’dan tekrar açabilirsin.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Tercihler kaydedilemedi. Yerel uygulama verileri klasörünün yazma iznini kontrol et.</value></data>
+  <data name="BadgePageTooLarge" xml:space="preserve"><value>Steam rozet sayfası beklenenden büyük.</value></data>
 </root>

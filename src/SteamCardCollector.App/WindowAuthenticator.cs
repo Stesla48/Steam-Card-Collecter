@@ -31,9 +31,11 @@ internal sealed class WindowAuthenticator(Window owner, CancellationToken cancel
             try
             {
                 owner.UpdateLayout();
-                if (window.ShowDialog() != true) throw new OperationCanceledException(Strings.SteamGuardSigninCanceled);
+                var accepted = window.ShowDialog() == true;
+                var code = window.TakeCode();
                 cancellationToken.ThrowIfCancellationRequested();
-                return window.Code;
+                if (!accepted || string.IsNullOrEmpty(code)) throw new OperationCanceledException(Strings.SteamGuardSigninCanceled);
+                return code;
             }
             finally
             {
