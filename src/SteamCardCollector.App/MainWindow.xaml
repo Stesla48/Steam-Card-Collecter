@@ -28,14 +28,14 @@
           <TextBlock Text="0.4.0" Margin="8,0,0,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource SteamCyan}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-          <Button x:Name="SettingsButton" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="{x:Static i:Strings.Settings}" Style="{StaticResource TextButton}" Margin="0,0,10,0" Click="Settings_Click"/>
-          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeButton}" Click="Minimize_Click" ToolTip="{x:Static i:Strings.Minimize}">
+          <Button x:Name="SettingsButton" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="{DynamicResource Text.Settings}" Style="{StaticResource TextButton}" Margin="0,0,10,0" Click="Settings_Click"/>
+          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeButton}" Click="Minimize_Click" ToolTip="{DynamicResource Text.Minimize}">
             <TextBlock Text="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
           </Button>
-          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeButton}" Click="Maximize_Click" ToolTip="{x:Static i:Strings.Maximize}">
+          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeButton}" Click="Maximize_Click" ToolTip="{DynamicResource Text.Maximize}">
             <TextBlock x:Name="MaximizeGlyph" Text="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
           </Button>
-          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeCloseButton}" Click="Close_Click" ToolTip="{x:Static i:Strings.Close}">
+          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeCloseButton}" Click="Close_Click" ToolTip="{DynamicResource Text.Close}">
             <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
           </Button>
         </StackPanel>
@@ -54,12 +54,12 @@
             <RowDefinition Height="Auto"/>
           </Grid.RowDefinitions>
           <StackPanel>
-            <TextBlock Text="{x:Static i:Strings.LocalSteamSession}" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold"/>
+            <TextBlock Text="{DynamicResource Text.LocalSteamSession}" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold"/>
             <TextBlock Margin="0,14,0,0" FontSize="34" FontWeight="Light" Foreground="White" LineHeight="40" LineStackingStrategy="BlockLineHeight">
-              <Run Text="{x:Static i:Strings.CollectYour}"/><LineBreak/><Run Text="{x:Static i:Strings.TradingCards}"/>
+              <Run Text="{DynamicResource Text.CollectYour}"/><LineBreak/><Run Text="{DynamicResource Text.TradingCards}"/>
             </TextBlock>
             <TextBlock Margin="0,16,8,20" TextWrapping="Wrap" Foreground="#9AA6B2" FontSize="13.5" LineHeight="20"
-                       Text="{x:Static i:Strings.LoginIntro}"/>
+                       Text="{DynamicResource Text.LoginIntro}"/>
             <Border Style="{StaticResource InfoCard}">
               <Grid>
                 <Grid.ColumnDefinitions>
@@ -67,7 +67,7 @@
                   <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Width="7" Height="7" Fill="{StaticResource SteamCyan}" Margin="0,5,10,0" VerticalAlignment="Top"/>
-                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="{x:Static i:Strings.CredentialsInMemory}"/>
+                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="{DynamicResource Text.CredentialsInMemory}"/>
               </Grid>
             </Border>
             <Border Style="{StaticResource InfoCard}">
@@ -77,7 +77,7 @@
                   <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Width="7" Height="7" Fill="{StaticResource SteamCyan}" Margin="0,5,10,0" VerticalAlignment="Top"/>
-                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="{x:Static i:Strings.AccountMatchRule}"/>
+                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="{DynamicResource Text.AccountMatchRule}"/>
               </Grid>
             </Border>
             <Border Style="{StaticResource InfoCard}">
@@ -87,7 +87,7 @@
                   <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Width="7" Height="7" Fill="{StaticResource SteamCyan}" Margin="0,5,10,0" VerticalAlignment="Top"/>
-                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="{x:Static i:Strings.AnIndependentCardCollectorForSteamAccounts}"/>
+                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="{DynamicResource Text.AnIndependentCardCollectorForSteamAccounts}"/>
               </Grid>
             </Border>
           </StackPanel>
@@ -99,8 +99,8 @@
               </Grid.ColumnDefinitions>
               <Ellipse x:Name="LocalChipDot" Width="8" Height="8" Fill="#6A737C" Margin="0,4,10,0" VerticalAlignment="Top"/>
               <StackPanel Grid.Column="1">
-                <TextBlock x:Name="LocalChipTitle" Text="{x:Static i:Strings.LocalSteam}" FontWeight="SemiBold" FontSize="13"/>
-                <TextBlock x:Name="LocalAccountLabel" Text="{x:Static i:Strings.CheckingLocalSteam}" Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" TextWrapping="Wrap"/>
+                <TextBlock x:Name="LocalChipTitle" Text="{DynamicResource Text.LocalSteam}" FontWeight="SemiBold" FontSize="13"/>
+                <TextBlock x:Name="LocalAccountLabel" Text="{DynamicResource Text.CheckingLocalSteam}" Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" TextWrapping="Wrap"/>
               </StackPanel>
             </Grid>
           </Border>
@@ -108,39 +108,39 @@
 
         <ScrollViewer x:Name="LoginForm" Grid.Column="1" Background="#1B2838" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
           <StackPanel Margin="48,32,48,24" MaxWidth="520">
-            <Button x:Name="ReturnButton" Content="{x:Static i:Strings.BackToDashboard}" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Margin="0,0,0,16" Visibility="Collapsed" Click="ReturnToDashboard_Click"/>
+            <Button x:Name="ReturnButton" Content="{DynamicResource Text.BackToDashboard}" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Margin="0,0,0,16" Visibility="Collapsed" Click="ReturnToDashboard_Click"/>
             <StackPanel x:Name="PasswordLogin">
-              <TextBlock Text="{x:Static i:Strings.SignInToSteam}" FontSize="26" FontWeight="SemiBold"/>
+              <TextBlock Text="{DynamicResource Text.SignInToSteam}" FontSize="26" FontWeight="SemiBold"/>
               <TextBlock x:Name="StatusLabel" Margin="0,8,0,18" Foreground="{StaticResource SteamMuted}" FontSize="13" TextWrapping="Wrap" LineHeight="18"
-                         Text="{x:Static i:Strings.SignInInstructions}"/>
-              <TextBlock Text="{x:Static i:Strings.SteamAccountName}" Style="{StaticResource FieldLabel}"/>
+                         Text="{DynamicResource Text.SignInInstructions}"/>
+              <TextBlock Text="{DynamicResource Text.SteamAccountName}" Style="{StaticResource FieldLabel}"/>
               <TextBox x:Name="Username"/>
-              <TextBlock Text="{x:Static i:Strings.Password}" Style="{StaticResource FieldLabel}" Margin="0,16,0,6"/>
+              <TextBlock Text="{DynamicResource Text.Password}" Style="{StaticResource FieldLabel}" Margin="0,16,0,6"/>
               <PasswordBox x:Name="Password"/>
-              <CheckBox x:Name="AutoStart" Content="{x:Static i:Strings.StartAutomaticallyWhenAccountsMatch}" IsChecked="False" Margin="0,18,0,0"/>
+              <CheckBox x:Name="AutoStart" Content="{DynamicResource Text.StartAutomaticallyWhenAccountsMatch}" IsChecked="False" Margin="0,18,0,0"/>
             </StackPanel>
             <StackPanel x:Name="QrLogin" Visibility="Collapsed">
-              <TextBlock Text="{x:Static i:Strings.QrSignInTitle}" FontSize="26" FontWeight="SemiBold"/>
-              <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#C5D4DE" FontSize="12" LineHeight="17" Text="{x:Static i:Strings.QrRiskShort}"/>
-              <TextBlock x:Name="QrHint" Margin="0,8,0,12" Foreground="{StaticResource SteamMuted}" FontSize="13" TextWrapping="Wrap" Text="{x:Static i:Strings.QrInstructions}"/>
+              <TextBlock Text="{DynamicResource Text.QrSignInTitle}" FontSize="26" FontWeight="SemiBold"/>
+              <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#C5D4DE" FontSize="12" LineHeight="17" Text="{DynamicResource Text.QrRiskShort}"/>
+              <TextBlock x:Name="QrHint" Margin="0,8,0,12" Foreground="{StaticResource SteamMuted}" FontSize="13" TextWrapping="Wrap" Text="{DynamicResource Text.QrInstructions}"/>
               <Border Background="White" Padding="10" HorizontalAlignment="Left" Margin="0,0,0,12">
                 <Image x:Name="QrImage" Width="196" Height="196" Stretch="Uniform"/>
               </Border>
-              <Button x:Name="QrCancelButton" Content="{x:Static i:Strings.Cancel}" Style="{StaticResource QuietButton}" HorizontalAlignment="Left" MinWidth="120" Margin="0,0,0,8" Click="QrCancel_Click"/>
-              <Button Content="{x:Static i:Strings.UsePasswordSignIn}" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Click="ShowPassword_Click"/>
+              <Button x:Name="QrCancelButton" Content="{DynamicResource Text.Cancel}" Style="{StaticResource QuietButton}" HorizontalAlignment="Left" MinWidth="120" Margin="0,0,0,8" Click="QrCancel_Click"/>
+              <Button Content="{DynamicResource Text.UsePasswordSignIn}" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Click="ShowPassword_Click"/>
             </StackPanel>
             <Border Margin="0,18,0,0" Padding="12,10" BorderBrush="{StaticResource SteamLine}" BorderThickness="1" Background="#1A2430">
               <StackPanel>
-                <TextBlock Text="{x:Static i:Strings.BeforeYouSignIn}" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                <TextBlock TextWrapping="Wrap" Foreground="#C5D4DE" FontSize="12" LineHeight="17" Text="{x:Static i:Strings.SignInRiskNotice}"/>
-                <TextBlock Text="{x:Static i:Strings.ContinuingAcceptsThisRisk}" Margin="0,8,0,0" Foreground="White" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap"/>
+                <TextBlock Text="{DynamicResource Text.BeforeYouSignIn}" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <TextBlock TextWrapping="Wrap" Foreground="#C5D4DE" FontSize="12" LineHeight="17" Text="{DynamicResource Text.SignInRiskNotice}"/>
+                <TextBlock Text="{DynamicResource Text.ContinuingAcceptsThisRisk}" Margin="0,8,0,0" Foreground="White" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap"/>
               </StackPanel>
             </Border>
             <StackPanel x:Name="PasswordActions" Margin="0,16,0,0">
-              <Button x:Name="ConnectButton" Content="{x:Static i:Strings.SignIn}" Style="{StaticResource GreenButton}" HorizontalAlignment="Left" MinWidth="176" Height="42" FontSize="13" Click="Connect_Click"/>
-              <Button x:Name="QrButton" Content="{x:Static i:Strings.SignInWithQr}" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Margin="0,10,0,0" Click="ShowQr_Click"/>
+              <Button x:Name="ConnectButton" Content="{DynamicResource Text.SignIn}" Style="{StaticResource GreenButton}" HorizontalAlignment="Left" MinWidth="176" Height="42" FontSize="13" Click="Connect_Click"/>
+              <Button x:Name="QrButton" Content="{DynamicResource Text.SignInWithQr}" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Margin="0,10,0,0" Click="ShowQr_Click"/>
             </StackPanel>
-            <TextBlock Margin="0,16,0,0" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="12" LineHeight="17" Text="{x:Static i:Strings.LocalClientPrivilegesHint}"/>
+            <TextBlock Margin="0,16,0,0" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="12" LineHeight="17" Text="{DynamicResource Text.LocalClientPrivilegesHint}"/>
           </StackPanel>
         </ScrollViewer>
       </Grid>
@@ -169,16 +169,16 @@
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
               <TextBlock x:Name="SidebarName" Text="Steam" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-              <TextBlock x:Name="SidebarPresence" Text="{x:Static i:Strings.Offline}" Margin="0,1,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12"/>
+              <TextBlock x:Name="SidebarPresence" Text="{DynamicResource Text.Offline}" Margin="0,1,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12"/>
             </StackPanel>
           </Grid>
           <StackPanel Grid.Row="1">
-            <RadioButton x:Name="NavDrops" Content="{x:Static i:Strings.EligibleGames}" Style="{StaticResource NavButton}" Tag="drops" IsChecked="True" Checked="DashboardNav_Checked"/>
-            <RadioButton x:Name="NavLibrary" Content="{x:Static i:Strings.AllGames}" Style="{StaticResource NavButton}" Tag="library" Checked="DashboardNav_Checked"/>
-            <RadioButton x:Name="NavLog" Content="{x:Static i:Strings.ActivityLog}" Style="{StaticResource NavButton}" Tag="log" Checked="DashboardNav_Checked"/>
+            <RadioButton x:Name="NavDrops" Content="{DynamicResource Text.EligibleGames}" Style="{StaticResource NavButton}" Tag="drops" IsChecked="True" Checked="DashboardNav_Checked"/>
+            <RadioButton x:Name="NavLibrary" Content="{DynamicResource Text.AllGames}" Style="{StaticResource NavButton}" Tag="library" Checked="DashboardNav_Checked"/>
+            <RadioButton x:Name="NavLog" Content="{DynamicResource Text.ActivityLog}" Style="{StaticResource NavButton}" Tag="log" Checked="DashboardNav_Checked"/>
           </StackPanel>
           <Border Grid.Row="2" BorderBrush="#0E141C" BorderThickness="0,1,0,0" Padding="16,12">
-            <Button x:Name="SwitchAccountButton" Content="{x:Static i:Strings.SwitchAccount}" Style="{StaticResource TextButton}" Click="SwitchAccount_Click"/>
+            <Button x:Name="SwitchAccountButton" Content="{DynamicResource Text.SwitchAccount}" Style="{StaticResource TextButton}" Click="SwitchAccount_Click"/>
           </Border>
         </Grid>
 
@@ -192,10 +192,10 @@
           </Grid.RowDefinitions>
           <WrapPanel Orientation="Horizontal">
             <StackPanel Margin="0,0,16,8" MaxWidth="420">
-              <TextBlock Text="{x:Static i:Strings.SessionLabel}" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold"/>
-              <TextBlock x:Name="SessionTitle" Text="{x:Static i:Strings.ReadyToCollect}" FontSize="26" FontWeight="SemiBold" Margin="0,6,0,8"/>
-              <TextBlock x:Name="DashboardLocalId" Text="{x:Static i:Strings.LocalSteamId}" Foreground="{StaticResource SteamMuted}" FontSize="13"/>
-              <TextBlock x:Name="AccountLabel" Text="{x:Static i:Strings.WebAccountDisconnected}" Foreground="{StaticResource SteamMuted}" FontSize="13" Margin="0,2,0,8" TextWrapping="Wrap"/>
+              <TextBlock Text="{DynamicResource Text.SessionLabel}" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold"/>
+              <TextBlock x:Name="SessionTitle" Text="{DynamicResource Text.ReadyToCollect}" FontSize="26" FontWeight="SemiBold" Margin="0,6,0,8"/>
+              <TextBlock x:Name="DashboardLocalId" Text="{DynamicResource Text.LocalSteamId}" Foreground="{StaticResource SteamMuted}" FontSize="13"/>
+              <TextBlock x:Name="AccountLabel" Text="{DynamicResource Text.WebAccountDisconnected}" Foreground="{StaticResource SteamMuted}" FontSize="13" Margin="0,2,0,8" TextWrapping="Wrap"/>
               <StackPanel Orientation="Horizontal">
                 <Ellipse x:Name="MatchDot" Width="8" Height="8" Fill="#7DCB3B" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
                 <TextBlock x:Name="MatchBadge" FontSize="13" VerticalAlignment="Center"/>
@@ -205,19 +205,19 @@
               <Border Style="{StaticResource StatCard}" Margin="0">
                 <StackPanel>
                   <TextBlock x:Name="LibraryStat" Text="0" FontSize="22" FontWeight="SemiBold"/>
-                  <TextBlock Text="{x:Static i:Strings.LibraryGames}" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
+                  <TextBlock Text="{DynamicResource Text.LibraryGames}" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
                 </StackPanel>
               </Border>
               <Border Style="{StaticResource StatCard}">
                 <StackPanel>
                   <TextBlock x:Name="CardStat" Text="0" FontSize="22" FontWeight="SemiBold"/>
-                  <TextBlock Text="{x:Static i:Strings.EligibleGamesLabel}" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
+                  <TextBlock Text="{DynamicResource Text.EligibleGamesLabel}" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
                 </StackPanel>
               </Border>
               <Border Style="{StaticResource StatCard}">
                 <StackPanel>
                   <TextBlock x:Name="DropStat" Text="0" FontSize="22" FontWeight="SemiBold"/>
-                  <TextBlock Text="{x:Static i:Strings.RemainingDrops}" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
+                  <TextBlock Text="{DynamicResource Text.RemainingDrops}" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
                 </StackPanel>
               </Border>
             </StackPanel>
@@ -225,13 +225,13 @@
           <TextBlock x:Name="CountLabel" Grid.Row="1" Margin="0,10,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" TextWrapping="Wrap" Visibility="Collapsed"/>
           <Grid Grid.Row="2" Margin="0,16,0,8">
             <StackPanel x:Name="ContentTabs" Orientation="Horizontal" VerticalAlignment="Center">
-              <RadioButton x:Name="TabDrops" Content="{x:Static i:Strings.EligibleGames}" Style="{StaticResource TextTab}" Tag="drops" IsChecked="True" Checked="DashboardNav_Checked"/>
-              <RadioButton x:Name="TabLibrary" Content="{x:Static i:Strings.AllGames}" Style="{StaticResource TextTab}" Tag="library" Checked="DashboardNav_Checked"/>
+              <RadioButton x:Name="TabDrops" Content="{DynamicResource Text.EligibleGames}" Style="{StaticResource TextTab}" Tag="drops" IsChecked="True" Checked="DashboardNav_Checked"/>
+              <RadioButton x:Name="TabLibrary" Content="{DynamicResource Text.AllGames}" Style="{StaticResource TextTab}" Tag="library" Checked="DashboardNav_Checked"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-              <Button x:Name="RefreshButton" Content="{x:Static i:Strings.Refresh}" Style="{StaticResource QuietButton}" MinWidth="92" IsEnabled="False" Click="Refresh_Click"/>
-              <Button x:Name="StartButton" Content="{x:Static i:Strings.Start}" Style="{StaticResource GreenButton}" MinWidth="104" Margin="8,0,0,0" IsEnabled="False" Click="Start_Click"/>
-              <Button x:Name="StopButton" Content="{x:Static i:Strings.Stop}" Style="{StaticResource DangerButton}" MinWidth="104" Margin="8,0,0,0" IsEnabled="False" Click="Stop_Click"/>
+              <Button x:Name="RefreshButton" Content="{DynamicResource Text.Refresh}" Style="{StaticResource QuietButton}" MinWidth="92" IsEnabled="False" Click="Refresh_Click"/>
+              <Button x:Name="StartButton" Content="{DynamicResource Text.Start}" Style="{StaticResource GreenButton}" MinWidth="104" Margin="8,0,0,0" IsEnabled="False" Click="Start_Click"/>
+              <Button x:Name="StopButton" Content="{DynamicResource Text.Stop}" Style="{StaticResource DangerButton}" MinWidth="104" Margin="8,0,0,0" IsEnabled="False" Click="Stop_Click"/>
             </StackPanel>
           </Grid>
 
@@ -247,10 +247,10 @@
                   <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Margin="0,0,12,0">
-                  <TextBlock Text="{x:Static i:Strings.CardDroppedTitle}" Foreground="#A4D007" FontSize="11" FontWeight="SemiBold"/>
+                  <TextBlock Text="{DynamicResource Text.CardDroppedTitle}" Foreground="#A4D007" FontSize="11" FontWeight="SemiBold"/>
                   <TextBlock x:Name="DropBannerText" Margin="0,4,0,0" TextWrapping="Wrap" FontSize="14"/>
                 </StackPanel>
-                <Button Grid.Column="1" Content="{x:Static i:Strings.Close}" Style="{StaticResource QuietButton}" MinWidth="72" VerticalAlignment="Center" Click="DismissDrop_Click"/>
+                <Button Grid.Column="1" Content="{DynamicResource Text.Close}" Style="{StaticResource QuietButton}" MinWidth="72" VerticalAlignment="Center" Click="DismissDrop_Click"/>
               </Grid>
             </Border>
             <Grid x:Name="DropsView" Grid.Row="1">
@@ -280,7 +280,7 @@
                           <ColumnDefinition Width="Auto"/>
                           <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="{x:Static i:Strings.FarmThisGame}"
+                        <CheckBox VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="{DynamicResource Text.FarmThisGame}"
                                   Tag="{Binding AppId}"
                                   IsChecked="{Binding AppId, Converter={StaticResource GameSelected}, Mode=OneWay}"
                                   IsEnabled="{Binding IsFarming, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource InverseBool}}"
@@ -300,13 +300,14 @@
                           <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}"/>
                           <TextBlock Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" Text="{Binding AppId, StringFormat=App ID {0}}"/>
                         </StackPanel>
-                        <TextBlock Grid.Column="3" VerticalAlignment="Center" Foreground="{StaticResource SteamCyan}" FontSize="13" Text="{Binding RemainingDrops, StringFormat={x:Static i:Strings.DropsLeft}}"/>
-                        <TextBlock x:Name="BadgeText" Grid.Column="4" Margin="14,0,2,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold">
+                        <ContentControl Grid.Column="3" VerticalAlignment="Center" Foreground="{StaticResource SteamCyan}" FontSize="13" Content="{Binding RemainingDrops}" ContentStringFormat="{DynamicResource Text.DropsLeft}"/>
+                        <TextBlock Tag="{DynamicResource Text.Playing}" x:Name="BadgeText" Grid.Column="4" Margin="14,0,2,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold">
                           <TextBlock.Text>
                             <MultiBinding Converter="{StaticResource FarmBadge}">
                               <Binding Path="AppId"/>
                               <Binding Path="CurrentFarmAppId" RelativeSource="{RelativeSource AncestorType=Window}"/>
                               <Binding Path="IsFarming" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                              <Binding Path="Tag" RelativeSource="{RelativeSource Self}"/>
                             </MultiBinding>
                           </TextBlock.Text>
                           <TextBlock.Style>
@@ -314,11 +315,17 @@
                               <Setter Property="Foreground" Value="{StaticResource SteamMuted}"/>
                               <Setter Property="Visibility" Value="Collapsed"/>
                               <Style.Triggers>
-                                <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="{x:Static i:Strings.Queued}">
+                                <DataTrigger Binding="{Binding IsFarming, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
                                   <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="{x:Static i:Strings.Playing}">
-                                  <Setter Property="Visibility" Value="Visible"/>
+                                <DataTrigger Value="True">
+                                  <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource FarmBadge}" ConverterParameter="active">
+                                      <Binding Path="AppId"/>
+                                      <Binding Path="CurrentFarmAppId" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                      <Binding Path="IsFarming" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                    </MultiBinding>
+                                  </DataTrigger.Binding>
                                   <Setter Property="Foreground" Value="#A4D007"/>
                                 </DataTrigger>
                               </Style.Triggers>
@@ -330,7 +337,7 @@
                   </DataTemplate>
                 </ListBox.ItemTemplate>
               </ListBox>
-              <TextBlock x:Name="GamesEmpty" Text="{x:Static i:Strings.NoGamesWithDropsRemaining}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
+              <TextBlock x:Name="GamesEmpty" Text="{DynamicResource Text.NoGamesWithDropsRemaining}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
             </Grid>
             <Grid x:Name="LibraryView" Grid.Row="1" Visibility="Collapsed">
               <ListBox ItemsSource="{Binding Library}" Style="{StaticResource FlatList}">
@@ -362,10 +369,10 @@
                   </DataTemplate>
                 </ListBox.ItemTemplate>
               </ListBox>
-              <TextBlock x:Name="LibraryEmpty" Text="{x:Static i:Strings.YourLibraryIsEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
+              <TextBlock x:Name="LibraryEmpty" Text="{DynamicResource Text.YourLibraryIsEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
             </Grid>
             <Grid x:Name="LogView" Grid.Row="1" Visibility="Collapsed">
-              <TextBlock x:Name="LogEmpty" Text="{x:Static i:Strings.NoActivityYet}" Foreground="{StaticResource SteamMuted}" Margin="0,8,0,0"/>
+              <TextBlock x:Name="LogEmpty" Text="{DynamicResource Text.NoActivityYet}" Foreground="{StaticResource SteamMuted}" Margin="0,8,0,0"/>
               <ListBox x:Name="LogList" ItemsSource="{Binding StatusLog}" Style="{StaticResource FlatList}" Background="Transparent">
                 <ListBox.ItemTemplate>
                   <DataTemplate>
@@ -384,11 +391,11 @@
                 <ColumnDefinition Width="*"/>
               </Grid.ColumnDefinitions>
               <StackPanel Margin="0,0,12,0">
-                <TextBlock Text="{x:Static i:Strings.YourPasswordStaysInMemory}" Foreground="{StaticResource SteamMuted}" FontSize="11.5"/>
+                <TextBlock Text="{DynamicResource Text.YourPasswordStaysInMemory}" Foreground="{StaticResource SteamMuted}" FontSize="11.5"/>
                 <TextBlock x:Name="MatchLabel" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="11.5" Margin="0,2,0,0"/>
               </StackPanel>
               <TextBlock x:Name="DashboardStatus" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" Foreground="#C5D4DE" FontSize="12" VerticalAlignment="Center"/>
-              <TextBlock Grid.Column="2" Text="{x:Static i:Strings.QueueTimingNote}" TextWrapping="Wrap" TextAlignment="Right" Foreground="{StaticResource SteamMuted}" FontSize="11.5" VerticalAlignment="Center" Margin="12,0,0,0"/>
+              <TextBlock Grid.Column="2" Text="{DynamicResource Text.QueueTimingNote}" TextWrapping="Wrap" TextAlignment="Right" Foreground="{StaticResource SteamMuted}" FontSize="11.5" VerticalAlignment="Center" Margin="12,0,0,0"/>
             </Grid>
           </Border>
         </Grid>

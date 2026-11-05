@@ -69,6 +69,7 @@ public sealed class FarmBadgeConverter : IMultiValueConverter
         return (parameter as string) switch
         {
             "bg" => badge == Strings.Playing ? Active : Row,
+            "active" => badge == Strings.Playing,
             "border" => badge == Strings.Playing ? Cyan : Transparent,
             _ => badge
         };

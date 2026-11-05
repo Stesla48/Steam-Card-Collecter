@@ -132,7 +132,7 @@
   <data name="DropsLeft" xml:space="preserve"><value>{0} kalan hak</value></data>
   <data name="Settings" xml:space="preserve"><value>Ayarlar</value></data>
   <data name="Language" xml:space="preserve"><value>Dil</value></data>
-  <data name="LanguageHint" xml:space="preserve"><value>Dil değişikliği uygulamayı yeniden açtığında uygulanır.</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>Dili uygulamak için Kaydet’e bas.</value></data>
   <data name="Guides" xml:space="preserve"><value>Rehberler</value></data>
   <data name="LoginGuide" xml:space="preserve"><value>Giriş rehberi</value></data>
   <data name="DashboardGuide" xml:space="preserve"><value>Toplama rehberi</value></data>
