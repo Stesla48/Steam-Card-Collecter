@@ -55,3 +55,40 @@ Paket betiği kontrolleri çalıştırır, Windows x64 self-contained uygulamay�
 - `ThirdParty`: bağımlılık lisansları ve SteamKit2'nin karşılık gelen kaynak arşivi.
 
 Bağımlılık açıklamaları: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+## GitHub'da otomatik EXE paketi
+
+`.github/workflows/release.yml`, Windows üzerinde testleri ve paket betiğini çalıştırır.
+`main` / `master` commit'leri ve pull request'ler için paket Actions sayfasındaki
+çalıştırmanın Artifacts bölümünden indirilir. Bir Release veya Pre-release
+**yayımlandığında**, Windows ZIP'i, kaynak ZIP'i ve `SHA256SUMS.txt` aynı Release'in
+Assets bölümüne otomatik eklenir. Taslak kaydetmek yayını tetiklemez.
+
+1. Kaynak ZIP'inin içindeki `.github`, `src`, `tests`, `scripts`, `lib`, `ThirdParty`
+   klasörlerini ve kök dosyalarını klasör yapısını koruyarak repoya commit edin.
+   Workflow dosyasının repo kökünde `.github/workflows/release.yml` konumunda
+   bulunduğunu kontrol edin; yalnızca kod commit etmek otomatik EXE derlemesi kurmaz.
+2. GitHub'da **Releases → Draft a new release** açın. Şu anki proje sürümü için
+   yeni etiket `v0.2.0` olmalı. Hedef olarak workflow'u içeren güncel commit'i seçin.
+3. Deneme sürümünü **Pre-release** olarak işaretleyip **Publish release** düğmesine
+   basın. Actions'ta **Build and release Windows ZIP** çalıştırmasının başarılı
+   olmasını bekleyin.
+4. Arkadaşınız Assets içindeki `SteamCardCollector-0.2.0-win-x64.zip` dosyasını
+   indirmeli. Otomatik `Source code (zip)` bağlantısı hazır uygulama içermez.
+
+Kişisel API key veya PAT eklemek gerekmez. Yalnızca Release'e dosya yükleyen iş,
+GitHub'ın çalışma süresi için verdiği `GITHUB_TOKEN` ile `contents: write` yetkisi
+kullanır; bu token uygulamaya veya ZIP'lere eklenmez.
+
+Önceden oluşturulmuş bir sürümü tekrar paketlemek için **Actions → Build and
+release Windows ZIP → Run workflow** açılıp `release_tag` alanına örneğin
+`v0.2.0` girilebilir. Bu yol mevcut etiketin kodunu derler; o etikette paket betiği
+ve doğru klasör yapısı bulunmalı. Alan boş bırakılırsa seçilen dal yalnızca
+derlenir ve dosyalar Actions artifact'i olur; Release'e yüklenmez.
+
+Sonraki sürümde önce `src/SteamCardCollector.App/SteamCardCollector.App.csproj`
+içindeki `<Version>` değerini örneğin `0.2.1` yapıp commit edin, ardından `v0.2.1`
+etiketiyle yeni Release yayımlayın. Etiket ve proje sürümü farklıysa workflow
+yanlış sürümlü paket yayımlamamak için hata verir. Tekrar çalıştırma aynı adlı
+Release dosyalarını yenileriyle değiştirir. Hedef reponun Actions politikası
+workflow ve gerekli yazma iznine izin vermelidir.

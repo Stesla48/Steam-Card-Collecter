@@ -1,7 +1,13 @@
-param([string]$OutputDirectory = 'dist/0.2.0')
+param([string]$OutputDirectory)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 Set-Location -LiteralPath $root
+[xml]$appProject = Get-Content -LiteralPath 'src/SteamCardCollector.App/SteamCardCollector.App.csproj' -Raw
+$appVersion = [string]$appProject.Project.PropertyGroup.Version
+$runtimeVersion = [string]$appProject.Project.PropertyGroup.RuntimeFrameworkVersion
+if ($appVersion -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$') { throw 'Invalid application version in the App csproj.' }
+if ($runtimeVersion -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid runtime version in the App csproj.' }
+if ([string]::IsNullOrWhiteSpace($OutputDirectory)) { $OutputDirectory = "dist/$appVersion" }
 $release = [IO.Path]::GetFullPath((Join-Path $root $OutputDirectory))
 if (Test-Path -LiteralPath $release) { throw "Output already exists: $release. Choose a new -OutputDirectory." }
 
@@ -28,11 +34,11 @@ function Run-AppCheck([string]$Exe, [string]$Mode, [string]$Report) {
 
 Invoke-Dotnet @('build', 'SteamCardCollector.sln', '-c', 'Release')
 Invoke-Dotnet @('run', '--project', 'tests/SteamCardCollector.Checks', '-c', 'Release', '--no-build')
-$windows = Join-Path $release 'SteamCardCollector-0.2.0-win-x64'
+$windows = Join-Path $release "SteamCardCollector-$appVersion-win-x64"
 Invoke-Dotnet @('publish', 'src/SteamCardCollector.App', '-c', 'Release', '-r', 'win-x64', '--self-contained', 'true', '-p:DebugType=None', '-p:DebugSymbols=false', '-o', $windows)
 
 $nugetRoot = ((& dotnet nuget locals global-packages --list) -replace '^[^:]+:\s*', '').Trim()
-$runtime = Join-Path $nugetRoot 'microsoft.netcore.app.runtime.win-x64/8.0.33'
+$runtime = Join-Path $nugetRoot "microsoft.netcore.app.runtime.win-x64/$runtimeVersion"
 Copy-Item -LiteralPath (Join-Path $runtime 'LICENSE.TXT') -Destination 'ThirdParty/dotnet-LICENSE.TXT' -Force
 Copy-Item -LiteralPath (Join-Path $runtime 'THIRD-PARTY-NOTICES.TXT') -Destination 'ThirdParty/dotnet-THIRD-PARTY-NOTICES.TXT' -Force
 Copy-Item -LiteralPath README.md, THIRD-PARTY-NOTICES.md -Destination $windows
@@ -63,10 +69,17 @@ try {
 }
 finally { $process.Dispose() }
 
-$source = Join-Path $release 'SteamCardCollector-0.2.0-source'
+$source = Join-Path $release "SteamCardCollector-$appVersion-source"
 New-Item -ItemType Directory -Path $source | Out-Null
-Copy-Item -LiteralPath SteamCardCollector.sln, Directory.Build.props, README.md, THIRD-PARTY-NOTICES.md, .gitignore -Destination $source
-foreach ($directory in @('src', 'tests', 'scripts', 'lib', 'ThirdParty')) {
+Copy-Item -LiteralPath SteamCardCollector.sln, Directory.Build.props, README.md, THIRD-PARTY-NOTICES.md -Destination $source
+if (Test-Path -LiteralPath '.gitignore') {
+    Copy-Item -LiteralPath '.gitignore' -Destination $source
+} else {
+    # Browser uploads can omit dotfiles. Keep packaging usable and source caches excluded.
+    @('**/bin/', '**/obj/', '.vs/', '.codex/', 'artifacts/', 'dist/', '*.user', '*.suo') |
+        Set-Content -LiteralPath (Join-Path $source '.gitignore') -Encoding ascii
+}
+foreach ($directory in @('.github', 'src', 'tests', 'scripts', 'lib', 'ThirdParty')) {
     Get-ChildItem -LiteralPath (Join-Path $root $directory) -File -Recurse |
         Where-Object { $_.FullName -notmatch '[\\/](bin|obj)[\\/]' } | ForEach-Object {
             $relative = $_.FullName.Substring($root.Length + 1)
@@ -75,8 +88,8 @@ foreach ($directory in @('src', 'tests', 'scripts', 'lib', 'ThirdParty')) {
             Copy-Item -LiteralPath $_.FullName -Destination $destination
         }
 }
-$windowsZip = Join-Path $release 'SteamCardCollector-0.2.0-win-x64.zip'
-$sourceZip = Join-Path $release 'SteamCardCollector-0.2.0-source.zip'
+$windowsZip = Join-Path $release "SteamCardCollector-$appVersion-win-x64.zip"
+$sourceZip = Join-Path $release "SteamCardCollector-$appVersion-source.zip"
 Compress-Archive -LiteralPath $windows -DestinationPath $windowsZip -CompressionLevel Optimal
 Compress-Archive -LiteralPath $source -DestinationPath $sourceZip -CompressionLevel Optimal
 @($windowsZip, $sourceZip) | ForEach-Object {
