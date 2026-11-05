@@ -1,1 +1,120 @@
 
+name: Build and release Windows ZIP
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Existing release tag, e.g. v0.2.0. Leave empty to build only.'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ github.event_name }}-${{ github.ref }}-${{ inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release_tag: ${{ steps.version.outputs.release_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.release_tag || github.ref }}
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Validate source layout and release version
+        id: version
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($path in @('SteamCardCollector.sln', 'src/SteamCardCollector.App/SteamCardCollector.App.csproj', 'scripts/Publish-Release.ps1', 'lib/steam_api64.dll', 'ThirdParty/SteamKit-3.4.0-source.zip')) {
+            if (!(Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Missing $path. Upload the source with its directory structure intact."
+            }
+          }
+          [xml]$project = Get-Content -LiteralPath 'src/SteamCardCollector.App/SteamCardCollector.App.csproj' -Raw
+          $appVersion = [string]$project.Project.PropertyGroup.Version
+          if ($appVersion -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$') {
+            throw 'Invalid application version in the App csproj.'
+          }
+          if ($env:RELEASE_TAG -and $env:RELEASE_TAG -cne "v$appVersion") {
+            throw "Release tag must be v$appVersion. Update the App csproj Version before making a new release."
+          }
+          "version=$appVersion" >> $env:GITHUB_OUTPUT
+          "release_tag=$env:RELEASE_TAG" >> $env:GITHUB_OUTPUT
+
+      - name: Test and package self-contained Windows x64 application
+        shell: pwsh
+        run: ./scripts/Publish-Release.ps1
+
+      - name: Keep Windows and source packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: SteamCardCollector-${{ steps.version.outputs.version }}-packages
+          path: |
+            dist/${{ steps.version.outputs.version }}/*.zip
+            dist/${{ steps.version.outputs.version }}/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Keep verification results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SteamCardCollector-verification
+          path: dist/${{ steps.version.outputs.version }}/verification/*
+          if-no-files-found: ignore
+          retention-days: 14
+
+  publish:
+    if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
+    needs: build
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: SteamCardCollector-${{ needs.build.outputs.version }}-packages
+          path: release-assets
+
+      - name: Attach tested packages to the existing GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.build.outputs.release_tag }}
+          APP_VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $assets = @(
+            "release-assets/SteamCardCollector-$env:APP_VERSION-win-x64.zip",
+            "release-assets/SteamCardCollector-$env:APP_VERSION-source.zip",
+            'release-assets/SHA256SUMS.txt'
+          )
+          foreach ($asset in $assets) {
+            if (!(Test-Path -LiteralPath $asset -PathType Leaf)) { throw "Missing release asset: $asset" }
+          }
+          gh release view $env:RELEASE_TAG --repo $env:GH_REPO
+          if ($LASTEXITCODE -ne 0) { throw 'Publish the GitHub Release first, then run this workflow again.' }
+          gh release upload $env:RELEASE_TAG @assets --repo $env:GH_REPO --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Release asset upload failed.' }
