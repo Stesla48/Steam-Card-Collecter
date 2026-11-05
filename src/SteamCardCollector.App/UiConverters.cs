@@ -1,3 +1,4 @@
+using SteamCardCollector.Core;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -67,8 +68,8 @@ public sealed class FarmBadgeConverter : IMultiValueConverter
         var badge = Badge(values);
         return (parameter as string) switch
         {
-            "bg" => badge == "OYNANIYOR" ? Active : Row,
-            "border" => badge == "OYNANIYOR" ? Cyan : Transparent,
+            "bg" => badge == Strings.Playing ? Active : Row,
+            "border" => badge == Strings.Playing ? Cyan : Transparent,
             _ => badge
         };
     }
@@ -77,7 +78,7 @@ public sealed class FarmBadgeConverter : IMultiValueConverter
     {
         if (values is not { Length: >= 3 } || values[0] is not uint appId || values[2] is not true)
             return "";
-        return values[1] is uint current && current == appId ? "OYNANIYOR" : "SIRADA";
+        return values[1] is uint current && current == appId ? Strings.Playing : Strings.Queued;
     }
 
     public object[] ConvertBack(object? value, Type[] targetTypes, object? parameter, CultureInfo culture) =>

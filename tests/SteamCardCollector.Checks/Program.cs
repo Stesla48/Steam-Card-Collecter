@@ -145,9 +145,9 @@ var none = DropEvents.Find(new Dictionary<uint, TrackedDrop>(), new[] { new Card
 Check(none.Count == 0, "The first drop snapshot is not announced as a drop.");
 var one = DropEvents.Find(new Dictionary<uint, TrackedDrop> { [10] = new("Hades", 4) }, new[] { new CardGame(10, "Hades", 3) });
 var oneText = DropEvents.Format(one);
-Check(one.Count == 1 && oneText.Contains("Kart düştü") && oneText.Contains("Hades") && oneText.Contains("3 hak kaldı"), "A decreased drop count is announced with the game name.");
-var done = DropEvents.Format(DropEvents.Find(new Dictionary<uint, TrackedDrop> { [10] = new("Hades", 1) }, Array.Empty<CardGame>()));
-Check(done.Contains("Kart düştü") && done.Contains("kart hakkı bitti"), "The last card drop says the game is finished.");
+Check(one.Count == 1 && one[0].Count == 1 && one[0].Remaining == 3 && oneText.Contains("Hades") && oneText.Contains('3'), "A decreased drop count is announced with the game name.");
+var finished = DropEvents.Find(new Dictionary<uint, TrackedDrop> { [10] = new("Hades", 1) }, Array.Empty<CardGame>());
+Check(finished.Count == 1 && finished[0].Remaining == 0 && DropEvents.Format(finished).Contains("Hades"), "The last card drop records that the game is finished.");
 const string profile = "<profile><steamID64>76561198000000000</steamID64><steamID><![CDATA[Selim]]></steamID><avatarMedium><![CDATA[https://avatars.steamstatic.com/abc_medium.jpg]]></avatarMedium></profile>";
 Check(SteamWeb.TryReadProfile(profile, steamId, out var persona, out var avatar) && persona == "Selim" && avatar!.Host == "avatars.steamstatic.com", "Profile XML yields the nickname and avatar host.");
 Check(!SteamWeb.TryReadProfile(profile, steamId + 1, out _, out _), "Another account's profile XML is ignored.");

@@ -27,7 +27,7 @@ public sealed class CardFarmer(ISteamSession session, TimeSpan? pollingInterval 
     public async Task RunAsync(IProgress<FarmingStatus>? progress, CancellationToken cancellationToken)
     {
         if (Interlocked.Exchange(ref running, 1) != 0)
-            throw new InvalidOperationException("Kart toplama zaten çalışıyor.");
+            throw new InvalidOperationException(Strings.CollectionIsAlreadyRunning);
         uint? current = null;
         try
         {
@@ -40,8 +40,8 @@ public sealed class CardFarmer(ISteamSession session, TimeSpan? pollingInterval 
                 if (next is null)
                 {
                     if (session.UnresolvedAppIds.Count > 0)
-                        throw new InvalidDataException($"Doğrulanmış kuyruk bitti; {session.UnresolvedAppIds.Count} oyunun kart hakkı okunamadı. Tüm kartlar tamamlandı olarak işaretlenmedi. Yenile ile tekrar kontrol edin.");
-                    progress?.Report(new("Kart düşürme hakkı kalan oyun yok.", null, 0, games));
+                        throw new InvalidDataException(string.Format(Strings.UnresolvedQueueSummary, session.UnresolvedAppIds.Count));
+                    progress?.Report(new(Strings.NoGamesHaveCardDropsRemaining, null, 0, games));
                     return;
                 }
                 if (current != next.AppId)
@@ -49,7 +49,7 @@ public sealed class CardFarmer(ISteamSession session, TimeSpan? pollingInterval 
                     await session.SetPlayingAsync(next.AppId, cancellationToken);
                     current = next.AppId;
                 }
-                progress?.Report(new("Kart düşürmesi bekleniyor.", next, games.Sum(game => game.RemainingDrops), games));
+                progress?.Report(new(Strings.WaitingForACardDrop, next, games.Sum(game => game.RemainingDrops), games));
                 await Task.Delay(interval, cancellationToken);
             }
         }

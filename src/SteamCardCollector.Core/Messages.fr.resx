@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="SteamDisconnectedSignInAgain" xml:space="preserve"><value>Steam s’est déconnecté. Reconnectez-vous.</value></data>
+  <data name="SteamSignedOutSignInAgain" xml:space="preserve"><value>La session Steam a été fermée. Reconnectez-vous.</value></data>
+  <data name="ThisSessionHasAlreadyStarted" xml:space="preserve"><value>Cette session est déjà ouverte.</value></data>
+  <data name="SteamStoppedRespondingSignInAgain" xml:space="preserve"><value>Steam ne répond plus. Reconnectez-vous.</value></data>
+  <data name="SteamSigninFailed" xml:space="preserve"><value>Échec de la connexion à Steam : {0}</value></data>
+  <data name="CouldNotReadTheSteamAccountId" xml:space="preserve"><value>Impossible de lire l’identifiant du compte Steam.</value></data>
+  <data name="CouldNotReadTheSteamLibrary" xml:space="preserve"><value>Impossible de lire la bibliothèque Steam : {0}</value></data>
+  <data name="CouldNotOpenTheSteamBadgesPage" xml:space="preserve"><value>Impossible d’ouvrir la page des badges Steam. Reconnectez-vous.</value></data>
+  <data name="SteamIsDisconnectedSignInAgain" xml:space="preserve"><value>Steam est déconnecté. Reconnectez-vous.</value></data>
+  <data name="InvalidNativeLibrary" xml:space="preserve"><value>Échec de la vérification de la DLL Steam. Extrayez à nouveau tout le paquet Windows.</value></data>
+  <data name="InvalidLocalSteamRequest" xml:space="preserve"><value>Requête Steam locale non valide.</value></data>
+  <data name="AnotherCollectorIsAlreadyRunning" xml:space="preserve"><value>Un autre collecteur est déjà en cours d’exécution.</value></data>
+  <data name="WorkerSessionMismatch" xml:space="preserve"><value>Les comptes Steam diffèrent ou le client local a redémarré.</value></data>
+  <data name="LocalConnectionFailed" xml:space="preserve"><value>Connexion au client Steam impossible. Connectez le compte qui possède ce jeu.</value></data>
+  <data name="WorkerSessionLost" xml:space="preserve"><value>Le compte local a changé ou s’est déconnecté. Collecte arrêtée.</value></data>
+  <data name="GameOwnershipUnverified" xml:space="preserve"><value>Steam n’a pas pu vérifier que vous possédez ce jeu.</value></data>
+  <data name="LocalSteamConnectionVerified" xml:space="preserve"><value>Connexion au client Steam vérifiée.</value></data>
+  <data name="NativeComponentStartupFailed" xml:space="preserve"><value>Impossible de démarrer le composant Steam ({0}). Extrayez tout le paquet Windows.</value></data>
+  <data name="TheLocalAndWebSteamAccountsDiffer" xml:space="preserve"><value>Les comptes Steam local et web diffèrent.</value></data>
+  <data name="InvalidGameId" xml:space="preserve"><value>Identifiant de jeu non valide.</value></data>
+  <data name="CouldNotLocateTheApplicationExecutable" xml:space="preserve"><value>Impossible de trouver l’exécutable de l’application.</value></data>
+  <data name="CouldNotStartTheLocalSteamProcess" xml:space="preserve"><value>Impossible de démarrer le processus Steam local.</value></data>
+  <data name="WorkerHandshakeFailed" xml:space="preserve"><value>Le processus Steam local n’a pas confirmé la connexion.</value></data>
+  <data name="TheLocalSteamSessionChanged" xml:space="preserve"><value>La session Steam locale a changé.</value></data>
+  <data name="TheLocalSteamProcessClosedCollectionStopped" xml:space="preserve"><value>Le processus Steam local s’est fermé. Collecte arrêtée.</value></data>
+  <data name="SessionChangedReconnect" xml:space="preserve"><value>La session Steam locale a changé. Reconnectez-vous.</value></data>
+  <data name="LocalSignInRequired" xml:space="preserve"><value>Ouvrez Steam sur ce PC et connectez-vous en ligne.</value></data>
+  <data name="TheLocalSteamClientIsOffline" xml:space="preserve"><value>Le client Steam local est hors ligne.</value></data>
+  <data name="LocalClientClosed" xml:space="preserve"><value>Le client Steam local s’est fermé. Rouvrez Steam.</value></data>
+  <data name="AccountMismatchDetails" xml:space="preserve"><value>Comptes différents. Steam local : {0} · Web : {1}. Utilisez le même compte.</value></data>
+  <data name="CardEligibilityIsUnverifiedSelectRefreshFirst" xml:space="preserve"><value>Les cartes disponibles n’ont pas été vérifiées. Sélectionnez Actualiser.</value></data>
+  <data name="CouldNotVerifyTheSteamWebSession" xml:space="preserve"><value>Impossible de vérifier la session web Steam. Reconnectez-vous.</value></data>
+  <data name="BadgePageUnreadable" xml:space="preserve"><value>Impossible de lire la page des badges. Collecte arrêtée.</value></data>
+  <data name="UnexpectedNumberOfBadgePages" xml:space="preserve"><value>Nombre inattendu de pages de badges.</value></data>
+  <data name="CollectionIsAlreadyRunning" xml:space="preserve"><value>La collecte est déjà en cours.</value></data>
+  <data name="UnresolvedQueueSummary" xml:space="preserve"><value>La file vérifiée est vide. Le nombre de cartes est inconnu pour {0} jeux. Sélectionnez Actualiser.</value></data>
+  <data name="NoGamesHaveCardDropsRemaining" xml:space="preserve"><value>Aucun jeu avec des cartes restantes.</value></data>
+  <data name="WaitingForACardDrop" xml:space="preserve"><value>En attente d’une carte.</value></data>
+  <data name="DeviceCodeRejected" xml:space="preserve"><value>Code refusé. Saisissez le code Steam Guard actuel.</value></data>
+  <data name="DeviceApprovalPrompt" xml:space="preserve"><value>Saisissez le code de l’application Steam ou approuvez la demande sur votre téléphone.</value></data>
+  <data name="EmailCodeRejected" xml:space="preserve"><value>Code refusé. Saisissez le dernier code reçu par e-mail.</value></data>
+  <data name="EmailCodePrompt" xml:space="preserve"><value>Saisissez le code Steam Guard envoyé à {0}.</value></data>
+  <data name="SteamGuardSigninCanceled" xml:space="preserve"><value>Connexion Steam Guard annulée.</value></data>
+  <data name="Playing" xml:space="preserve"><value>EN JEU</value></data>
+  <data name="Queued" xml:space="preserve"><value>EN ATTENTE</value></data>
+  <data name="EnterYourSteamAccountNameAndPassword" xml:space="preserve"><value>Saisissez votre nom de compte et votre mot de passe Steam.</value></data>
+  <data name="SteamDisconnected" xml:space="preserve"><value>Steam déconnecté</value></data>
+  <data name="ConnectingToSteam" xml:space="preserve"><value>Connexion à Steam…</value></data>
+  <data name="SigninCanceledOrTimedOut" xml:space="preserve"><value>Connexion annulée ou délai dépassé.</value></data>
+  <data name="WebAccountDisconnected" xml:space="preserve"><value>Compte web : déconnecté</value></data>
+  <data name="CheckingRemainingCardDrops" xml:space="preserve"><value>Vérification des cartes restantes…</value></data>
+  <data name="ReadyToStart" xml:space="preserve"><value>Prêt. Sélectionnez Démarrer pour collecter via le client Steam.</value></data>
+  <data name="MatchAccountsToCollect" xml:space="preserve"><value>Nombre de cartes chargé. Utilisez le même compte dans les deux sessions pour collecter.</value></data>
+  <data name="NoVerifiedEligibleGames" xml:space="preserve"><value>Aucun jeu admissible vérifié. Le nombre de cartes de certains jeux est inconnu.</value></data>
+  <data name="CardQueryTimedOut" xml:space="preserve"><value>Délai dépassé. Votre bibliothèque reste disponible. Sélectionnez Actualiser.</value></data>
+  <data name="CardCountsAreUnverified" xml:space="preserve"><value>Nombre de cartes non vérifié.</value></data>
+  <data name="CardCountsOutOfDate" xml:space="preserve"><value>Nombre de cartes périmé. Sélectionnez Actualiser.</value></data>
+  <data name="GamesEligibleRemainingDrops" xml:space="preserve"><value>{0} jeux · {1} admissibles · {2} cartes restantes</value></data>
+  <data name="UnknownGamesAppId" xml:space="preserve"><value> · Inconnu : {0} jeux (App ID : {1})</value></data>
+  <data name="MatchingIdsRequired" xml:space="preserve"><value>La collecte exige des identifiants Steam local et web identiques.</value></data>
+  <data name="CollectionStopped" xml:space="preserve"><value>Collecte arrêtée.</value></data>
+  <data name="LocalSteamConnected" xml:space="preserve"><value>Steam local connecté</value></data>
+  <data name="SignInToTheSameWebAccount" xml:space="preserve"><value>Connectez le même compte web pour vérifier les cartes disponibles.</value></data>
+  <data name="PresenceAccountVerified" xml:space="preserve"><value>Les comptes correspondent. Le client Steam affichera le jeu en cours.</value></data>
+  <data name="ReconnectWithMatchingAccount" xml:space="preserve"><value>Les comptes diffèrent. Reconnectez-vous avec le même compte pour collecter.</value></data>
+  <data name="NoSessionFound" xml:space="preserve"><value>Aucune session trouvée</value></data>
+  <data name="LocalSteamOffline" xml:space="preserve"><value>Steam local hors ligne</value></data>
+  <data name="LocalSteamRequired" xml:space="preserve"><value>Pour collecter, ouvrez Steam et connectez-vous sous cet utilisateur Windows.</value></data>
+  <data name="ReadyToCollect" xml:space="preserve"><value>Prêt pour la collecte</value></data>
+  <data name="AccountsDiffer" xml:space="preserve"><value>Comptes différents</value></data>
+  <data name="Session" xml:space="preserve"><value>Session</value></data>
+  <data name="AccountsMatch" xml:space="preserve"><value>Comptes identiques</value></data>
+  <data name="Offline" xml:space="preserve"><value>hors ligne</value></data>
+  <data name="Online" xml:space="preserve"><value>en ligne</value></data>
+  <data name="Connected" xml:space="preserve"><value>connecté</value></data>
+  <data name="CheckCredentialsAndGuard" xml:space="preserve"><value>Échec de connexion. Vérifiez vos identifiants et la confirmation Steam Guard.</value></data>
+  <data name="CheckInternetConnection" xml:space="preserve"><value>Échec de la connexion web à Steam. Vérifiez votre connexion Internet et réessayez.</value></data>
+  <data name="CouldNotReadCardCounts" xml:space="preserve"><value>Impossible de lire le nombre de cartes : </value></data>
+  <data name="OperationFailed" xml:space="preserve"><value>Échec de l’opération ({0}).</value></data>
+  <data name="Minimize" xml:space="preserve"><value>Réduire</value></data>
+  <data name="Maximize" xml:space="preserve"><value>Agrandir</value></data>
+  <data name="Close" xml:space="preserve"><value>Fermer</value></data>
+  <data name="CollectYour" xml:space="preserve"><value>Collectionnez vos</value></data>
+  <data name="TradingCards" xml:space="preserve"><value>cartes à échanger.</value></data>
+  <data name="LoginIntro" xml:space="preserve"><value>Connectez-vous pour consulter votre bibliothèque et les cartes restantes. Le client Steam de ce PC affiche le jeu en cours.</value></data>
+  <data name="CredentialsInMemory" xml:space="preserve"><value>Votre mot de passe et vos jetons de session restent en mémoire.</value></data>
+  <data name="AccountMatchRule" xml:space="preserve"><value>La collecte commence uniquement si les identifiants Steam local et web correspondent.</value></data>
+  <data name="AnIndependentCardCollectorForSteamAccounts" xml:space="preserve"><value>Un collecteur de cartes indépendant pour les comptes Steam.</value></data>
+  <data name="LocalSteam" xml:space="preserve"><value>Steam local</value></data>
+  <data name="CheckingLocalSteam" xml:space="preserve"><value>Vérification du client Steam…</value></data>
+  <data name="BackToDashboard" xml:space="preserve"><value>← Tableau de bord</value></data>
+  <data name="SignInToSteam" xml:space="preserve"><value>Connexion à Steam</value></data>
+  <data name="SignInInstructions" xml:space="preserve"><value>Utilisez le même compte que dans le client Steam. Si demandé, saisissez le code Steam Guard ou approuvez la demande sur votre téléphone.</value></data>
+  <data name="SteamAccountName" xml:space="preserve"><value>NOM DU COMPTE STEAM</value></data>
+  <data name="Password" xml:space="preserve"><value>MOT DE PASSE</value></data>
+  <data name="StartAutomaticallyWhenAccountsMatch" xml:space="preserve"><value>DÉMARRER SI LES COMPTES CORRESPONDENT</value></data>
+  <data name="SignIn" xml:space="preserve"><value>SE CONNECTER</value></data>
+  <data name="LocalClientPrivilegesHint" xml:space="preserve"><value>Gardez Steam en ligne sous cet utilisateur Windows. Lancez les deux applications avec les mêmes privilèges.</value></data>
+  <data name="EligibleGames" xml:space="preserve"><value>Jeux admissibles</value></data>
+  <data name="AllGames" xml:space="preserve"><value>Tous les jeux</value></data>
+  <data name="ActivityLog" xml:space="preserve"><value>Journal d’activité</value></data>
+  <data name="SwitchAccount" xml:space="preserve"><value>Changer de compte</value></data>
+  <data name="SessionLabel" xml:space="preserve"><value>SESSION</value></data>
+  <data name="LocalSteamId" xml:space="preserve"><value>ID Steam local : —</value></data>
+  <data name="LibraryGames" xml:space="preserve"><value>jeux en bibliothèque</value></data>
+  <data name="EligibleGamesLabel" xml:space="preserve"><value>jeux admissibles</value></data>
+  <data name="RemainingDrops" xml:space="preserve"><value>cartes restantes</value></data>
+  <data name="Refresh" xml:space="preserve"><value>ACTUALISER</value></data>
+  <data name="Start" xml:space="preserve"><value>DÉMARRER</value></data>
+  <data name="Stop" xml:space="preserve"><value>ARRÊTER</value></data>
+  <data name="NoGamesWithDropsRemaining" xml:space="preserve"><value>Aucun jeu avec des cartes restantes.</value></data>
+  <data name="YourLibraryIsEmpty" xml:space="preserve"><value>Votre bibliothèque est vide.</value></data>
+  <data name="NoActivityYet" xml:space="preserve"><value>Aucune activité pour le moment.</value></data>
+  <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>Votre mot de passe reste en mémoire.</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>Un jeu à la fois · vérification toutes les 3 minutes</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="VerificationCode" xml:space="preserve"><value>Code de vérification</value></data>
+  <data name="Confirm" xml:space="preserve"><value>CONFIRMER</value></data>
+  <data name="LocalSteamSession" xml:space="preserve"><value>SESSION STEAM LOCALE</value></data>
+  <data name="LocalSteamIdLabel" xml:space="preserve"><value>ID Steam local : {0}</value></data>
+  <data name="LocalSteamIdNoSession" xml:space="preserve"><value>ID Steam local : aucune session</value></data>
+  <data name="RefreshRetryHint" xml:space="preserve"><value> Votre bibliothèque reste disponible. Sélectionnez Actualiser.</value></data>
+  <data name="WindowsIsRequired" xml:space="preserve"><value>Windows est requis.</value></data>
+  <data name="WindowsX64Required" xml:space="preserve"><value>Windows 64 bits est requis.</value></data>
+  <data name="Game" xml:space="preserve"><value>Jeu {0}</value></data>
+  <data name="DropsLeft" xml:space="preserve"><value>{0} cartes restantes</value></data>
+  <data name="Settings" xml:space="preserve"><value>Paramètres</value></data>
+  <data name="Language" xml:space="preserve"><value>Langue</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>La langue changera à la prochaine ouverture de l’application.</value></data>
+  <data name="Guides" xml:space="preserve"><value>Guides</value></data>
+  <data name="LoginGuide" xml:space="preserve"><value>Guide de connexion</value></data>
+  <data name="DashboardGuide" xml:space="preserve"><value>Guide de collecte</value></data>
+  <data name="Save" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="Back" xml:space="preserve"><value>Retour</value></data>
+  <data name="Next" xml:space="preserve"><value>Suivant</value></data>
+  <data name="Done" xml:space="preserve"><value>Terminer</value></data>
+  <data name="Skip" xml:space="preserve"><value>Passer le guide</value></data>
+  <data name="LoginSteamTitle" xml:space="preserve"><value>Ouvrez Steam sur votre PC</value></data>
+  <data name="LoginSteamBody" xml:space="preserve"><value>Connectez-vous à Steam sur ce PC et passez en ligne. Vérifiez votre ID dans le panneau Steam local.</value></data>
+  <data name="LoginWebTitle" xml:space="preserve"><value>Utilisez le même compte Steam</value></data>
+  <data name="LoginWebBody" xml:space="preserve"><value>Saisissez votre nom de compte et votre mot de passe Steam, puis sélectionnez Se connecter. L’application pourra lire votre bibliothèque et vos pages de badges.</value></data>
+  <data name="LoginGuardTitle" xml:space="preserve"><value>Validez Steam Guard</value></data>
+  <data name="LoginGuardBody" xml:space="preserve"><value>Si Steam le demande, approuvez la connexion sur votre téléphone ou saisissez le code. Vérifiez ensuite que les identifiants local et web correspondent.</value></data>
+  <data name="DashGamesTitle" xml:space="preserve"><value>Consultez les jeux admissibles</value></data>
+  <data name="DashGamesBody" xml:space="preserve"><value>Les jeux admissibles ont des cartes disponibles confirmées. Sélectionnez Actualiser pour vérifier à nouveau. Un jeu au nombre de cartes inconnu laisse les autres avancer.</value></data>
+  <data name="DashStartTitle" xml:space="preserve"><value>Démarrez la collecte</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>Lorsque les identifiants correspondent et qu’un jeu est admissible, sélectionnez Démarrer. Gardez Steam en ligne pendant que les jeux passent un par un.</value></data>
+  <data name="DashLogTitle" xml:space="preserve"><value>Suivez la progression</value></data>
+  <data name="DashLogBody" xml:space="preserve"><value>Ouvrez le journal d’activité pour suivre la collecte. Sélectionnez Arrêter pour terminer. Les deux guides sont accessibles dans les paramètres.</value></data>
+  <data name="SaveFailed" xml:space="preserve"><value>Impossible d’enregistrer vos préférences. Vérifiez les droits d’écriture du dossier local des données d’application.</value></data>
+  <data name="BadgePageTooLarge" xml:space="preserve"><value>La page des badges Steam dépasse la taille maximale.</value></data>
+
+  <data name="BeforeYouSignIn" xml:space="preserve"><value>AVANT LA CONNEXION</value></data>
+  <data name="SignInRiskNotice" xml:space="preserve"><value>Cette application n'est pas un logiciel officiel de Valve. Avec un mot de passe, vous saisissez votre mot de passe Steam dans une application tierce. Un processus du même utilisateur Windows peut le lire tant qu'il est en mémoire. L'application et son auteur déclinent toute responsabilité en cas de vol de compte, de perte ou de sanction Steam.</value></data>
+  <data name="ContinuingAcceptsThisRisk" xml:space="preserve"><value>En continuant, j'accepte ce risque.</value></data>
+  <data name="SignInWithQr" xml:space="preserve"><value>Se connecter avec un code QR</value></data>
+  <data name="QrSignInTitle" xml:space="preserve"><value>Connexion par QR</value></data>
+  <data name="QrRiskShort" xml:space="preserve"><value>Cette application n'est pas un logiciel officiel de Valve. La connexion par QR reste une session tierce. En continuant, j'accepte ce risque.</value></data>
+  <data name="QrInstructions" xml:space="preserve"><value>Ouvrez l'application mobile Steam et scannez ce code. Confirmez sur le téléphone. Ce mode n'utilise pas le mot de passe.</value></data>
+  <data name="QrPreparing" xml:space="preserve"><value>Préparation du code QR. Scannez-le avec l'application Steam.</value></data>
+  <data name="QrReady" xml:space="preserve"><value>Code QR prêt. Scannez-le avec l'application Steam.</value></data>
+  <data name="QrCanceled" xml:space="preserve"><value>Connexion par QR annulée.</value></data>
+  <data name="QrUnavailable" xml:space="preserve"><value>Impossible d'obtenir le code QR. Utilisez le mot de passe.</value></data>
+  <data name="QrDrawFailed" xml:space="preserve"><value>Impossible d'afficher le code QR. Utilisez le mot de passe.</value></data>
+  <data name="UsePasswordSignIn" xml:space="preserve"><value>Se connecter avec un mot de passe</value></data>
+  <data name="SelectAtLeastOneGame" xml:space="preserve"><value>Sélectionnez au moins un jeu à collecter.</value></data>
+  <data name="FarmThisGame" xml:space="preserve"><value>Collecter ce jeu</value></data>
+  <data name="CardDroppedTitle" xml:space="preserve"><value>CARTE OBTENUE</value></data>
+  <data name="CardDroppedOne" xml:space="preserve"><value>Carte obtenue : {0}. Il en reste {1}.</value></data>
+  <data name="CardDroppedSeveralForGame" xml:space="preserve"><value>{1} cartes obtenues pour {0}. Il en reste {2}.</value></data>
+  <data name="CardDroppedFinished" xml:space="preserve"><value>Carte obtenue : {0}. Ce jeu n'a plus de cartes à obtenir.</value></data>
+  <data name="CardDroppedSummary" xml:space="preserve"><value>{0} cartes obtenues : {1}.</value></data>
+  <data name="CouldNotOpenSteamProfile" xml:space="preserve"><value>Impossible d'ouvrir le profil Steam.</value></data>
+  <data name="WebSteamId" xml:space="preserve"><value>ID Steam web : {0}</value></data>
+</root>

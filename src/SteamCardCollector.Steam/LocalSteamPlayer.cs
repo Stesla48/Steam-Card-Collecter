@@ -1,3 +1,4 @@
+using SteamCardCollector.Core;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
@@ -27,14 +28,14 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
             await StopCoreAsync();
             var identity = ReadIdentity();
             if (expectedSteamId == 0 || identity.SteamId != expectedSteamId)
-                throw new InvalidOperationException("Yerel Steam hesabı ile web hesabı eşleşmiyor.");
-            if (appId == 0) throw new InvalidOperationException("Geçersiz oyun kimliği.");
+                throw new InvalidOperationException(Strings.TheLocalAndWebSteamAccountsDiffer);
+            if (appId == 0) throw new InvalidOperationException(Strings.InvalidGameId);
 
             // A private working directory avoids overwriting a shared steam_appid.txt.
             workDirectory = Path.Combine(Path.GetTempPath(), "SteamCardCollector-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(workDirectory);
             await File.WriteAllTextAsync(Path.Combine(workDirectory, "steam_appid.txt"), appId.ToString(CultureInfo.InvariantCulture), cancellationToken);
-            var info = new ProcessStartInfo(Environment.ProcessPath ?? throw new InvalidOperationException("Uygulama yolu bulunamadı."))
+            var info = new ProcessStartInfo(Environment.ProcessPath ?? throw new InvalidOperationException(Strings.CouldNotLocateTheApplicationExecutable))
             {
                 UseShellExecute = false, CreateNoWindow = true, WorkingDirectory = workDirectory,
                 RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true
@@ -45,9 +46,10 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
             info.ArgumentList.Add(appId.ToString(CultureInfo.InvariantCulture));
             info.ArgumentList.Add(expectedSteamId.ToString(CultureInfo.InvariantCulture));
             info.ArgumentList.Add(identity.ProcessId.ToString(CultureInfo.InvariantCulture));
+            info.Environment["SCC_LANGUAGE"] = CultureInfo.CurrentUICulture.Name;
             info.Environment["SteamAppId"] = appId.ToString(CultureInfo.InvariantCulture);
             info.Environment["SteamGameId"] = appId.ToString(CultureInfo.InvariantCulture);
-            worker = Process.Start(info) ?? throw new IOException("Yerel Steam süreci başlatılamadı.");
+            worker = Process.Start(info) ?? throw new IOException(Strings.CouldNotStartTheLocalSteamProcess);
             var stderr = DrainAsync(worker.StandardError);
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(TimeSpan.FromSeconds(20));
@@ -55,8 +57,8 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
             var line = await worker.StandardOutput.ReadLineAsync(timeout.Token);
             var reply = ReadReply(line);
             if (reply is null || !reply.Ready || reply.AppId != appId || reply.SteamId != expectedSteamId)
-                throw new InvalidOperationException(reply?.Message ?? "Yerel Steam süreci bağlantıyı doğrulamadı.");
-            if (ReadIdentity() != identity) throw new InvalidOperationException("Yerel Steam oturumu değişti.");
+                throw new InvalidOperationException(reply?.Message ?? Strings.WorkerHandshakeFailed);
+            if (ReadIdentity() != identity) throw new InvalidOperationException(Strings.TheLocalSteamSessionChanged);
             var remainingOutput = ReadTailAsync(worker.StandardOutput, MaxWorkerReplyChars);
             monitorCancellation = new();
             monitor = MonitorAsync(worker, identity, remainingOutput, stderr, monitorCancellation.Token);
@@ -76,9 +78,9 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
                 if (process.HasExited)
                 {
                     var reply = ReadReply(await output);
-                    throw new IOException(reply?.Message ?? "Yerel Steam oyun süreci kapandı. Toplama durduruldu.");
+                    throw new IOException(reply?.Message ?? Strings.TheLocalSteamProcessClosedCollectionStopped);
                 }
-                if (ReadIdentity() != identity) throw new IOException("Yerel Steam oturumu değişti. Yeniden bağlanın.");
+                if (ReadIdentity() != identity) throw new IOException(Strings.SessionChangedReconnect);
                 await process.StandardInput.WriteLineAsync("ping".AsMemory(), token);
                 await process.StandardInput.FlushAsync(token);
             }

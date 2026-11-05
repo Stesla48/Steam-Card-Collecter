@@ -50,14 +50,14 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         http.DefaultRequestHeaders.UserAgent.ParseAdd("SteamCardCollector/0.1");
         subscriptions.Add(callbacks.Subscribe<SteamClient.ConnectedCallback>(_ => connected.TrySetResult()));
         subscriptions.Add(callbacks.Subscribe<SteamUser.LoggedOnCallback>(c => loggedOn.TrySetResult(c)));
-        subscriptions.Add(callbacks.Subscribe<SteamClient.DisconnectedCallback>(_ => Fail("Steam bağlantısı kesildi. Yeniden bağlanın.")));
-        subscriptions.Add(callbacks.Subscribe<SteamUser.LoggedOffCallback>(_ => Fail("Steam oturumu kapandı. Yeniden bağlanın.")));
+        subscriptions.Add(callbacks.Subscribe<SteamClient.DisconnectedCallback>(_ => Fail(Strings.SteamDisconnectedSignInAgain)));
+        subscriptions.Add(callbacks.Subscribe<SteamUser.LoggedOffCallback>(_ => Fail(Strings.SteamSignedOutSignInAgain)));
     }
 
     public async Task LoginAsync(string username, string? password, IAuthenticator authenticator, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrEmpty(password))
-            throw new InvalidOperationException("Steam kullanıcı adı ve şifreni gir.");
+            throw new InvalidOperationException(Strings.EnterYourSteamAccountNameAndPassword);
         using var timeout = await BeginConnectionAsync(cancellationToken);
         var token = timeout.Token;
         var details = new AuthSessionDetails
@@ -99,7 +99,7 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
 
     private async Task<CancellationTokenSource> BeginConnectionAsync(CancellationToken cancellationToken)
     {
-        if (callbackTask is not null) throw new InvalidOperationException("Bu oturum zaten başlatıldı.");
+        if (callbackTask is not null) throw new InvalidOperationException(Strings.ThisSessionHasAlreadyStarted);
         var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, lifetime.Token);
         try
         {
@@ -107,7 +107,7 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
             callbackTask = Task.Run(() =>
             {
                 try { while (!lifetime.IsCancellationRequested) callbacks.RunWaitCallbacks(TimeSpan.FromMilliseconds(100)); }
-                catch (Exception) { Fail("Steam iletişimi durdu. Yeniden bağlanın."); }
+                catch (Exception) { Fail(Strings.SteamStoppedRespondingSignInAgain); }
             });
             client.Connect();
             await connected.Task.WaitAsync(timeout.Token);
@@ -126,8 +126,8 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         AccountName = result.AccountName;
         user.LogOn(new SteamUser.LogOnDetails { Username = result.AccountName, AccessToken = result.RefreshToken, ShouldRememberPassword = false });
         var logged = await loggedOn.Task.WaitAsync(token);
-        if (logged.Result != EResult.OK) throw new InvalidOperationException($"Steam girişi başarısız: {logged.Result}");
-        SteamId = (logged.ClientSteamID ?? throw new IOException("Steam hesap kimliği alınamadı.")).ConvertToUInt64();
+        if (logged.Result != EResult.OK) throw new InvalidOperationException(string.Format(Strings.SteamSigninFailed, logged.Result));
+        SteamId = (logged.ClientSteamID ?? throw new IOException(Strings.CouldNotReadTheSteamAccountId)).ConvertToUInt64();
         authenticated = true;
         UpdateCookie(result.AccessToken);
         await LoadLibraryAsync(token);
@@ -144,8 +144,8 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         {
             steamid = SteamId, include_appinfo = true, include_played_free_games = true
         }).ToTask().WaitAsync(token);
-        if (response.Result != EResult.OK) throw new IOException($"Steam oyun listesi okunamadı: {response.Result}");
-        Library = response.Body.games.Select(g => new OwnedGame(checked((uint)g.appid), string.IsNullOrWhiteSpace(g.name) ? $"Oyun {g.appid}" : g.name))
+        if (response.Result != EResult.OK) throw new IOException(string.Format(Strings.CouldNotReadTheSteamLibrary, response.Result));
+        Library = response.Body.games.Select(g => new OwnedGame(checked((uint)g.appid), string.IsNullOrWhiteSpace(g.name) ? string.Format(Strings.Game, g.appid) : g.name))
             .OrderBy(g => g.Name, StringComparer.CurrentCultureIgnoreCase).ToArray();
         EnsureConnected();
     }
@@ -197,22 +197,22 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         var current = start;
         for (var hop = 0; hop < 4; hop++)
         {
-            if (!allowed(current)) throw new IOException("Steam profiline erişilemedi.");
+            if (!allowed(current)) throw new IOException(Strings.CouldNotOpenSteamProfile);
             using var request = new HttpRequestMessage(HttpMethod.Get, current);
             using var response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if ((int)response.StatusCode is >= 300 and < 400)
             {
-                var next = response.Headers.Location ?? throw new IOException("Steam profiline erişilemedi.");
+                var next = response.Headers.Location ?? throw new IOException(Strings.CouldNotOpenSteamProfile);
                 current = next.IsAbsoluteUri ? next : new Uri(current, next);
                 continue;
             }
             response.EnsureSuccessStatusCode();
             if (!allowed(response.RequestMessage?.RequestUri ?? current))
-                throw new IOException("Steam profiline erişilemedi.");
+                throw new IOException(Strings.CouldNotOpenSteamProfile);
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             return await SteamWeb.ReadBoundedTextAsync(stream, maxChars, cancellationToken);
         }
-        throw new IOException("Steam profiline erişilemedi.");
+        throw new IOException(Strings.CouldNotOpenSteamProfile);
     }
 
     private async Task<string> GetBadgeHtmlAsync(int page, CancellationToken cancellationToken)
@@ -221,25 +221,25 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         for (var hop = 0; hop < 5; hop++)
         {
             if (!SteamWeb.IsBadgePage(current))
-                throw new IOException("Steam rozet sayfasına erişilemedi; yeniden bağlanın.");
+                throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
             using var request = new HttpRequestMessage(HttpMethod.Get, current);
             using var response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if ((int)response.StatusCode is >= 300 and < 400)
             {
-                var next = response.Headers.Location ?? throw new IOException("Steam rozet sayfasına erişilemedi; yeniden bağlanın.");
+                var next = response.Headers.Location ?? throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
                 current = next.IsAbsoluteUri ? next : new Uri(current, next);
                 continue;
             }
             response.EnsureSuccessStatusCode();
             if (!SteamWeb.IsBadgePage(response.RequestMessage?.RequestUri ?? current))
-                throw new IOException("Steam rozet sayfasına erişilemedi; yeniden bağlanın.");
+                throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
             var length = response.Content.Headers.ContentLength;
             if (length is > SteamWeb.MaxBadgePageChars)
-                throw new InvalidDataException("Steam rozet sayfası beklenenden büyük.");
+                throw new InvalidDataException(Strings.BadgePageTooLarge);
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             return await SteamWeb.ReadBoundedTextAsync(stream, SteamWeb.MaxBadgePageChars, cancellationToken);
         }
-        throw new IOException("Steam rozet sayfasına erişilemedi; yeniden bağlanın.");
+        throw new IOException(Strings.CouldNotOpenTheSteamBadgesPage);
     }
 
     private void UpdateCookie(string accessToken)
@@ -250,7 +250,7 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
 
     private void EnsureConnected()
     {
-        if (!IsConnected) throw new IOException("Steam bağlantısı yok. Yeniden bağlanın.");
+        if (!IsConnected) throw new IOException(Strings.SteamIsDisconnectedSignInAgain);
     }
     private void ClearSecrets()
     {

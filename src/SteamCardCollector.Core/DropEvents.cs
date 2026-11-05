@@ -27,9 +27,11 @@ public static class DropEvents
         if (drops.Count == 1)
         {
             var drop = drops[0];
-            var tail = drop.Remaining > 0 ? $"{drop.Remaining} hak kaldı." : "Bu oyunun kart hakkı bitti.";
-            return drop.Count == 1 ? $"Kart düştü: {drop.Name}. {tail}" : $"{drop.Name} için {drop.Count} kart düştü. {tail}";
+            if (drop.Remaining <= 0) return string.Format(Strings.CardDroppedFinished, drop.Name);
+            return drop.Count == 1
+                ? string.Format(Strings.CardDroppedOne, drop.Name, drop.Remaining)
+                : string.Format(Strings.CardDroppedSeveralForGame, drop.Name, drop.Count, drop.Remaining);
         }
-        return $"{drops.Sum(drop => drop.Count)} kart düştü: {string.Join(", ", drops.Select(drop => drop.Name))}.";
+        return string.Format(Strings.CardDroppedSummary, drops.Sum(drop => drop.Count), string.Join(", ", drops.Select(drop => drop.Name)));
     }
 }

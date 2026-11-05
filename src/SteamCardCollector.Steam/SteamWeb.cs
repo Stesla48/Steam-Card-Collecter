@@ -1,3 +1,4 @@
+using SteamCardCollector.Core;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -86,7 +87,7 @@ public static class SteamWeb
             var read = await reader.ReadAsync(buffer.AsMemory(), cancellationToken);
             if (read == 0) return builder.ToString();
             if (read > maxChars - builder.Length)
-                throw new InvalidDataException("Steam rozet sayfası beklenenden büyük.");
+                throw new InvalidDataException(Strings.BadgePageTooLarge);
             builder.Append(buffer, 0, read);
         }
     }

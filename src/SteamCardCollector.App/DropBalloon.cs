@@ -48,7 +48,7 @@ static class DropBalloon
             hIcon = LoadIcon(IntPtr.Zero, new IntPtr(32516)),
             szTip = "Steam Card Collector",
             szInfo = Trim(text, 240),
-            szInfoTitle = "Kart düştü",
+            szInfoTitle = SteamCardCollector.Core.Strings.CardDroppedTitle,
             dwInfoFlags = NiifInfo
         };
         return data;
