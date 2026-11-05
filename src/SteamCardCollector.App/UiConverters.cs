@@ -29,6 +29,32 @@ public sealed class AppColorConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+public sealed class InverseBoolConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is not true;
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
+}
+
+public sealed class GameSelectedConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not uint id || Application.Current?.MainWindow is not MainWindow window) return false;
+        return window.IsGameSelected(id);
+    }
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
+}
+
+public sealed class GameArtConverter : IMultiValueConverter
+{
+    public object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (values.Length == 0 || values[0] is not uint id || Application.Current?.MainWindow is not MainWindow window) return null!;
+        return window.ArtFor(id)!;
+    }
+    public object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo culture) => throw new NotSupportedException();
+}
+
 public sealed class FarmBadgeConverter : IMultiValueConverter
 {
     private static readonly SolidColorBrush Row = BrushCache.Solid(Color.FromRgb(0x16, 0x20, 0x2D));

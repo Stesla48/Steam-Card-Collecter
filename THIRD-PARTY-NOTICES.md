@@ -7,6 +7,7 @@ ArchiSteamFarm is not bundled or used as an engine.
 | --- | --- | --- | --- |
 | SteamKit2 | 3.4.0 | LGPL-2.1-only | https://github.com/SteamRE/SteamKit/tree/3.4.0 |
 | AngleSharp | 1.5.0 | MIT | https://github.com/AngleSharp/AngleSharp/tree/1.5.0 |
+| QRCoder | 1.6.0 | MIT | https://github.com/codebude/QRCoder/tree/1.6.0 |
 | Steamworks.NET | 20.2.0 | MIT | https://github.com/rlabrecque/Steamworks.NET/releases/tag/20.2.0 |
 | protobuf-net / Core | 3.2.56 | Apache-2.0 | https://github.com/protobuf-net/protobuf-net |
 | ZstdSharp.Port | 0.8.7 | MIT | https://github.com/oleg-st/ZstdSharp |

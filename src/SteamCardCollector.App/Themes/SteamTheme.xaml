@@ -3,6 +3,9 @@
                     xmlns:local="clr-namespace:SteamCardCollector.App">
   <local:AppColorConverter x:Key="AppColor"/>
   <local:FarmBadgeConverter x:Key="FarmBadge"/>
+  <local:InverseBoolConverter x:Key="InverseBool"/>
+  <local:GameSelectedConverter x:Key="GameSelected"/>
+  <local:GameArtConverter x:Key="GameArt"/>
 
   <SolidColorBrush x:Key="SteamBg" Color="#1B2838"/>
   <SolidColorBrush x:Key="SteamBgDeep" Color="#171D25"/>

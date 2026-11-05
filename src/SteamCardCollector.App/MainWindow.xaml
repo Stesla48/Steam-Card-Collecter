@@ -110,22 +110,47 @@
           </Border>
         </Grid>
 
-        <Grid x:Name="LoginForm" Grid.Column="1" Background="#1B2838">
-          <StackPanel Margin="48,42,48,28" VerticalAlignment="Center" MaxWidth="520" HorizontalAlignment="Stretch">
+        <ScrollViewer x:Name="LoginForm" Grid.Column="1" Background="#1B2838" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Margin="48,32,48,24" MaxWidth="520">
             <Button x:Name="ReturnButton" Content="← Panele dön" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Margin="0,0,0,16" Visibility="Collapsed" Click="ReturnToDashboard_Click"/>
-            <TextBlock Text="Web hesabına bağlan" FontSize="26" FontWeight="SemiBold"/>
-            <TextBlock x:Name="StatusLabel" Margin="0,8,0,22" Foreground="{StaticResource SteamMuted}" FontSize="13" TextWrapping="Wrap" LineHeight="18"
-                       Text="Aynı Steam hesabının kullanıcı adı ve şifresi. Steam Guard istenirse kodunu gir veya telefonundan onayla."/>
-            <TextBlock Text="STEAM HESAP ADI" Style="{StaticResource FieldLabel}"/>
-            <TextBox x:Name="Username"/>
-            <TextBlock Text="ŞİFRE" Style="{StaticResource FieldLabel}" Margin="0,16,0,6"/>
-            <PasswordBox x:Name="Password"/>
-            <CheckBox x:Name="AutoStart" Content="HESAPLAR EŞLEŞİNCE OTOMATİK BAŞLAT" IsChecked="False" Margin="0,18,0,0"/>
-            <Button x:Name="ConnectButton" Content="WEB'E BAĞLAN" Style="{StaticResource GreenButton}" HorizontalAlignment="Left" MinWidth="176" Height="42" FontSize="13" Margin="0,18,0,0" Click="Connect_Click"/>
-            <TextBlock Margin="0,22,0,0" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="12" LineHeight="17"
+            <StackPanel x:Name="PasswordLogin">
+              <TextBlock Text="Web hesabına bağlan" FontSize="26" FontWeight="SemiBold"/>
+              <TextBlock x:Name="StatusLabel" Margin="0,8,0,18" Foreground="{StaticResource SteamMuted}" FontSize="13" TextWrapping="Wrap" LineHeight="18"
+                         Text="Aynı Steam hesabının kullanıcı adı ve şifresi. Steam Guard istenirse kodunu gir veya telefonundan onayla."/>
+              <TextBlock Text="STEAM HESAP ADI" Style="{StaticResource FieldLabel}"/>
+              <TextBox x:Name="Username"/>
+              <TextBlock Text="ŞİFRE" Style="{StaticResource FieldLabel}" Margin="0,16,0,6"/>
+              <PasswordBox x:Name="Password"/>
+              <CheckBox x:Name="AutoStart" Content="HESAPLAR EŞLEŞİNCE OTOMATİK BAŞLAT" IsChecked="False" Margin="0,18,0,0"/>
+            </StackPanel>
+            <StackPanel x:Name="QrLogin" Visibility="Collapsed">
+              <TextBlock Text="QR ile bağlan" FontSize="26" FontWeight="SemiBold"/>
+              <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#C5D4DE" FontSize="12" LineHeight="17"
+                         Text="Bu uygulama Valve'ın resmi yazılımı değildir. QR ile de üçüncü taraf oturum açılır. Devam ederek bu riski kabul ediyorum."/>
+              <TextBlock x:Name="QrHint" Margin="0,8,0,12" Foreground="{StaticResource SteamMuted}" FontSize="13" TextWrapping="Wrap"
+                         Text="Steam mobil uygulamasını açıp bu kodu okut. Onay telefondan verilir. Bu yolda şifre yazılmaz."/>
+              <Border Background="White" Padding="10" HorizontalAlignment="Left" Margin="0,0,0,12">
+                <Image x:Name="QrImage" Width="196" Height="196" Stretch="Uniform"/>
+              </Border>
+              <Button x:Name="QrCancelButton" Content="İPTAL" Style="{StaticResource QuietButton}" HorizontalAlignment="Left" MinWidth="120" Margin="0,0,0,8" Click="QrCancel_Click"/>
+              <Button Content="Şifre ile bağlan" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Click="ShowPassword_Click"/>
+            </StackPanel>
+            <Border Margin="0,18,0,0" Padding="12,10" BorderBrush="{StaticResource SteamLine}" BorderThickness="1" Background="#1A2430">
+              <StackPanel>
+                <TextBlock Text="BAĞLANMADAN ÖNCE" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <TextBlock TextWrapping="Wrap" Foreground="#C5D4DE" FontSize="12" LineHeight="17"
+                           Text="Bu uygulama Valve'ın resmi yazılımı değildir. Şifre ile devam edersen Steam şifreni üçüncü taraf bir uygulamaya yazarsın. Aynı Windows kullanıcısında çalışan bir süreç, şifre bellekteyken onu okuyabilir. Hesap çalınması, kayıp veya Steam yaptırımı için uygulama ve yazarı sorumluluk kabul etmez."/>
+                <TextBlock Text="Devam ederek bu riski kabul ediyorum." Margin="0,8,0,0" Foreground="White" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap"/>
+              </StackPanel>
+            </Border>
+            <StackPanel x:Name="PasswordActions" Margin="0,16,0,0">
+              <Button x:Name="ConnectButton" Content="WEB'E BAĞLAN" Style="{StaticResource GreenButton}" HorizontalAlignment="Left" MinWidth="176" Height="42" FontSize="13" Click="Connect_Click"/>
+              <Button x:Name="QrButton" Content="QR kod ile bağlan" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Margin="0,10,0,0" Click="ShowQr_Click"/>
+            </StackPanel>
+            <TextBlock Margin="0,16,0,0" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="12" LineHeight="17"
                        Text="Steam bu Windows kullanıcısında açık ve çevrimiçi olmalı. Uygulamayı Steam'den farklı yönetici yetkisiyle açma."/>
           </StackPanel>
-        </Grid>
+        </ScrollViewer>
       </Grid>
 
       <Grid x:Name="DashboardView" Visibility="Collapsed" Background="#1B2838">
@@ -144,8 +169,11 @@
               <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Border Width="36" Height="36" CornerRadius="3" Background="#67A0C7" Margin="0,0,10,0">
-              <TextBlock x:Name="AvatarLetter" Text="?" Foreground="White" FontWeight="SemiBold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Border Width="36" Height="36" CornerRadius="4" Background="#67A0C7" Margin="0,0,10,0" ClipToBounds="True">
+              <Grid>
+                <TextBlock x:Name="AvatarLetter" Text="?" Foreground="White" FontWeight="SemiBold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Image x:Name="AvatarImage" Stretch="UniformToFill" Visibility="Collapsed"/>
+              </Grid>
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
               <TextBlock x:Name="SidebarName" Text="Steam" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
@@ -216,7 +244,24 @@
           </Grid>
 
           <Grid Grid.Row="3" Margin="0,6,0,8">
-            <Grid x:Name="DropsView">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border x:Name="DropBanner" Visibility="Collapsed" Background="#16301F" BorderBrush="#A4D007" BorderThickness="3,0,0,0" Padding="12,10" Margin="0,0,0,8">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,12,0">
+                  <TextBlock Text="KART DÜŞTÜ" Foreground="#A4D007" FontSize="11" FontWeight="SemiBold"/>
+                  <TextBlock x:Name="DropBannerText" Margin="0,4,0,0" TextWrapping="Wrap" FontSize="14"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="Kapat" Style="{StaticResource QuietButton}" MinWidth="72" VerticalAlignment="Center" Click="DismissDrop_Click"/>
+              </Grid>
+            </Border>
+            <Grid x:Name="DropsView" Grid.Row="1">
               <ListBox ItemsSource="{Binding Games}" Style="{StaticResource FlatList}">
                 <ListBox.ItemTemplate>
                   <DataTemplate>
@@ -238,17 +283,33 @@
                       <Grid>
                         <Grid.ColumnDefinitions>
                           <ColumnDefinition Width="Auto"/>
+                          <ColumnDefinition Width="Auto"/>
                           <ColumnDefinition Width="*"/>
                           <ColumnDefinition Width="Auto"/>
                           <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Border Width="52" Height="32" CornerRadius="2" VerticalAlignment="Center" Background="{Binding AppId, Converter={StaticResource AppColor}}"/>
-                        <StackPanel Grid.Column="1" Margin="12,0,12,0" VerticalAlignment="Center">
+                        <CheckBox VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="Bu oyunu topla"
+                                  Tag="{Binding AppId}"
+                                  IsChecked="{Binding AppId, Converter={StaticResource GameSelected}, Mode=OneWay}"
+                                  IsEnabled="{Binding IsFarming, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource InverseBool}}"
+                                  Checked="GameSelection_Changed" Unchecked="GameSelection_Changed"/>
+                        <Grid Grid.Column="1" Width="74" Height="34" VerticalAlignment="Center">
+                          <Border CornerRadius="2" Background="{Binding AppId, Converter={StaticResource AppColor}}"/>
+                          <Image Stretch="UniformToFill">
+                            <Image.Source>
+                              <MultiBinding Converter="{StaticResource GameArt}">
+                                <Binding Path="AppId"/>
+                                <Binding Path="ImageRevision" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                              </MultiBinding>
+                            </Image.Source>
+                          </Image>
+                        </Grid>
+                        <StackPanel Grid.Column="2" Margin="12,0,12,0" VerticalAlignment="Center">
                           <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}"/>
                           <TextBlock Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" Text="{Binding AppId, StringFormat=App ID {0}}"/>
                         </StackPanel>
-                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource SteamCyan}" FontSize="13" Text="{Binding RemainingDrops, StringFormat={}{0} kalan hak}"/>
-                        <TextBlock x:Name="BadgeText" Grid.Column="3" Margin="14,0,2,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold">
+                        <TextBlock Grid.Column="3" VerticalAlignment="Center" Foreground="{StaticResource SteamCyan}" FontSize="13" Text="{Binding RemainingDrops, StringFormat={}{0} kalan hak}"/>
+                        <TextBlock x:Name="BadgeText" Grid.Column="4" Margin="14,0,2,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold">
                           <TextBlock.Text>
                             <MultiBinding Converter="{StaticResource FarmBadge}">
                               <Binding Path="AppId"/>
@@ -279,7 +340,7 @@
               </ListBox>
               <TextBlock x:Name="GamesEmpty" Text="Kart hakkı kalan oyun yok." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
             </Grid>
-            <Grid x:Name="LibraryView" Visibility="Collapsed">
+            <Grid x:Name="LibraryView" Grid.Row="1" Visibility="Collapsed">
               <ListBox ItemsSource="{Binding Library}" Style="{StaticResource FlatList}">
                 <ListBox.ItemTemplate>
                   <DataTemplate>
@@ -289,7 +350,17 @@
                           <ColumnDefinition Width="Auto"/>
                           <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Width="52" Height="32" CornerRadius="2" VerticalAlignment="Center" Background="{Binding AppId, Converter={StaticResource AppColor}}"/>
+                        <Grid Width="74" Height="34" VerticalAlignment="Center">
+                          <Border CornerRadius="2" Background="{Binding AppId, Converter={StaticResource AppColor}}"/>
+                          <Image Stretch="UniformToFill">
+                            <Image.Source>
+                              <MultiBinding Converter="{StaticResource GameArt}">
+                                <Binding Path="AppId"/>
+                                <Binding Path="ImageRevision" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                              </MultiBinding>
+                            </Image.Source>
+                          </Image>
+                        </Grid>
                         <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
                           <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}"/>
                           <TextBlock Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" Text="{Binding AppId, StringFormat=App ID {0}}"/>
@@ -301,7 +372,7 @@
               </ListBox>
               <TextBlock x:Name="LibraryEmpty" Text="Kütüphanede oyun yok." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
             </Grid>
-            <Grid x:Name="LogView" Visibility="Collapsed">
+            <Grid x:Name="LogView" Grid.Row="1" Visibility="Collapsed">
               <TextBlock x:Name="LogEmpty" Text="Henüz durum mesajı yok." Foreground="{StaticResource SteamMuted}" Margin="0,8,0,0"/>
               <ListBox x:Name="LogList" ItemsSource="{Binding StatusLog}" Style="{StaticResource FlatList}" Background="Transparent">
                 <ListBox.ItemTemplate>

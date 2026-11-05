@@ -137,6 +137,23 @@ try
 }
 catch (InvalidDataException) { Check(true, "An oversized badge body must be rejected."); }
 Console.WriteLine("PASS: badge reads stay on HTTPS steamcommunity.com and reject an oversized body.");
+
+var picked = new TestSession();
+await new CardFarmer(new GameSelectionSession(picked, new HashSet<uint> { 10 }), TimeSpan.FromMilliseconds(1)).RunAsync(null, CancellationToken.None);
+Check(picked.Played.SequenceEqual(new uint?[] { 10, null }), "Only the selected game is farmed.");
+var none = DropEvents.Find(new Dictionary<uint, TrackedDrop>(), new[] { new CardGame(10, "Hades", 4) });
+Check(none.Count == 0, "The first drop snapshot is not announced as a drop.");
+var one = DropEvents.Find(new Dictionary<uint, TrackedDrop> { [10] = new("Hades", 4) }, new[] { new CardGame(10, "Hades", 3) });
+var oneText = DropEvents.Format(one);
+Check(one.Count == 1 && oneText.Contains("Kart düştü") && oneText.Contains("Hades") && oneText.Contains("3 hak kaldı"), "A decreased drop count is announced with the game name.");
+var done = DropEvents.Format(DropEvents.Find(new Dictionary<uint, TrackedDrop> { [10] = new("Hades", 1) }, Array.Empty<CardGame>()));
+Check(done.Contains("Kart düştü") && done.Contains("kart hakkı bitti"), "The last card drop says the game is finished.");
+const string profile = "<profile><steamID64>76561198000000000</steamID64><steamID><![CDATA[Selim]]></steamID><avatarMedium><![CDATA[https://avatars.steamstatic.com/abc_medium.jpg]]></avatarMedium></profile>";
+Check(SteamWeb.TryReadProfile(profile, steamId, out var persona, out var avatar) && persona == "Selim" && avatar!.Host == "avatars.steamstatic.com", "Profile XML yields the nickname and avatar host.");
+Check(!SteamWeb.TryReadProfile(profile, steamId + 1, out _, out _), "Another account's profile XML is ignored.");
+Check(SteamWeb.IsSteamImage(new Uri("https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg")), "Store capsule hosts are accepted.");
+Check(!SteamWeb.IsSteamImage(new Uri("https://example.com/steam/apps/730/header.jpg")), "Capsule art must stay on a Steam image host.");
+Console.WriteLine("PASS: selected farming, drop notices, nickname/avatar parsing, and image hosts.");
 Console.WriteLine($"TOTAL: {checkCount} assertions passed. No real Steam login or game initialization.");
 
 sealed class FakeCards : ICardSource
