@@ -1,3 +1,4 @@
+using SteamCardCollector.Core;
 using System.Windows;
 using SteamKit2.Authentication;
 
@@ -6,12 +7,12 @@ namespace SteamCardCollector.App;
 internal sealed class WindowAuthenticator(Window owner, CancellationToken cancellationToken) : IAuthenticator
 {
     public Task<string> GetDeviceCodeAsync(bool previousCodeWasIncorrect) => AskAsync(previousCodeWasIncorrect
-        ? "Kod kabul edilmedi. Steam Guard'daki güncel kodu gir."
-        : "Steam uygulamasındaki güncel kodu gir. Telefonundan onay verdiysen bu pencere kapanır.");
+        ? Strings.DeviceCodeRejected
+        : Strings.DeviceApprovalPrompt);
 
     public Task<string> GetEmailCodeAsync(string email, bool previousCodeWasIncorrect) => AskAsync(previousCodeWasIncorrect
-        ? "Kod kabul edilmedi. E-postandaki güncel kodu gir."
-        : $"{email} adresine gönderilen Steam Guard kodunu gir.");
+        ? Strings.EmailCodeRejected
+        : string.Format(Strings.EmailCodePrompt, email));
 
     public Task<bool> AcceptDeviceConfirmationAsync() => Task.FromResult(true);
 
@@ -30,7 +31,7 @@ internal sealed class WindowAuthenticator(Window owner, CancellationToken cancel
             try
             {
                 owner.UpdateLayout();
-                if (window.ShowDialog() != true) throw new OperationCanceledException("Steam Guard girişi iptal edildi.");
+                if (window.ShowDialog() != true) throw new OperationCanceledException(Strings.SteamGuardSigninCanceled);
                 cancellationToken.ThrowIfCancellationRequested();
                 return window.Code;
             }

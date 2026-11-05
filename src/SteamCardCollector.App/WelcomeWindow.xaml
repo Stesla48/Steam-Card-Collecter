@@ -1,0 +1,28 @@
+<Window x:Class="SteamCardCollector.App.WelcomeWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="clr-namespace:SteamCardCollector.Core;assembly=SteamCardCollector.Core"
+    Title="Steam Card Collector" Icon="Assets/PocketCard.ico" Width="470" SizeToContent="Height"
+    WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#171D25" Foreground="White">
+    <StackPanel Margin="28">
+        <Image Source="Assets/PocketCard.ico" Width="48" Height="48" HorizontalAlignment="Left"/>
+        <TextBlock x:Name="Heading" FontSize="24" FontWeight="SemiBold" Margin="0,16,0,8" TextWrapping="Wrap"/>
+        <StackPanel x:Name="Languages" Visibility="Collapsed">
+            <RadioButton x:Name="English" Content="English" GroupName="language" Margin="0,8" Foreground="White" Checked="SelectionChanged"/>
+            <RadioButton x:Name="Turkish" Content="Türkçe" GroupName="language" Margin="0,8" Foreground="White" Checked="SelectionChanged"/>
+        </StackPanel>
+        <TextBlock x:Name="Details" Foreground="#C5D4DE" FontSize="15" TextWrapping="Wrap" Margin="0,8"/>
+        <StackPanel x:Name="ReplayPanel" Visibility="Collapsed" Margin="0,12">
+            <TextBlock Text="{x:Static i:Strings.Guides}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+            <WrapPanel>
+                <Button Content="{x:Static i:Strings.LoginGuide}" Style="{StaticResource QuietButton}" Click="ReplayLogin"/>
+                <Button Content="{x:Static i:Strings.DashboardGuide}" Style="{StaticResource QuietButton}" Margin="8,0,0,0" Click="ReplayDashboard"/>
+            </WrapPanel>
+        </StackPanel>
+        <DockPanel Margin="0,20,0,0" LastChildFill="False">
+            <Button x:Name="SkipButton" DockPanel.Dock="Left" Content="{x:Static i:Strings.Skip}" Visibility="Collapsed" Style="{StaticResource TextButton}" Click="SkipGuide"/>
+            <Button x:Name="Primary" DockPanel.Dock="Right" MinWidth="100" Style="{StaticResource GreenButton}" IsDefault="True" Click="Advance"/>
+            <Button x:Name="Previous" DockPanel.Dock="Right" Margin="0,0,8,0" Content="{x:Static i:Strings.Back}" Visibility="Collapsed" Style="{StaticResource QuietButton}" Click="GoBack"/>
+        </DockPanel>
+    </StackPanel>
+</Window>

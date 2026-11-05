@@ -14,10 +14,10 @@ public static class BadgePageParser
         // This identity is emitted by Steam for the logged-in viewer, not the profile owner.
         var identity = Regex.Match(html, "g_steamID\\s*=\\s*[\"'](?<id>[0-9]+)[\"']");
         if (!identity.Success || identity.Groups["id"].Value != expectedSteamId.ToString(CultureInfo.InvariantCulture))
-            throw new InvalidDataException("Steam web oturumu doğrulanamadı. Yeniden bağlanın.");
+            throw new InvalidDataException(Strings.CouldNotVerifyTheSteamWebSession);
         var doc = new HtmlParser().ParseDocument(html);
         if (doc.QuerySelector(".badges_sheet") is null)
-            throw new InvalidDataException("Steam rozet sayfası okunamadı; işlem durduruldu.");
+            throw new InvalidDataException(Strings.BadgePageUnreadable);
         var games = new List<CardGame>();
         var unresolved = new HashSet<uint>();
         foreach (var row in doc.QuerySelectorAll(".badge_row"))
@@ -41,7 +41,7 @@ public static class BadgePageParser
             { unresolved.Add(appId); continue; }
             if (remaining == 0) continue;
             var name = row.QuerySelector(".badge_title")?.TextContent.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-            games.Add(new(appId, name ?? $"Oyun {appId}", remaining));
+            games.Add(new(appId, name ?? string.Format(Strings.Game, appId), remaining));
         }
         var lastPage = 1;
         foreach (var link in doc.QuerySelectorAll(".pagelink"))
@@ -50,11 +50,11 @@ public static class BadgePageParser
             if (match.Success)
             {
                 if (!int.TryParse(match.Groups[1].Value, out var page) || page < 1 || page > 1000)
-                    throw new InvalidDataException("Beklenmeyen rozet sayfası sayısı.");
+                    throw new InvalidDataException(Strings.UnexpectedNumberOfBadgePages);
                 lastPage = Math.Max(lastPage, page);
             }
         }
-        if (lastPage > 1000) throw new InvalidDataException("Beklenmeyen rozet sayfası sayısı.");
+        if (lastPage > 1000) throw new InvalidDataException(Strings.UnexpectedNumberOfBadgePages);
         return new(games, lastPage, unresolved.ToArray());
     }
 }

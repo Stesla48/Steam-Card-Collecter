@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="SteamDisconnectedSignInAgain" xml:space="preserve"><value>Steam bağlantısı kesildi. Yeniden bağlanın.</value></data>
+  <data name="SteamSignedOutSignInAgain" xml:space="preserve"><value>Steam oturumu kapandı. Yeniden bağlanın.</value></data>
+  <data name="ThisSessionHasAlreadyStarted" xml:space="preserve"><value>Bu oturum zaten başlatıldı.</value></data>
+  <data name="SteamStoppedRespondingSignInAgain" xml:space="preserve"><value>Steam iletişimi durdu. Yeniden bağlanın.</value></data>
+  <data name="SteamSigninFailed" xml:space="preserve"><value>Steam girişi başarısız: {0}</value></data>
+  <data name="CouldNotReadTheSteamAccountId" xml:space="preserve"><value>Steam hesap kimliği alınamadı.</value></data>
+  <data name="CouldNotReadTheSteamLibrary" xml:space="preserve"><value>Steam oyun listesi okunamadı: {0}</value></data>
+  <data name="CouldNotOpenTheSteamBadgesPage" xml:space="preserve"><value>Steam rozet sayfasına erişilemedi; yeniden bağlanın.</value></data>
+  <data name="SteamIsDisconnectedSignInAgain" xml:space="preserve"><value>Steam bağlantısı yok. Yeniden bağlanın.</value></data>
+  <data name="InvalidNativeLibrary" xml:space="preserve"><value>Steam DLL doğrulanamadı. Windows paketinin tamamını yeniden çıkarın.</value></data>
+  <data name="InvalidLocalSteamRequest" xml:space="preserve"><value>Geçersiz yerel Steam isteği.</value></data>
+  <data name="AnotherCollectorIsAlreadyRunning" xml:space="preserve"><value>Başka bir Steam Card Collector toplama işlemi açık.</value></data>
+  <data name="WorkerSessionMismatch" xml:space="preserve"><value>Yerel Steam ve web hesabı eşleşmiyor veya Steam yeniden başlatıldı.</value></data>
+  <data name="LocalConnectionFailed" xml:space="preserve"><value>Yerel Steam bağlantısı kurulamadı. Steam çevrimiçi olmalı ve oyun bu hesaba ait olmalı.</value></data>
+  <data name="WorkerSessionLost" xml:space="preserve"><value>Yerel Steam hesabı değişti veya bağlantı kesildi. Toplama durduruldu.</value></data>
+  <data name="GameOwnershipUnverified" xml:space="preserve"><value>Yerel Steam bu oyun için sahiplik doğrulamadı.</value></data>
+  <data name="LocalSteamConnectionVerified" xml:space="preserve"><value>Yerel Steam bağlantısı doğrulandı.</value></data>
+  <data name="NativeComponentStartupFailed" xml:space="preserve"><value>Yerel Steam bileşeni başlatılamadı ({0}). Windows paketinin tamamını çıkarın.</value></data>
+  <data name="TheLocalAndWebSteamAccountsDiffer" xml:space="preserve"><value>Yerel Steam hesabı ile web hesabı eşleşmiyor.</value></data>
+  <data name="InvalidGameId" xml:space="preserve"><value>Geçersiz oyun kimliği.</value></data>
+  <data name="CouldNotLocateTheApplicationExecutable" xml:space="preserve"><value>Uygulama yolu bulunamadı.</value></data>
+  <data name="CouldNotStartTheLocalSteamProcess" xml:space="preserve"><value>Yerel Steam süreci başlatılamadı.</value></data>
+  <data name="WorkerHandshakeFailed" xml:space="preserve"><value>Yerel Steam süreci bağlantıyı doğrulamadı.</value></data>
+  <data name="TheLocalSteamSessionChanged" xml:space="preserve"><value>Yerel Steam oturumu değişti.</value></data>
+  <data name="TheLocalSteamProcessClosedCollectionStopped" xml:space="preserve"><value>Yerel Steam oyun süreci kapandı. Toplama durduruldu.</value></data>
+  <data name="SessionChangedReconnect" xml:space="preserve"><value>Yerel Steam oturumu değişti. Yeniden bağlanın.</value></data>
+  <data name="LocalSignInRequired" xml:space="preserve"><value>Yerel Steam oturumu bulunamadı. Steam'i açıp çevrimiçi giriş yapın.</value></data>
+  <data name="TheLocalSteamClientIsOffline" xml:space="preserve"><value>Yerel Steam istemcisi çalışmıyor.</value></data>
+  <data name="LocalClientClosed" xml:space="preserve"><value>Yerel Steam istemcisi kapandı. Steam'i açın.</value></data>
+  <data name="AccountMismatchDetails" xml:space="preserve"><value>Hesaplar eşleşmiyor. Yerel Steam: {0} · Web: {1}. Aynı hesapla yeniden bağlanın.</value></data>
+  <data name="CardEligibilityIsUnverifiedSelectRefreshFirst" xml:space="preserve"><value>Oyunun kart hakkı doğrulanmadı. Önce Yenile'ye basın.</value></data>
+  <data name="CouldNotVerifyTheSteamWebSession" xml:space="preserve"><value>Steam web oturumu doğrulanamadı. Yeniden bağlanın.</value></data>
+  <data name="BadgePageUnreadable" xml:space="preserve"><value>Steam rozet sayfası okunamadı; işlem durduruldu.</value></data>
+  <data name="UnexpectedNumberOfBadgePages" xml:space="preserve"><value>Beklenmeyen rozet sayfası sayısı.</value></data>
+  <data name="CollectionIsAlreadyRunning" xml:space="preserve"><value>Kart toplama zaten çalışıyor.</value></data>
+  <data name="UnresolvedQueueSummary" xml:space="preserve"><value>Doğrulanmış kuyruk bitti; {0} oyunun kart hakkı okunamadı. Tüm kartlar tamamlandı olarak işaretlenmedi. Yenile ile tekrar kontrol edin.</value></data>
+  <data name="NoGamesHaveCardDropsRemaining" xml:space="preserve"><value>Kart düşürme hakkı kalan oyun yok.</value></data>
+  <data name="WaitingForACardDrop" xml:space="preserve"><value>Kart düşürmesi bekleniyor.</value></data>
+  <data name="DeviceCodeRejected" xml:space="preserve"><value>Kod kabul edilmedi. Steam Guard'daki güncel kodu gir.</value></data>
+  <data name="DeviceApprovalPrompt" xml:space="preserve"><value>Steam uygulamasındaki güncel kodu gir. Telefonundan onay verdiysen bu pencere kapanır.</value></data>
+  <data name="EmailCodeRejected" xml:space="preserve"><value>Kod kabul edilmedi. E-postandaki güncel kodu gir.</value></data>
+  <data name="EmailCodePrompt" xml:space="preserve"><value>{0} adresine gönderilen Steam Guard kodunu gir.</value></data>
+  <data name="SteamGuardSigninCanceled" xml:space="preserve"><value>Steam Guard girişi iptal edildi.</value></data>
+  <data name="Playing" xml:space="preserve"><value>OYNANIYOR</value></data>
+  <data name="Queued" xml:space="preserve"><value>SIRADA</value></data>
+  <data name="EnterYourSteamAccountNameAndPassword" xml:space="preserve"><value>Steam kullanıcı adı ve şifreni gir.</value></data>
+  <data name="SteamDisconnected" xml:space="preserve"><value>Steam bağlantısı kesildi</value></data>
+  <data name="ConnectingToSteam" xml:space="preserve"><value>Steam'e bağlanılıyor…</value></data>
+  <data name="SigninCanceledOrTimedOut" xml:space="preserve"><value>Bağlantı iptal edildi veya giriş süresi doldu.</value></data>
+  <data name="WebAccountDisconnected" xml:space="preserve"><value>Web hesabı: bağlı değil</value></data>
+  <data name="CheckingRemainingCardDrops" xml:space="preserve"><value>Oyunların kalan kart hakları kontrol ediliyor…</value></data>
+  <data name="ReadyToStart" xml:space="preserve"><value>Hazır. Başlat ile yerel Steam üzerinden topla.</value></data>
+  <data name="MatchAccountsToCollect" xml:space="preserve"><value>Kart hakları okundu. Toplama için yerel ve web hesaplarını eşleştir.</value></data>
+  <data name="NoVerifiedEligibleGames" xml:space="preserve"><value>Kart hakkı doğrulanabilen oyun bulunamadı. Okunamayan oyunlar var; kart hakları bitmiş sayılmadı.</value></data>
+  <data name="CardQueryTimedOut" xml:space="preserve"><value>Steam kart hakları sorgusu zaman aşımına uğradı. Oyun listen korunuyor; Yenile ile tekrar dene.</value></data>
+  <data name="CardCountsAreUnverified" xml:space="preserve"><value>Kart hakları henüz doğrulanmadı.</value></data>
+  <data name="CardCountsOutOfDate" xml:space="preserve"><value>Kart bilgisi güncel değil; yeniden kontrol edin.</value></data>
+  <data name="GamesEligibleRemainingDrops" xml:space="preserve"><value>{0} oyun · {1} kart hakkı olan oyun · {2} kalan kart hakkı</value></data>
+  <data name="UnknownGamesAppId" xml:space="preserve"><value> · Okunamadı: {0} oyun (App ID: {1})</value></data>
+  <data name="MatchingIdsRequired" xml:space="preserve"><value>Toplama başlatılmadı: yerel Steam oturumu ile web Steam ID eşleşmeli.</value></data>
+  <data name="CollectionStopped" xml:space="preserve"><value>Kart toplama durduruldu.</value></data>
+  <data name="LocalSteamConnected" xml:space="preserve"><value>Yerel Steam bağlı</value></data>
+  <data name="SignInToTheSameWebAccount" xml:space="preserve"><value>Kart haklarını okumak için aynı hesabın web girişini yap.</value></data>
+  <data name="PresenceAccountVerified" xml:space="preserve"><value>Hesaplar eşleşiyor. Oynanıyor durumu yerel Steam üzerinden gönderilecek.</value></data>
+  <data name="ReconnectWithMatchingAccount" xml:space="preserve"><value>Hesaplar farklı. Toplama engellendi; aynı hesapla yeniden bağlan.</value></data>
+  <data name="NoSessionFound" xml:space="preserve"><value>Oturum bulunamadı</value></data>
+  <data name="LocalSteamOffline" xml:space="preserve"><value>Yerel Steam kapalı</value></data>
+  <data name="LocalSteamRequired" xml:space="preserve"><value>Steam'i bu Windows kullanıcısında açıp çevrimiçi giriş yap. Toplama engellendi.</value></data>
+  <data name="ReadyToCollect" xml:space="preserve"><value>Kart toplama hazır</value></data>
+  <data name="AccountsDiffer" xml:space="preserve"><value>Hesaplar eşleşmiyor</value></data>
+  <data name="Session" xml:space="preserve"><value>Oturum</value></data>
+  <data name="AccountsMatch" xml:space="preserve"><value>Hesaplar eşleşiyor</value></data>
+  <data name="Offline" xml:space="preserve"><value>çevrimdışı</value></data>
+  <data name="Online" xml:space="preserve"><value>çevrimiçi</value></data>
+  <data name="Connected" xml:space="preserve"><value>bağlı</value></data>
+  <data name="CheckCredentialsAndGuard" xml:space="preserve"><value>Steam girişi doğrulanamadı. Bilgilerini ve Steam Guard onayını kontrol et.</value></data>
+  <data name="CheckInternetConnection" xml:space="preserve"><value>Steam web bağlantısı başarısız. İnternet bağlantını kontrol edip tekrar dene.</value></data>
+  <data name="CouldNotReadCardCounts" xml:space="preserve"><value>Kart hakları okunamadı: </value></data>
+  <data name="OperationFailed" xml:space="preserve"><value>İşlem tamamlanamadı ({0}). Ekrandaki hata türünü paylaşabilirsin.</value></data>
+  <data name="Minimize" xml:space="preserve"><value>Küçült</value></data>
+  <data name="Maximize" xml:space="preserve"><value>Ekranı kapla</value></data>
+  <data name="Close" xml:space="preserve"><value>Kapat</value></data>
+  <data name="CollectYour" xml:space="preserve"><value>Kartlarını</value></data>
+  <data name="TradingCards" xml:space="preserve"><value>güvenle topla.</value></data>
+  <data name="LoginIntro" xml:space="preserve"><value>Giriş yalnızca kütüphane ve rozet sayfalarındaki kart haklarını okumak içindir. Oynanıyor durumu, bilgisayarında açık olan Steam istemcisi üzerinden gönderilir.</value></data>
+  <data name="CredentialsInMemory" xml:space="preserve"><value>Şifre ve oturum anahtarları diske kaydedilmez.</value></data>
+  <data name="AccountMatchRule" xml:space="preserve"><value>Yerel Steam ID ile web Steam ID eşleşmeden toplama başlamaz.</value></data>
+  <data name="AnIndependentCardCollectorForSteamAccounts" xml:space="preserve"><value>Bu uygulama Valve yazılımı değildir; Steam hesabınla çalışan bir kart toplayıcıdır.</value></data>
+  <data name="LocalSteam" xml:space="preserve"><value>Yerel Steam</value></data>
+  <data name="CheckingLocalSteam" xml:space="preserve"><value>Yerel Steam kontrol ediliyor…</value></data>
+  <data name="BackToDashboard" xml:space="preserve"><value>← Panele dön</value></data>
+  <data name="SignInToSteam" xml:space="preserve"><value>Web hesabına bağlan</value></data>
+  <data name="SignInInstructions" xml:space="preserve"><value>Aynı Steam hesabının kullanıcı adı ve şifresi. Steam Guard istenirse kodunu gir veya telefonundan onayla.</value></data>
+  <data name="SteamAccountName" xml:space="preserve"><value>STEAM HESAP ADI</value></data>
+  <data name="Password" xml:space="preserve"><value>ŞİFRE</value></data>
+  <data name="StartAutomaticallyWhenAccountsMatch" xml:space="preserve"><value>HESAPLAR EŞLEŞİNCE OTOMATİK BAŞLAT</value></data>
+  <data name="SignIn" xml:space="preserve"><value>WEB'E BAĞLAN</value></data>
+  <data name="LocalClientPrivilegesHint" xml:space="preserve"><value>Steam bu Windows kullanıcısında açık ve çevrimiçi olmalı. Uygulamayı Steam'den farklı yönetici yetkisiyle açma.</value></data>
+  <data name="EligibleGames" xml:space="preserve"><value>Kart hakkı kalanlar</value></data>
+  <data name="AllGames" xml:space="preserve"><value>Tüm oyunlar</value></data>
+  <data name="ActivityLog" xml:space="preserve"><value>Durum günlüğü</value></data>
+  <data name="SwitchAccount" xml:space="preserve"><value>Hesabı değiştir</value></data>
+  <data name="SessionLabel" xml:space="preserve"><value>OTURUM</value></data>
+  <data name="LocalSteamId" xml:space="preserve"><value>Yerel Steam ID: —</value></data>
+  <data name="LibraryGames" xml:space="preserve"><value>kütüphane</value></data>
+  <data name="EligibleGamesLabel" xml:space="preserve"><value>kart hakkı olan</value></data>
+  <data name="RemainingDrops" xml:space="preserve"><value>kalan kart hakkı</value></data>
+  <data name="Refresh" xml:space="preserve"><value>YENİLE</value></data>
+  <data name="Start" xml:space="preserve"><value>BAŞLAT</value></data>
+  <data name="Stop" xml:space="preserve"><value>DURDUR</value></data>
+  <data name="NoGamesWithDropsRemaining" xml:space="preserve"><value>Kart hakkı kalan oyun yok.</value></data>
+  <data name="YourLibraryIsEmpty" xml:space="preserve"><value>Kütüphanede oyun yok.</value></data>
+  <data name="NoActivityYet" xml:space="preserve"><value>Henüz durum mesajı yok.</value></data>
+  <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>Şifre kaydedilmez.</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>Oyunlar tek tek işlenir · haklar 3 dk'da bir kontrol edilir</value></data>
+  <data name="Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="VerificationCode" xml:space="preserve"><value>Doğrulama kodu</value></data>
+  <data name="Confirm" xml:space="preserve"><value>ONAYLA</value></data>
+  <data name="LocalSteamSession" xml:space="preserve"><value>YEREL STEAM OTURUMU</value></data>
+  <data name="LocalSteamIdLabel" xml:space="preserve"><value>Yerel Steam ID: {0}</value></data>
+  <data name="LocalSteamIdNoSession" xml:space="preserve"><value>Yerel Steam ID: oturum yok</value></data>
+  <data name="RefreshRetryHint" xml:space="preserve"><value> Oyun listen korunuyor; Yenile ile tekrar deneyebilirsin.</value></data>
+  <data name="WindowsIsRequired" xml:space="preserve"><value>Windows gerekir.</value></data>
+  <data name="WindowsX64Required" xml:space="preserve"><value>Windows x64 gerekir.</value></data>
+  <data name="Game" xml:space="preserve"><value>Oyun {0}</value></data>
+  <data name="DropsLeft" xml:space="preserve"><value>{0} kalan hak</value></data>
+  <data name="Settings" xml:space="preserve"><value>Ayarlar</value></data>
+  <data name="Language" xml:space="preserve"><value>Dil</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>Dil değişikliği uygulamayı yeniden açtığında uygulanır.</value></data>
+  <data name="Guides" xml:space="preserve"><value>Rehberler</value></data>
+  <data name="LoginGuide" xml:space="preserve"><value>Giriş rehberi</value></data>
+  <data name="DashboardGuide" xml:space="preserve"><value>Toplama rehberi</value></data>
+  <data name="Save" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Back" xml:space="preserve"><value>Geri</value></data>
+  <data name="Next" xml:space="preserve"><value>İleri</value></data>
+  <data name="Done" xml:space="preserve"><value>Bitir</value></data>
+  <data name="Skip" xml:space="preserve"><value>Rehberi geç</value></data>
+  <data name="LoginSteamTitle" xml:space="preserve"><value>Bilgisayarında Steam’i aç</value></data>
+  <data name="LoginSteamBody" xml:space="preserve"><value>Bu bilgisayarda Steam’e giriş yap ve çevrimiçi ol. Yerel Steam bölümünde Steam ID’ni kontrol et.</value></data>
+  <data name="LoginWebTitle" xml:space="preserve"><value>Aynı Steam hesabını kullan</value></data>
+  <data name="LoginWebBody" xml:space="preserve"><value>Steam hesap adını ve şifreni girip Web’e Bağlan’a bas. Böylece uygulama kütüphaneni ve rozet sayfalarını okuyabilir.</value></data>
+  <data name="LoginGuardTitle" xml:space="preserve"><value>Steam Guard onayını tamamla</value></data>
+  <data name="LoginGuardBody" xml:space="preserve"><value>Steam isterse telefonundan onay ver veya kodu gir. Girişten sonra yerel ve web Steam ID’lerinin eşleştiğini kontrol et.</value></data>
+  <data name="DashGamesTitle" xml:space="preserve"><value>Kart hakkı olan oyunlara bak</value></data>
+  <data name="DashGamesBody" xml:space="preserve"><value>Kart hakkı kalanlar bölümünde doğrulanmış oyunları görürsün. Yenile ile tekrar kontrol et. Sayacı okunamayan bir oyun diğerlerini bekletmez.</value></data>
+  <data name="DashStartTitle" xml:space="preserve"><value>Toplamayı başlat</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>ID’ler eşleştiğinde ve uygun bir oyun olduğunda Başlat’a bas. Uygulama oyunları sırayla çalıştırırken Steam’i çevrimiçi tut.</value></data>
+  <data name="DashLogTitle" xml:space="preserve"><value>İlerlemeyi takip et</value></data>
+  <data name="DashLogBody" xml:space="preserve"><value>Durum günlüğünden gelişmeleri takip et. Toplamayı bitirmek için Durdur’a bas. İki rehberi de Ayarlar’dan tekrar açabilirsin.</value></data>
+  <data name="SaveFailed" xml:space="preserve"><value>Tercihler kaydedilemedi. Yerel uygulama verileri klasörünün yazma iznini kontrol et.</value></data>
+</root>

@@ -1,3 +1,4 @@
+using SteamCardCollector.Core;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using Steamworks;
@@ -19,13 +20,13 @@ public static class SteamNativeRuntime
         var path = Path.Combine(AppContext.BaseDirectory, "lib", "steam_api64.dll");
         using var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         if (Convert.ToHexString(SHA256.HashData(file)) != ExpectedSha256)
-            throw new BadImageFormatException("Steam DLL doğrulanamadı. Windows paketinin tamamını yeniden çıkarın.");
+            throw new BadImageFormatException(Strings.InvalidNativeLibrary);
         return NativeLibrary.Load(path);
     }
 
     public static void Validate()
     {
-        if (!Environment.Is64BitProcess) throw new BadImageFormatException("Windows x64 gerekir.");
+        if (!Environment.Is64BitProcess) throw new BadImageFormatException(Strings.WindowsX64Required);
         var handle = LoadVerified();
         try
         {

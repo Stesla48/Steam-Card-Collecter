@@ -13,9 +13,9 @@ public sealed class LocalFarmingSession(ICardSource cards, ILocalSteamPlayer pla
     {
         var local = player.ReadIdentity();
         if (cards.SteamId == 0 || local.SteamId != cards.SteamId)
-            throw new InvalidOperationException($"Hesaplar eşleşmiyor. Yerel Steam: {local.SteamId} · Web: {cards.SteamId}. Aynı hesapla yeniden bağlanın.");
+            throw new InvalidOperationException(string.Format(Strings.AccountMismatchDetails, local.SteamId, cards.SteamId));
         if (local != identity)
-            throw new InvalidOperationException("Yerel Steam oturumu değişti. Yeniden bağlanın.");
+            throw new InvalidOperationException(Strings.SessionChangedReconnect);
     }
 
     public async Task<IReadOnlyList<CardGame>> GetCardGamesAsync(CancellationToken cancellationToken)
@@ -33,7 +33,7 @@ public sealed class LocalFarmingSession(ICardSource cards, ILocalSteamPlayer pla
         if (appId is null) { await player.StopAsync(cancellationToken); return; }
         EnsureSameAccount();
         if (!verifiedCandidates.Contains(appId.Value))
-            throw new InvalidOperationException("Oyunun kart hakkı doğrulanmadı. Önce Yenile'ye basın.");
+            throw new InvalidOperationException(Strings.CardEligibilityIsUnverifiedSelectRefreshFirst);
         await player.StartAsync(appId.Value, cards.SteamId, cancellationToken);
         try { EnsureSameAccount(); }
         catch { await player.StopAsync(CancellationToken.None); throw; }
