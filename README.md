@@ -1,4 +1,4 @@
-# Steam Card Collector 0.3.0
+# Steam Card Collector 0.4.0
 
 A Windows x64 desktop app that reads Steam trading card eligibility and uses your local Steam client to show one eligible game as playing.
 
@@ -34,10 +34,10 @@ dotnet run --project src/SteamCardCollector.App -c Release
 powershell -ExecutionPolicy Bypass -File scripts/Publish-Release.ps1
 ```
 
-The packaging script builds a self-contained x64 app with .NET 8.0.33, runs the queue, account, parser, WPF, onboarding and native checks, and rejects a mismatched worker request. It writes the Windows ZIP, source ZIP and SHA-256 checksums under `dist/0.3.0`. Native DLL integrity is verified before loading. For bundled licenses and the corresponding SteamKit2 source, see [third-party notices](THIRD-PARTY-NOTICES.md).
+The packaging script builds a self-contained x64 app with .NET 8.0.33, runs the queue, account, parser, WPF, onboarding and native checks, and rejects a mismatched worker request. It writes the Windows ZIP, source ZIP and SHA-256 checksums under `dist/0.4.0`. Native DLL integrity is verified before loading. For bundled licenses and the corresponding SteamKit2 source, see [third-party notices](THIRD-PARTY-NOTICES.md).
 
 ## GitHub builds and releases
 
 Pushes to main or master and pull requests produce downloadable Actions artifacts. To test another branch, open **Actions → Build and release Windows ZIP → Run workflow**, select the branch and leave the release tag empty.
 
-To publish, set the app project version, commit it, then publish a release targeting that commit with a matching tag (for example, `v0.3.0`). The workflow attaches the Windows ZIP, source ZIP and checksums to the release using GitHub's temporary token. To rebuild an existing release, supply its tag when running the workflow manually. The workflow checks out that tag and replaces the matching assets.
+To publish, set the app project version, commit it, then publish a release targeting that commit with a matching tag (for example, `v0.4.0`). The workflow attaches the Windows ZIP, source ZIP and checksums to the release using GitHub's temporary token. To rebuild an existing release, supply its tag when running the workflow manually. The workflow checks out that tag and replaces the matching assets.
