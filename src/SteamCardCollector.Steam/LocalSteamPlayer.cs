@@ -46,7 +46,7 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
             info.ArgumentList.Add(appId.ToString(CultureInfo.InvariantCulture));
             info.ArgumentList.Add(expectedSteamId.ToString(CultureInfo.InvariantCulture));
             info.ArgumentList.Add(identity.ProcessId.ToString(CultureInfo.InvariantCulture));
-            info.Environment["SCC_LANGUAGE"] = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            info.Environment["SCC_LANGUAGE"] = CultureInfo.CurrentUICulture.Name;
             info.Environment["SteamAppId"] = appId.ToString(CultureInfo.InvariantCulture);
             info.Environment["SteamGameId"] = appId.ToString(CultureInfo.InvariantCulture);
             worker = Process.Start(info) ?? throw new IOException(Strings.CouldNotStartTheLocalSteamProcess);

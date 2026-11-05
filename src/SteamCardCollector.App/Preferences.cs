@@ -14,7 +14,7 @@ internal sealed record Preferences(string? Language = null, bool LoginGuideSeen 
         try
         {
             var saved = JsonSerializer.Deserialize<Preferences>(File.ReadAllText(path));
-            return saved?.Language is "en" or "tr" ? saved : new();
+            return saved != null && AppLanguage.Find(saved.Language) != null ? saved : new();
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
         {

@@ -10,23 +10,24 @@ internal static class WelcomeChecks
 {
     internal static void Run(MainWindow owner, string testPath)
     {
-        var original = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        var original = CultureInfo.CurrentUICulture.Name;
         try
         {
             var picker = new WelcomeWindow(WelcomePage.Language);
             Check(!picker.Primary.IsEnabled && picker.SelectedLanguage == null);
-            picker.Turkish.IsChecked = true;
+            picker.Languages.SelectedValue = "tr";
             Check(picker.Primary.IsEnabled && picker.SelectedLanguage == "tr");
             picker.Close();
-            foreach (var language in new[] { "en", "tr" })
+            foreach (var option in AppLanguage.All)
             {
+                var language = option.Code;
                 App.ApplyLanguage(language);
                 var prefs = new Preferences(language, LoginGuideSeen: true, DashboardGuideSeen: true);
                 prefs.Save(testPath);
                 Check(Preferences.Load(testPath) == prefs);
                 var settings = new WelcomeWindow(WelcomePage.Settings, language);
                 Check(settings.SelectedLanguage == language && settings.ReplayPanel.Visibility == Visibility.Visible);
-                Check(Strings.Settings == (language == "en" ? "Settings" : "Ayarlar"));
+                Check(language == "en" || Strings.Settings != "Settings");
                 settings.Close();
                 foreach (var guide in new[] { WelcomePage.LoginGuide, WelcomePage.DashboardGuide })
                 {

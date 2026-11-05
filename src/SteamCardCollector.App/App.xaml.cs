@@ -59,7 +59,7 @@ public partial class App : Application
                     var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
                     encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
                     using (var file = File.Create(e.Args[1] + ".png")) encoder.Save(file);
-                    File.WriteAllText(e.Args[1], "PASS: WPF window rendered; account controls gated; language selection, preferences, settings and both guides checked in English and Turkish.");
+                    File.WriteAllText(e.Args[1], "PASS: WPF window rendered; account controls gated; language selection, preferences, settings and both guides checked in every supported language.");
                 }
                 catch (Exception ex) { File.WriteAllText(e.Args[1], "FAIL: " + ex); Environment.ExitCode = 1; }
                 finally { window.Close(); }
@@ -68,7 +68,7 @@ public partial class App : Application
     }
     internal static void ApplyLanguage(string? language)
     {
-        var culture = CultureInfo.GetCultureInfo(language == "tr" ? "tr-TR" : "en-US");
+        var culture = CultureInfo.GetCultureInfo(AppLanguage.Find(language)?.Code ?? "en");
         CultureInfo.DefaultThreadCurrentUICulture = culture;
         CultureInfo.CurrentUICulture = culture;
     }

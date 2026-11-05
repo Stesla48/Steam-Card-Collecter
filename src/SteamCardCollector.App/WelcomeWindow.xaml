@@ -7,10 +7,8 @@
     <StackPanel Margin="28">
         <Image Source="Assets/PocketCard.ico" Width="48" Height="48" HorizontalAlignment="Left"/>
         <TextBlock x:Name="Heading" FontSize="24" FontWeight="SemiBold" Margin="0,16,0,8" TextWrapping="Wrap"/>
-        <StackPanel x:Name="Languages" Visibility="Collapsed">
-            <RadioButton x:Name="English" Content="English" GroupName="language" Margin="0,8" Foreground="White" Checked="SelectionChanged"/>
-            <RadioButton x:Name="Turkish" Content="Türkçe" GroupName="language" Margin="0,8" Foreground="White" Checked="SelectionChanged"/>
-        </StackPanel>
+        <ComboBox x:Name="Languages" Visibility="Collapsed" DisplayMemberPath="NativeName" SelectedValuePath="Code"
+                  Margin="0,8" Padding="8,6" FontSize="16" SelectionChanged="SelectionChanged"/>
         <TextBlock x:Name="Details" Foreground="#C5D4DE" FontSize="15" TextWrapping="Wrap" Margin="0,8"/>
         <StackPanel x:Name="ReplayPanel" Visibility="Collapsed" Margin="0,12">
             <TextBlock Text="{x:Static i:Strings.Guides}" FontWeight="SemiBold" Margin="0,0,0,8"/>

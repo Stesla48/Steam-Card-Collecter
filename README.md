@@ -2,11 +2,13 @@
 
 A Windows x64 desktop app that reads Steam trading card eligibility and uses your local Steam client to show one eligible game as playing.
 
+**Residual risk.** This is third-party software, not a Valve product. You enter your Steam password into this app. A process running as the same Windows user may be able to read your password while it is in memory.
+
 ## Getting started
 
 1. Download the Windows x64 ZIP from the release assets. Extract the entire ZIP and keep the files together.
 2. Open Steam on this PC and sign in online. Run Steam and the collector as the same Windows user with the same privileges.
-3. Open `SteamCardCollector.App.exe`. Choose **English** or **Türkçe** and follow the sign-in guide.
+3. Open `SteamCardCollector.App.exe`. Choose English, Turkish, German, Spanish, French or Simplified Chinese and follow the sign-in guide.
 4. Sign in with the same Steam account and complete Steam Guard if prompted. The web session reads the library and badge pages. Your password and session tokens stay in memory.
 5. After sign-in, follow the collection guide. When the Steam IDs match and eligible games are available, select **Start**. Automatic start is off by default.
 6. Use **Activity log** to follow progress, **Refresh** to check card counts and **Stop** to end collection. Sign in again to load newly acquired games.

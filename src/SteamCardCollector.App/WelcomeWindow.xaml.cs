@@ -10,12 +10,12 @@ public partial class WelcomeWindow : Window
     private readonly WelcomePage page;
     private readonly (string Title, string Body)[] steps;
     private int step;
-    internal string? SelectedLanguage => English.IsChecked == true ? "en" : Turkish.IsChecked == true ? "tr" : null;
+    internal string? SelectedLanguage => Languages.SelectedValue as string;
 
     internal WelcomeWindow(WelcomePage page, string? language = null)
     {
-        InitializeComponent();
         this.page = page;
+        InitializeComponent();
         steps = page == WelcomePage.LoginGuide
             ? [(Strings.LoginSteamTitle, Strings.LoginSteamBody), (Strings.LoginWebTitle, Strings.LoginWebBody), (Strings.LoginGuardTitle, Strings.LoginGuardBody)]
             : [(Strings.DashGamesTitle, Strings.DashGamesBody), (Strings.DashStartTitle, Strings.DashStartBody), (Strings.DashLogTitle, Strings.DashLogBody)];
@@ -31,13 +31,13 @@ public partial class WelcomeWindow : Window
 
         bool first = page == WelcomePage.Language;
         Title = first ? "Steam Card Collector" : Strings.Settings;
-        Heading.Text = first ? "Choose your language / Dil seçin" : Strings.Settings + " · " + Strings.Language;
+        Heading.Text = first ? AppLanguage.All[0].Prompt : Strings.Settings + " · " + Strings.Language;
         Details.Text = first ? "" : Strings.LanguageHint;
         Languages.Visibility = Visibility.Visible;
         ReplayPanel.Visibility = first ? Visibility.Collapsed : Visibility.Visible;
-        Primary.Content = first ? "Continue / Devam" : Strings.Save;
-        English.IsChecked = language == "en";
-        Turkish.IsChecked = language == "tr";
+        Primary.Content = first ? AppLanguage.All[0].Continue : Strings.Save;
+        Languages.ItemsSource = AppLanguage.All;
+        Languages.SelectedValue = language;
         Primary.IsEnabled = SelectedLanguage != null;
     }
 
@@ -50,7 +50,15 @@ public partial class WelcomeWindow : Window
         Primary.Content = step == steps.Length - 1 ? Strings.Done : Strings.Next;
     }
 
-    private void SelectionChanged(object sender, RoutedEventArgs e) => Primary.IsEnabled = SelectedLanguage != null;
+    private void SelectionChanged(object sender, RoutedEventArgs e)
+    {
+        Primary.IsEnabled = SelectedLanguage != null;
+        if (page == WelcomePage.Language && Languages.SelectedItem is AppLanguage selected)
+        {
+            Heading.Text = selected.Prompt;
+            Primary.Content = selected.Continue;
+        }
+    }
 
     private void Advance(object sender, RoutedEventArgs e)
     {
