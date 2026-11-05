@@ -155,4 +155,27 @@
   <data name="DashLogBody" xml:space="preserve"><value>Abre el Registro de actividad para ver el progreso. Pulsa Detener para finalizar. Puedes volver a abrir ambas guías en Ajustes.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>No se pudieron guardar tus preferencias. Comprueba los permisos de escritura de la carpeta de datos locales de la aplicación.</value></data>
   <data name="BadgePageTooLarge" xml:space="preserve"><value>La página de insignias de Steam supera el tamaño máximo.</value></data>
+
+  <data name="BeforeYouSignIn" xml:space="preserve"><value>ANTES DE INICIAR SESIÓN</value></data>
+  <data name="SignInRiskNotice" xml:space="preserve"><value>Esta aplicación no es software oficial de Valve. Si continúas con una contraseña, escribes tu contraseña de Steam en una aplicación de terceros. Un proceso del mismo usuario de Windows puede leerla mientras está en memoria. La aplicación y su autor no asumen responsabilidad por robo de cuenta, pérdida o sanciones de Steam.</value></data>
+  <data name="ContinuingAcceptsThisRisk" xml:space="preserve"><value>Al continuar, acepto este riesgo.</value></data>
+  <data name="SignInWithQr" xml:space="preserve"><value>Iniciar sesión con código QR</value></data>
+  <data name="QrSignInTitle" xml:space="preserve"><value>Iniciar sesión con QR</value></data>
+  <data name="QrRiskShort" xml:space="preserve"><value>Esta aplicación no es software oficial de Valve. El inicio con QR también es una sesión de terceros. Al continuar, acepto este riesgo.</value></data>
+  <data name="QrInstructions" xml:space="preserve"><value>Abre la aplicación móvil de Steam y escanea este código. Aprueba el inicio en el teléfono. Esta vía no usa la contraseña.</value></data>
+  <data name="QrPreparing" xml:space="preserve"><value>Preparando el código QR. Escanéalo con la aplicación de Steam.</value></data>
+  <data name="QrReady" xml:space="preserve"><value>Código QR listo. Escanéalo con la aplicación de Steam.</value></data>
+  <data name="QrCanceled" xml:space="preserve"><value>Se canceló el inicio con QR.</value></data>
+  <data name="QrUnavailable" xml:space="preserve"><value>No se pudo obtener el código QR. Usa la contraseña.</value></data>
+  <data name="QrDrawFailed" xml:space="preserve"><value>No se pudo dibujar el código QR. Usa la contraseña.</value></data>
+  <data name="UsePasswordSignIn" xml:space="preserve"><value>Iniciar sesión con contraseña</value></data>
+  <data name="SelectAtLeastOneGame" xml:space="preserve"><value>Selecciona al menos un juego para recolectar.</value></data>
+  <data name="FarmThisGame" xml:space="preserve"><value>Recolectar este juego</value></data>
+  <data name="CardDroppedTitle" xml:space="preserve"><value>CARTA OBTENIDA</value></data>
+  <data name="CardDroppedOne" xml:space="preserve"><value>Carta obtenida: {0}. Quedan {1}.</value></data>
+  <data name="CardDroppedSeveralForGame" xml:space="preserve"><value>{1} cartas obtenidas de {0}. Quedan {2}.</value></data>
+  <data name="CardDroppedFinished" xml:space="preserve"><value>Carta obtenida: {0}. Este juego ya no tiene cartas pendientes.</value></data>
+  <data name="CardDroppedSummary" xml:space="preserve"><value>{0} cartas obtenidas: {1}.</value></data>
+  <data name="CouldNotOpenSteamProfile" xml:space="preserve"><value>No se pudo abrir el perfil de Steam.</value></data>
+  <data name="WebSteamId" xml:space="preserve"><value>ID web de Steam: {0}</value></data>
 </root>

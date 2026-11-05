@@ -155,4 +155,27 @@
   <data name="DashLogBody" xml:space="preserve"><value>Durum günlüğünden gelişmeleri takip et. Toplamayı bitirmek için Durdur’a bas. İki rehberi de Ayarlar’dan tekrar açabilirsin.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Tercihler kaydedilemedi. Yerel uygulama verileri klasörünün yazma iznini kontrol et.</value></data>
   <data name="BadgePageTooLarge" xml:space="preserve"><value>Steam rozet sayfası beklenenden büyük.</value></data>
+
+  <data name="BeforeYouSignIn" xml:space="preserve"><value>BAĞLANMADAN ÖNCE</value></data>
+  <data name="SignInRiskNotice" xml:space="preserve"><value>Bu uygulama Valve'ın resmi yazılımı değildir. Şifre ile devam edersen Steam şifreni üçüncü taraf bir uygulamaya yazarsın. Aynı Windows kullanıcısında çalışan bir süreç, şifre bellekteyken onu okuyabilir. Hesap çalınması, kayıp veya Steam yaptırımı için uygulama ve yazarı sorumluluk kabul etmez.</value></data>
+  <data name="ContinuingAcceptsThisRisk" xml:space="preserve"><value>Devam ederek bu riski kabul ediyorum.</value></data>
+  <data name="SignInWithQr" xml:space="preserve"><value>QR kod ile bağlan</value></data>
+  <data name="QrSignInTitle" xml:space="preserve"><value>QR ile bağlan</value></data>
+  <data name="QrRiskShort" xml:space="preserve"><value>Bu uygulama Valve'ın resmi yazılımı değildir. QR ile de üçüncü taraf oturum açılır. Devam ederek bu riski kabul ediyorum.</value></data>
+  <data name="QrInstructions" xml:space="preserve"><value>Steam mobil uygulamasını açıp bu kodu okut. Onay telefondan verilir. Bu yolda şifre yazılmaz.</value></data>
+  <data name="QrPreparing" xml:space="preserve"><value>QR kod hazırlanıyor. Steam uygulamasından okut.</value></data>
+  <data name="QrReady" xml:space="preserve"><value>QR kod hazır. Steam uygulamasından okut.</value></data>
+  <data name="QrCanceled" xml:space="preserve"><value>QR ile bağlanma iptal edildi.</value></data>
+  <data name="QrUnavailable" xml:space="preserve"><value>QR kodu alınamadı. Şifre ile bağlan.</value></data>
+  <data name="QrDrawFailed" xml:space="preserve"><value>QR kod çizilemedi. Şifre ile bağlan.</value></data>
+  <data name="UsePasswordSignIn" xml:space="preserve"><value>Şifre ile bağlan</value></data>
+  <data name="SelectAtLeastOneGame" xml:space="preserve"><value>Toplamak için en az bir oyun seç.</value></data>
+  <data name="FarmThisGame" xml:space="preserve"><value>Bu oyunu topla</value></data>
+  <data name="CardDroppedTitle" xml:space="preserve"><value>KART DÜŞTÜ</value></data>
+  <data name="CardDroppedOne" xml:space="preserve"><value>Kart düştü: {0}. {1} hak kaldı.</value></data>
+  <data name="CardDroppedSeveralForGame" xml:space="preserve"><value>{0} için {1} kart düştü. {2} hak kaldı.</value></data>
+  <data name="CardDroppedFinished" xml:space="preserve"><value>Kart düştü: {0}. Bu oyunun kart hakkı bitti.</value></data>
+  <data name="CardDroppedSummary" xml:space="preserve"><value>{0} kart düştü: {1}.</value></data>
+  <data name="CouldNotOpenSteamProfile" xml:space="preserve"><value>Steam profiline erişilemedi.</value></data>
+  <data name="WebSteamId" xml:space="preserve"><value>Web Steam ID: {0}</value></data>
 </root>

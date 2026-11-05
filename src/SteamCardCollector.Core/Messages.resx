@@ -155,4 +155,27 @@
   <data name="DashLogBody" xml:space="preserve"><value>Open Activity log to see updates. Select Stop to end the session. You can reopen either guide from Settings.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Could not save your preferences. Check write access to your local application data folder.</value></data>
   <data name="BadgePageTooLarge" xml:space="preserve"><value>The Steam badge page exceeds the size limit.</value></data>
+
+  <data name="BeforeYouSignIn" xml:space="preserve"><value>BEFORE YOU SIGN IN</value></data>
+  <data name="SignInRiskNotice" xml:space="preserve"><value>This app is not official Valve software. If you continue with a password, you type your Steam password into a third-party app. A process running as the same Windows user can read that password while it is in memory. The app and its author accept no liability for account theft, loss, or Steam penalties.</value></data>
+  <data name="ContinuingAcceptsThisRisk" xml:space="preserve"><value>By continuing, I accept this risk.</value></data>
+  <data name="SignInWithQr" xml:space="preserve"><value>Sign in with a QR code</value></data>
+  <data name="QrSignInTitle" xml:space="preserve"><value>Sign in with QR</value></data>
+  <data name="QrRiskShort" xml:space="preserve"><value>This app is not official Valve software. A QR sign-in is still a third-party session. By continuing, I accept this risk.</value></data>
+  <data name="QrInstructions" xml:space="preserve"><value>Open the Steam mobile app and scan this code. Approve the sign-in on your phone. This path does not use your password.</value></data>
+  <data name="QrPreparing" xml:space="preserve"><value>Preparing a QR code. Scan it with the Steam app.</value></data>
+  <data name="QrReady" xml:space="preserve"><value>QR code ready. Scan it with the Steam app.</value></data>
+  <data name="QrCanceled" xml:space="preserve"><value>QR sign-in was canceled.</value></data>
+  <data name="QrUnavailable" xml:space="preserve"><value>Could not get a QR code. Use your password instead.</value></data>
+  <data name="QrDrawFailed" xml:space="preserve"><value>Could not draw the QR code. Use your password instead.</value></data>
+  <data name="UsePasswordSignIn" xml:space="preserve"><value>Sign in with a password</value></data>
+  <data name="SelectAtLeastOneGame" xml:space="preserve"><value>Select at least one game to collect.</value></data>
+  <data name="FarmThisGame" xml:space="preserve"><value>Collect this game</value></data>
+  <data name="CardDroppedTitle" xml:space="preserve"><value>CARD DROPPED</value></data>
+  <data name="CardDroppedOne" xml:space="preserve"><value>Card dropped: {0}. {1} drops left.</value></data>
+  <data name="CardDroppedSeveralForGame" xml:space="preserve"><value>{1} cards dropped for {0}. {2} drops left.</value></data>
+  <data name="CardDroppedFinished" xml:space="preserve"><value>Card dropped: {0}. This game has no drops left.</value></data>
+  <data name="CardDroppedSummary" xml:space="preserve"><value>{0} cards dropped: {1}.</value></data>
+  <data name="CouldNotOpenSteamProfile" xml:space="preserve"><value>Could not open the Steam profile.</value></data>
+  <data name="WebSteamId" xml:space="preserve"><value>Web Steam ID: {0}</value></data>
 </root>

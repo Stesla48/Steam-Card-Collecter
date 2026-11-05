@@ -158,4 +158,26 @@ public static class Strings
     public static string DashLogTitle => Get(nameof(DashLogTitle));
     public static string DashLogBody => Get(nameof(DashLogBody));
     public static string SaveFailed => Get(nameof(SaveFailed));
+    public static string BeforeYouSignIn => Get(nameof(BeforeYouSignIn));
+    public static string SignInRiskNotice => Get(nameof(SignInRiskNotice));
+    public static string ContinuingAcceptsThisRisk => Get(nameof(ContinuingAcceptsThisRisk));
+    public static string SignInWithQr => Get(nameof(SignInWithQr));
+    public static string QrSignInTitle => Get(nameof(QrSignInTitle));
+    public static string QrRiskShort => Get(nameof(QrRiskShort));
+    public static string QrInstructions => Get(nameof(QrInstructions));
+    public static string QrPreparing => Get(nameof(QrPreparing));
+    public static string QrReady => Get(nameof(QrReady));
+    public static string QrCanceled => Get(nameof(QrCanceled));
+    public static string QrUnavailable => Get(nameof(QrUnavailable));
+    public static string QrDrawFailed => Get(nameof(QrDrawFailed));
+    public static string UsePasswordSignIn => Get(nameof(UsePasswordSignIn));
+    public static string SelectAtLeastOneGame => Get(nameof(SelectAtLeastOneGame));
+    public static string FarmThisGame => Get(nameof(FarmThisGame));
+    public static string CardDroppedTitle => Get(nameof(CardDroppedTitle));
+    public static string CardDroppedOne => Get(nameof(CardDroppedOne));
+    public static string CardDroppedSeveralForGame => Get(nameof(CardDroppedSeveralForGame));
+    public static string CardDroppedFinished => Get(nameof(CardDroppedFinished));
+    public static string CardDroppedSummary => Get(nameof(CardDroppedSummary));
+    public static string CouldNotOpenSteamProfile => Get(nameof(CouldNotOpenSteamProfile));
+    public static string WebSteamId => Get(nameof(WebSteamId));
 }

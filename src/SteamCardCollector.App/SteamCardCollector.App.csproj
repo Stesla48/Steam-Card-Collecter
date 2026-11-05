@@ -8,4 +8,5 @@
   </PropertyGroup>
   <ItemGroup><Resource Include="Assets/PocketCard.ico" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../SteamCardCollector.Core/SteamCardCollector.Core.csproj" /><ProjectReference Include="../SteamCardCollector.Steam/SteamCardCollector.Steam.csproj" /></ItemGroup>
+  <ItemGroup><PackageReference Include="QRCoder" Version="1.6.0" /></ItemGroup>
 </Project>

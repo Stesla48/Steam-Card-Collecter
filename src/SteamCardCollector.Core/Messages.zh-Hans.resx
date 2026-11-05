@@ -155,4 +155,27 @@
   <data name="DashLogBody" xml:space="preserve"><value>打开活动日志查看进度。选择停止可结束收集。在设置中可重新打开任一指南。</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>无法保存偏好设置。请检查本地应用数据文件夹的写入权限。</value></data>
   <data name="BadgePageTooLarge" xml:space="preserve"><value>Steam 徽章页面超出大小限制。</value></data>
+
+  <data name="BeforeYouSignIn" xml:space="preserve"><value>登录之前</value></data>
+  <data name="SignInRiskNotice" xml:space="preserve"><value>此应用不是 Valve 的官方软件。如果使用密码继续，你是在把 Steam 密码输入第三方应用。同一 Windows 用户下运行的进程可以在密码仍位于内存时读取它。对于账号被盗、损失或 Steam 处罚，应用及其作者不承担责任。</value></data>
+  <data name="ContinuingAcceptsThisRisk" xml:space="preserve"><value>继续即表示我接受此风险。</value></data>
+  <data name="SignInWithQr" xml:space="preserve"><value>使用二维码登录</value></data>
+  <data name="QrSignInTitle" xml:space="preserve"><value>二维码登录</value></data>
+  <data name="QrRiskShort" xml:space="preserve"><value>此应用不是 Valve 的官方软件。二维码登录同样是第三方会话。继续即表示我接受此风险。</value></data>
+  <data name="QrInstructions" xml:space="preserve"><value>打开 Steam 手机应用并扫描此码。在手机上确认登录。此方式不使用密码。</value></data>
+  <data name="QrPreparing" xml:space="preserve"><value>正在准备二维码。请用 Steam 应用扫描。</value></data>
+  <data name="QrReady" xml:space="preserve"><value>二维码已就绪。请用 Steam 应用扫描。</value></data>
+  <data name="QrCanceled" xml:space="preserve"><value>已取消二维码登录。</value></data>
+  <data name="QrUnavailable" xml:space="preserve"><value>无法获取二维码。请改用密码登录。</value></data>
+  <data name="QrDrawFailed" xml:space="preserve"><value>无法绘制二维码。请改用密码登录。</value></data>
+  <data name="UsePasswordSignIn" xml:space="preserve"><value>使用密码登录</value></data>
+  <data name="SelectAtLeastOneGame" xml:space="preserve"><value>请至少选择一个要收集的游戏。</value></data>
+  <data name="FarmThisGame" xml:space="preserve"><value>收集此游戏</value></data>
+  <data name="CardDroppedTitle" xml:space="preserve"><value>掉落卡牌</value></data>
+  <data name="CardDroppedOne" xml:space="preserve"><value>卡牌已掉落：{0}。剩余 {1} 次。</value></data>
+  <data name="CardDroppedSeveralForGame" xml:space="preserve"><value>{0} 掉落了 {1} 张卡牌。剩余 {2} 次。</value></data>
+  <data name="CardDroppedFinished" xml:space="preserve"><value>卡牌已掉落：{0}。此游戏已无剩余掉落。</value></data>
+  <data name="CardDroppedSummary" xml:space="preserve"><value>掉落了 {0} 张卡牌：{1}。</value></data>
+  <data name="CouldNotOpenSteamProfile" xml:space="preserve"><value>无法打开 Steam 个人资料。</value></data>
+  <data name="WebSteamId" xml:space="preserve"><value>Web Steam ID：{0}</value></data>
 </root>

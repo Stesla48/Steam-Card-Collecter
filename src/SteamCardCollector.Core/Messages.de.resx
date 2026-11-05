@@ -155,4 +155,27 @@
   <data name="DashLogBody" xml:space="preserve"><value>Im Aktivitätsprotokoll siehst du den Fortschritt. Wähle Stopp, um die Sammlung zu beenden. Beide Anleitungen findest du in den Einstellungen.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Einstellungen konnten nicht gespeichert werden. Prüfe die Schreibrechte im lokalen Anwendungsdatenordner.</value></data>
   <data name="BadgePageTooLarge" xml:space="preserve"><value>Die Steam-Abzeichenseite überschreitet die zulässige Größe.</value></data>
+
+  <data name="BeforeYouSignIn" xml:space="preserve"><value>VOR DER ANMELDUNG</value></data>
+  <data name="SignInRiskNotice" xml:space="preserve"><value>Diese App ist keine offizielle Valve-Software. Mit einem Passwort gibst du dein Steam-Passwort in eine Drittanbieter-App ein. Ein Prozess desselben Windows-Benutzers kann dieses Passwort lesen, solange es im Speicher liegt. App und Autor übernehmen keine Haftung für Kontodiebstahl, Verlust oder Steam-Sanktionen.</value></data>
+  <data name="ContinuingAcceptsThisRisk" xml:space="preserve"><value>Mit dem Fortfahren akzeptiere ich dieses Risiko.</value></data>
+  <data name="SignInWithQr" xml:space="preserve"><value>Mit QR-Code anmelden</value></data>
+  <data name="QrSignInTitle" xml:space="preserve"><value>Mit QR anmelden</value></data>
+  <data name="QrRiskShort" xml:space="preserve"><value>Diese App ist keine offizielle Valve-Software. Auch die QR-Anmeldung ist eine Drittanbieter-Sitzung. Mit dem Fortfahren akzeptiere ich dieses Risiko.</value></data>
+  <data name="QrInstructions" xml:space="preserve"><value>Öffne die Steam-App und scanne diesen Code. Bestätige die Anmeldung auf dem Telefon. Dieser Weg verwendet kein Passwort.</value></data>
+  <data name="QrPreparing" xml:space="preserve"><value>QR-Code wird vorbereitet. Mit der Steam-App scannen.</value></data>
+  <data name="QrReady" xml:space="preserve"><value>QR-Code bereit. Mit der Steam-App scannen.</value></data>
+  <data name="QrCanceled" xml:space="preserve"><value>QR-Anmeldung abgebrochen.</value></data>
+  <data name="QrUnavailable" xml:space="preserve"><value>QR-Code nicht verfügbar. Stattdessen mit Passwort anmelden.</value></data>
+  <data name="QrDrawFailed" xml:space="preserve"><value>QR-Code konnte nicht gezeichnet werden. Stattdessen mit Passwort anmelden.</value></data>
+  <data name="UsePasswordSignIn" xml:space="preserve"><value>Mit Passwort anmelden</value></data>
+  <data name="SelectAtLeastOneGame" xml:space="preserve"><value>Wähle mindestens ein Spiel zum Sammeln.</value></data>
+  <data name="FarmThisGame" xml:space="preserve"><value>Dieses Spiel sammeln</value></data>
+  <data name="CardDroppedTitle" xml:space="preserve"><value>KARTE GEFALLEN</value></data>
+  <data name="CardDroppedOne" xml:space="preserve"><value>Karte gefallen: {0}. Noch {1}.</value></data>
+  <data name="CardDroppedSeveralForGame" xml:space="preserve"><value>{1} Karten für {0} gefallen. Noch {2}.</value></data>
+  <data name="CardDroppedFinished" xml:space="preserve"><value>Karte gefallen: {0}. Für dieses Spiel sind keine Karten mehr übrig.</value></data>
+  <data name="CardDroppedSummary" xml:space="preserve"><value>{0} Karten gefallen: {1}.</value></data>
+  <data name="CouldNotOpenSteamProfile" xml:space="preserve"><value>Steam-Profil konnte nicht geöffnet werden.</value></data>
+  <data name="WebSteamId" xml:space="preserve"><value>Web-Steam-ID: {0}</value></data>
 </root>
