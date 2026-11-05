@@ -1,37 +1,337 @@
-<Window x:Class="SteamCardCollector.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Steam Card Collector · 0.2.0" Width="920" Height="740" MinWidth="740" MinHeight="650" Background="#F4F6F8" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
- <Grid Margin="24">
-  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-  <StackPanel><TextBlock Text="Steam Card Collector" FontSize="26" FontWeight="SemiBold"/><TextBlock Text="Kart hakkı kalan oyunları sırayla ve otomatik işle." Margin="0,6,0,16" Foreground="#526070"/></StackPanel>
-  <Border Grid.Row="1" Background="White" Padding="16" CornerRadius="8" Margin="0,0,0,16">
-   <StackPanel>
-    <TextBlock x:Name="LocalAccountLabel" Text="Yerel Steam kontrol ediliyor…" FontWeight="SemiBold" Margin="0,0,0,6" TextWrapping="Wrap"/>
-    <TextBlock x:Name="AccountLabel" Text="Web hesabı: bağlı değil" Margin="0,0,0,6" TextWrapping="Wrap"/>
-    <TextBlock x:Name="MatchLabel" Text="Toplama için yerel ve web Steam ID eşleşmeli." Foreground="#526070" Margin="0,0,0,12" TextWrapping="Wrap"/>
-    <WrapPanel>
-     <StackPanel Margin="0,0,12,0"><TextBlock Text="Steam kullanıcı adı"/><TextBox x:Name="Username" Width="200" Padding="6" Margin="0,4,0,0"/></StackPanel>
-     <StackPanel Margin="0,0,12,0"><TextBlock Text="Şifre (kaydedilmez)"/><PasswordBox x:Name="Password" Width="200" Padding="6" Margin="0,4,0,0"/></StackPanel>
-     <Button x:Name="ConnectButton" Content="Web'e bağlan" Click="Connect_Click" Padding="14,8" VerticalAlignment="Bottom"/>
-     <Button x:Name="RefreshButton" Content="Yenile" Click="Refresh_Click" IsEnabled="False" Padding="14,8" Margin="8,0,0,0" VerticalAlignment="Bottom"/>
-    </WrapPanel>
-    <CheckBox x:Name="AutoStart" Content="Hesaplar eşleşince kart toplamayı otomatik başlat" IsChecked="False" Margin="0,14,0,6"/>
-    <TextBlock Text="Steam bilgisayarında açık ve çevrimiçi olmalı. Bu giriş yalnızca kütüphane ve kart haklarını okumak içindir. Steam Guard istenirse kodu gir veya telefonundan onayla." TextWrapping="Wrap" Foreground="#526070"/>
-   </StackPanel>
-  </Border>
-  <TabControl Grid.Row="2">
-   <TabItem Header="Kart hakkı kalanlar">
-    <DataGrid ItemsSource="{Binding Games}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column" Background="White">
-     <DataGrid.Columns><DataGridTextColumn Header="Oyun" Binding="{Binding Name}" Width="*"/><DataGridTextColumn Header="App ID" Binding="{Binding AppId}" Width="90"/><DataGridTextColumn Header="Kalan kart hakkı" Binding="{Binding RemainingDrops}" Width="140"/></DataGrid.Columns>
-    </DataGrid>
-   </TabItem>
-   <TabItem Header="Tüm oyunlar">
-    <DataGrid ItemsSource="{Binding Library}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column" Background="White">
-     <DataGrid.Columns><DataGridTextColumn Header="Oyun" Binding="{Binding Name}" Width="*"/><DataGridTextColumn Header="App ID" Binding="{Binding AppId}" Width="100"/></DataGrid.Columns>
-    </DataGrid>
-   </TabItem>
-  </TabControl>
-  <Grid Grid.Row="3" Margin="0,16,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-   <StackPanel Margin="0,0,10,0"><TextBlock x:Name="StatusLabel" Text="Bağlantı bekleniyor." TextWrapping="Wrap"/><TextBlock x:Name="CountLabel" Margin="0,5,0,0" Foreground="#526070" TextWrapping="Wrap"/></StackPanel>
-   <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"><Button x:Name="StartButton" Content="Başlat" Click="Start_Click" IsEnabled="False" Padding="18,9"/><Button x:Name="StopButton" Content="Durdur" Click="Stop_Click" IsEnabled="False" Padding="18,9" Margin="8,0,0,0"/></StackPanel>
+<Window x:Class="SteamCardCollector.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Steam Card Collector · 0.2.0"
+        Width="1040" Height="740" MinWidth="740" MinHeight="650"
+        WindowStyle="None" ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        Background="#171D25" Foreground="White" FontFamily="Segoe UI"
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        Closing="Window_Closing" StateChanged="Window_StateChanged">
+  <shell:WindowChrome.WindowChrome>
+    <shell:WindowChrome CaptionHeight="40" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+  </shell:WindowChrome.WindowChrome>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="40"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Background="#171D25" BorderBrush="#0C1016" BorderThickness="0,0,0,1">
+      <Grid>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,0,0">
+          <Grid Width="16" Height="16" Margin="0,0,10,0">
+            <Ellipse Stroke="#C5D4DE" StrokeThickness="1.3"/>
+            <Ellipse Width="3.2" Height="3.2" Fill="#C5D4DE" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2.4,2,0"/>
+            <Ellipse Width="4.4" Height="4.4" Fill="#C5D4DE" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="1.8,0,0,1.8"/>
+            <Path Stroke="#C5D4DE" StrokeThickness="1.15" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stretch="None"
+                  Data="M5.1,11.3 C7.1,9.4 8.5,8.7 10.3,8.3 L13.3,7.3"/>
+          </Grid>
+          <TextBlock Text="STEAM CARD COLLECTOR" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="#D5DDE6"/>
+          <TextBlock Text="0.2.0" Margin="8,0,0,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource SteamCyan}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeButton}" Click="Minimize_Click" ToolTip="Küçült">
+            <TextBlock Text="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
+          </Button>
+          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeButton}" Click="Maximize_Click" ToolTip="Ekranı kapla">
+            <TextBlock x:Name="MaximizeGlyph" Text="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
+          </Button>
+          <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ChromeCloseButton}" Click="Close_Click" ToolTip="Kapat">
+            <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="1">
+      <Grid x:Name="LoginView">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="5*"/>
+          <ColumnDefinition Width="7*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Background="#171D25" Margin="32,28,28,22">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <StackPanel>
+            <TextBlock Text="YEREL STEAM OTURUMU" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold"/>
+            <TextBlock Margin="0,14,0,0" FontSize="34" FontWeight="Light" Foreground="White" LineHeight="40" LineStackingStrategy="BlockLineHeight">
+              <Run Text="Kartlarını"/><LineBreak/><Run Text="güvenle topla."/>
+            </TextBlock>
+            <TextBlock Margin="0,16,8,20" TextWrapping="Wrap" Foreground="#9AA6B2" FontSize="13.5" LineHeight="20"
+                       Text="Giriş yalnızca kütüphane ve rozet sayfalarındaki kart haklarını okumak içindir. Oynanıyor durumu, bilgisayarında açık olan Steam istemcisi üzerinden gönderilir."/>
+            <Border Style="{StaticResource InfoCard}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Ellipse Width="7" Height="7" Fill="{StaticResource SteamCyan}" Margin="0,5,10,0" VerticalAlignment="Top"/>
+                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="Şifre ve oturum anahtarları diske kaydedilmez."/>
+              </Grid>
+            </Border>
+            <Border Style="{StaticResource InfoCard}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Ellipse Width="7" Height="7" Fill="{StaticResource SteamCyan}" Margin="0,5,10,0" VerticalAlignment="Top"/>
+                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="Yerel Steam ID ile web Steam ID eşleşmeden toplama başlamaz."/>
+              </Grid>
+            </Border>
+            <Border Style="{StaticResource InfoCard}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Ellipse Width="7" Height="7" Fill="{StaticResource SteamCyan}" Margin="0,5,10,0" VerticalAlignment="Top"/>
+                <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="#D5DDE6" FontSize="13" Text="Bu uygulama Valve yazılımı değildir; Steam hesabınla çalışan bir kart toplayıcıdır."/>
+              </Grid>
+            </Border>
+          </StackPanel>
+          <Border Grid.Row="1" Style="{StaticResource InfoCard}" Margin="0,16,0,0">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Ellipse x:Name="LocalChipDot" Width="8" Height="8" Fill="#6A737C" Margin="0,4,10,0" VerticalAlignment="Top"/>
+              <StackPanel Grid.Column="1">
+                <TextBlock x:Name="LocalChipTitle" Text="Yerel Steam" FontWeight="SemiBold" FontSize="13"/>
+                <TextBlock x:Name="LocalAccountLabel" Text="Yerel Steam kontrol ediliyor…" Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" TextWrapping="Wrap"/>
+              </StackPanel>
+            </Grid>
+          </Border>
+        </Grid>
+
+        <Grid x:Name="LoginForm" Grid.Column="1" Background="#1B2838">
+          <StackPanel Margin="48,42,48,28" VerticalAlignment="Center" MaxWidth="520" HorizontalAlignment="Stretch">
+            <Button x:Name="ReturnButton" Content="← Panele dön" Style="{StaticResource TextButton}" HorizontalAlignment="Left" Margin="0,0,0,16" Visibility="Collapsed" Click="ReturnToDashboard_Click"/>
+            <TextBlock Text="Web hesabına bağlan" FontSize="26" FontWeight="SemiBold"/>
+            <TextBlock x:Name="StatusLabel" Margin="0,8,0,22" Foreground="{StaticResource SteamMuted}" FontSize="13" TextWrapping="Wrap" LineHeight="18"
+                       Text="Aynı Steam hesabının kullanıcı adı ve şifresi. Steam Guard istenirse kodunu gir veya telefonundan onayla."/>
+            <TextBlock Text="STEAM HESAP ADI" Style="{StaticResource FieldLabel}"/>
+            <TextBox x:Name="Username"/>
+            <TextBlock Text="ŞİFRE" Style="{StaticResource FieldLabel}" Margin="0,16,0,6"/>
+            <PasswordBox x:Name="Password"/>
+            <CheckBox x:Name="AutoStart" Content="HESAPLAR EŞLEŞİNCE OTOMATİK BAŞLAT" IsChecked="False" Margin="0,18,0,0"/>
+            <Button x:Name="ConnectButton" Content="WEB'E BAĞLAN" Style="{StaticResource GreenButton}" HorizontalAlignment="Left" MinWidth="176" Height="42" FontSize="13" Margin="0,18,0,0" Click="Connect_Click"/>
+            <TextBlock Margin="0,22,0,0" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="12" LineHeight="17"
+                       Text="Steam bu Windows kullanıcısında açık ve çevrimiçi olmalı. Uygulamayı Steam'den farklı yönetici yetkisiyle açma."/>
+          </StackPanel>
+        </Grid>
+      </Grid>
+
+      <Grid x:Name="DashboardView" Visibility="Collapsed" Background="#1B2838">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="216"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Background="#171D25">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <Grid Margin="16,18,16,12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Width="36" Height="36" CornerRadius="3" Background="#67A0C7" Margin="0,0,10,0">
+              <TextBlock x:Name="AvatarLetter" Text="?" Foreground="White" FontWeight="SemiBold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock x:Name="SidebarName" Text="Steam" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+              <TextBlock x:Name="SidebarPresence" Text="çevrimdışı" Margin="0,1,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12"/>
+            </StackPanel>
+          </Grid>
+          <StackPanel Grid.Row="1">
+            <RadioButton x:Name="NavDrops" Content="Kart hakkı kalanlar" Style="{StaticResource NavButton}" Tag="drops" IsChecked="True" Checked="DashboardNav_Checked"/>
+            <RadioButton x:Name="NavLibrary" Content="Tüm oyunlar" Style="{StaticResource NavButton}" Tag="library" Checked="DashboardNav_Checked"/>
+            <RadioButton x:Name="NavLog" Content="Durum günlüğü" Style="{StaticResource NavButton}" Tag="log" Checked="DashboardNav_Checked"/>
+          </StackPanel>
+          <Border Grid.Row="2" BorderBrush="#0E141C" BorderThickness="0,1,0,0" Padding="16,12">
+            <Button x:Name="SwitchAccountButton" Content="Hesabı değiştir" Style="{StaticResource TextButton}" Click="SwitchAccount_Click"/>
+          </Border>
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="26,20,26,0">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <WrapPanel Orientation="Horizontal">
+            <StackPanel Margin="0,0,16,8" MaxWidth="420">
+              <TextBlock Text="OTURUM" Foreground="{StaticResource SteamCyan}" FontSize="11" FontWeight="SemiBold"/>
+              <TextBlock x:Name="SessionTitle" Text="Kart toplama hazır" FontSize="26" FontWeight="SemiBold" Margin="0,6,0,8"/>
+              <TextBlock x:Name="DashboardLocalId" Text="Yerel Steam ID: —" Foreground="{StaticResource SteamMuted}" FontSize="13"/>
+              <TextBlock x:Name="AccountLabel" Text="Web hesabı: bağlı değil" Foreground="{StaticResource SteamMuted}" FontSize="13" Margin="0,2,0,8" TextWrapping="Wrap"/>
+              <StackPanel Orientation="Horizontal">
+                <Ellipse x:Name="MatchDot" Width="8" Height="8" Fill="#7DCB3B" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                <TextBlock x:Name="MatchBadge" FontSize="13" VerticalAlignment="Center"/>
+              </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+              <Border Style="{StaticResource StatCard}" Margin="0">
+                <StackPanel>
+                  <TextBlock x:Name="LibraryStat" Text="0" FontSize="22" FontWeight="SemiBold"/>
+                  <TextBlock Text="kütüphane" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource StatCard}">
+                <StackPanel>
+                  <TextBlock x:Name="CardStat" Text="0" FontSize="22" FontWeight="SemiBold"/>
+                  <TextBlock Text="kart hakkı olan" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource StatCard}">
+                <StackPanel>
+                  <TextBlock x:Name="DropStat" Text="0" FontSize="22" FontWeight="SemiBold"/>
+                  <TextBlock Text="kalan kart hakkı" Foreground="{StaticResource SteamMuted}" FontSize="12" Margin="0,2,0,0"/>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </WrapPanel>
+          <TextBlock x:Name="CountLabel" Grid.Row="1" Margin="0,10,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" TextWrapping="Wrap" Visibility="Collapsed"/>
+          <Grid Grid.Row="2" Margin="0,16,0,8">
+            <StackPanel x:Name="ContentTabs" Orientation="Horizontal" VerticalAlignment="Center">
+              <RadioButton x:Name="TabDrops" Content="Kart hakkı kalanlar" Style="{StaticResource TextTab}" Tag="drops" IsChecked="True" Checked="DashboardNav_Checked"/>
+              <RadioButton x:Name="TabLibrary" Content="Tüm oyunlar" Style="{StaticResource TextTab}" Tag="library" Checked="DashboardNav_Checked"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+              <Button x:Name="RefreshButton" Content="YENİLE" Style="{StaticResource QuietButton}" MinWidth="92" IsEnabled="False" Click="Refresh_Click"/>
+              <Button x:Name="StartButton" Content="BAŞLAT" Style="{StaticResource GreenButton}" MinWidth="104" Margin="8,0,0,0" IsEnabled="False" Click="Start_Click"/>
+              <Button x:Name="StopButton" Content="DURDUR" Style="{StaticResource DangerButton}" MinWidth="104" Margin="8,0,0,0" IsEnabled="False" Click="Stop_Click"/>
+            </StackPanel>
+          </Grid>
+
+          <Grid Grid.Row="3" Margin="0,6,0,8">
+            <Grid x:Name="DropsView">
+              <ListBox ItemsSource="{Binding Games}" Style="{StaticResource FlatList}">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <Border Margin="0,0,0,8" Padding="12,10" CornerRadius="2" BorderThickness="1" SnapsToDevicePixels="True">
+                      <Border.Background>
+                        <MultiBinding Converter="{StaticResource FarmBadge}" ConverterParameter="bg">
+                          <Binding Path="AppId"/>
+                          <Binding Path="CurrentFarmAppId" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                          <Binding Path="IsFarming" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                        </MultiBinding>
+                      </Border.Background>
+                      <Border.BorderBrush>
+                        <MultiBinding Converter="{StaticResource FarmBadge}" ConverterParameter="border">
+                          <Binding Path="AppId"/>
+                          <Binding Path="CurrentFarmAppId" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                          <Binding Path="IsFarming" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                        </MultiBinding>
+                      </Border.BorderBrush>
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto"/>
+                          <ColumnDefinition Width="*"/>
+                          <ColumnDefinition Width="Auto"/>
+                          <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="52" Height="32" CornerRadius="2" VerticalAlignment="Center" Background="{Binding AppId, Converter={StaticResource AppColor}}"/>
+                        <StackPanel Grid.Column="1" Margin="12,0,12,0" VerticalAlignment="Center">
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}"/>
+                          <TextBlock Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" Text="{Binding AppId, StringFormat=App ID {0}}"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource SteamCyan}" FontSize="13" Text="{Binding RemainingDrops, StringFormat={}{0} kalan hak}"/>
+                        <TextBlock x:Name="BadgeText" Grid.Column="3" Margin="14,0,2,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold">
+                          <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource FarmBadge}">
+                              <Binding Path="AppId"/>
+                              <Binding Path="CurrentFarmAppId" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                              <Binding Path="IsFarming" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            </MultiBinding>
+                          </TextBlock.Text>
+                          <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                              <Setter Property="Foreground" Value="{StaticResource SteamMuted}"/>
+                              <Setter Property="Visibility" Value="Collapsed"/>
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="SIRADA">
+                                  <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="OYNANIYOR">
+                                  <Setter Property="Visibility" Value="Visible"/>
+                                  <Setter Property="Foreground" Value="#A4D007"/>
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </TextBlock.Style>
+                        </TextBlock>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+              <TextBlock x:Name="GamesEmpty" Text="Kart hakkı kalan oyun yok." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
+            </Grid>
+            <Grid x:Name="LibraryView" Visibility="Collapsed">
+              <ListBox ItemsSource="{Binding Library}" Style="{StaticResource FlatList}">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <Border Margin="0,0,0,8" Padding="12,10" CornerRadius="2" BorderThickness="1" Background="{StaticResource SteamRow}" BorderBrush="Transparent">
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="Auto"/>
+                          <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="52" Height="32" CornerRadius="2" VerticalAlignment="Center" Background="{Binding AppId, Converter={StaticResource AppColor}}"/>
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}"/>
+                          <TextBlock Margin="0,2,0,0" Foreground="{StaticResource SteamMuted}" FontSize="12" Text="{Binding AppId, StringFormat=App ID {0}}"/>
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+              <TextBlock x:Name="LibraryEmpty" Text="Kütüphanede oyun yok." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SteamMuted}" IsHitTestVisible="False"/>
+            </Grid>
+            <Grid x:Name="LogView" Visibility="Collapsed">
+              <TextBlock x:Name="LogEmpty" Text="Henüz durum mesajı yok." Foreground="{StaticResource SteamMuted}" Margin="0,8,0,0"/>
+              <ListBox x:Name="LogList" ItemsSource="{Binding StatusLog}" Style="{StaticResource FlatList}" Background="Transparent">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding}" FontFamily="Consolas" FontSize="12.5" Foreground="#C5D4DE" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Grid>
+          </Grid>
+
+          <Border Grid.Row="4" BorderBrush="#243140" BorderThickness="0,1,0,0" Padding="26,10,26,12" Margin="-26,8,-26,0">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <StackPanel Margin="0,0,12,0">
+                <TextBlock Text="Şifre kaydedilmez." Foreground="{StaticResource SteamMuted}" FontSize="11.5"/>
+                <TextBlock x:Name="MatchLabel" TextWrapping="Wrap" Foreground="{StaticResource SteamMuted}" FontSize="11.5" Margin="0,2,0,0"/>
+              </StackPanel>
+              <TextBlock x:Name="DashboardStatus" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Center" Foreground="#C5D4DE" FontSize="12" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="2" Text="Oyunlar tek tek işlenir · haklar 3 dk'da bir kontrol edilir" TextWrapping="Wrap" TextAlignment="Right" Foreground="{StaticResource SteamMuted}" FontSize="11.5" VerticalAlignment="Center" Margin="12,0,0,0"/>
+            </Grid>
+          </Border>
+        </Grid>
+      </Grid>
+    </Grid>
+
+    <Border x:Name="GuardOverlay" Grid.RowSpan="2" Background="#99060A10" Visibility="Collapsed" IsHitTestVisible="False"/>
   </Grid>
- </Grid>
 </Window>
