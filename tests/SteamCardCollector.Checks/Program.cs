@@ -150,6 +150,9 @@ var finished = DropEvents.Find(new Dictionary<uint, TrackedDrop> { [10] = new("H
 Check(finished.Count == 1 && finished[0].Remaining == 0 && DropEvents.Format(finished).Contains("Hades"), "The last card drop records that the game is finished.");
 const string profile = "<profile><steamID64>76561198000000000</steamID64><steamID><![CDATA[Selim]]></steamID><avatarMedium><![CDATA[https://avatars.steamstatic.com/abc_medium.jpg]]></avatarMedium></profile>";
 Check(SteamWeb.TryReadProfile(profile, steamId, out var persona, out var avatar) && persona == "Selim" && avatar!.Host == "avatars.steamstatic.com", "Profile XML yields the nickname and avatar host.");
+var plainProfile = profile.Replace("<![CDATA[Selim]]>", "Player &amp; Co").Replace("avatarMedium", "avatarFull");
+Check(SteamWeb.TryReadProfile(plainProfile, steamId, out persona, out avatar) && persona == "Player & Co" && avatar != null,
+    "Profiles support escaped display names and alternate avatar sizes.");
 Check(!SteamWeb.TryReadProfile(profile, steamId + 1, out _, out _), "Another account's profile XML is ignored.");
 Check(SteamWeb.IsSteamImage(new Uri("https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg")), "Store capsule hosts are accepted.");
 Check(!SteamWeb.IsSteamImage(new Uri("https://example.com/steam/apps/730/header.jpg")), "Capsule art must stay on a Steam image host.");

@@ -132,7 +132,7 @@
   <data name="DropsLeft" xml:space="preserve"><value>剩余 {0} 张</value></data>
   <data name="Settings" xml:space="preserve"><value>设置</value></data>
   <data name="Language" xml:space="preserve"><value>语言</value></data>
-  <data name="LanguageHint" xml:space="preserve"><value>语言更改将在下次启动应用时生效。</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>选择保存以应用语言设置。</value></data>
   <data name="Guides" xml:space="preserve"><value>指南</value></data>
   <data name="LoginGuide" xml:space="preserve"><value>登录指南</value></data>
   <data name="DashboardGuide" xml:space="preserve"><value>收集指南</value></data>

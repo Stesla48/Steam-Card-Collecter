@@ -21,7 +21,8 @@ internal static class WelcomeChecks
             foreach (var option in AppLanguage.All)
             {
                 var language = option.Code;
-                App.ApplyLanguage(language);
+                owner.ChangeLanguage(language);
+                Check(Equals(owner.SettingsButton.Content, Strings.Settings));
                 var prefs = new Preferences(language, LoginGuideSeen: true, DashboardGuideSeen: true);
                 prefs.Save(testPath);
                 Check(Preferences.Load(testPath) == prefs);

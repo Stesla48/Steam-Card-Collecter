@@ -54,11 +54,6 @@ public partial class App : Application
                 {
                     window.VerifyInitialUi();
                     WelcomeChecks.Run(window, path);
-                    var bitmap = new System.Windows.Media.Imaging.RenderTargetBitmap((int)window.ActualWidth, (int)window.ActualHeight, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
-                    bitmap.Render(window);
-                    var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
-                    encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
-                    using (var file = File.Create(e.Args[1] + ".png")) encoder.Save(file);
                     File.WriteAllText(e.Args[1], "PASS: WPF window rendered; account controls gated; language selection, preferences, settings and both guides checked in every supported language.");
                 }
                 catch (Exception ex) { File.WriteAllText(e.Args[1], "FAIL: " + ex); Environment.ExitCode = 1; }
@@ -71,5 +66,7 @@ public partial class App : Application
         var culture = CultureInfo.GetCultureInfo(AppLanguage.Find(language)?.Code ?? "en");
         CultureInfo.DefaultThreadCurrentUICulture = culture;
         CultureInfo.CurrentUICulture = culture;
+        foreach (var property in typeof(Strings).GetProperties())
+            Current.Resources["Text." + property.Name] = (string)property.GetValue(null)!;
     }
 }

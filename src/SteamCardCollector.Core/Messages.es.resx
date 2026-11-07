@@ -132,7 +132,7 @@
   <data name="DropsLeft" xml:space="preserve"><value>{0} cromos restantes</value></data>
   <data name="Settings" xml:space="preserve"><value>Ajustes</value></data>
   <data name="Language" xml:space="preserve"><value>Idioma</value></data>
-  <data name="LanguageHint" xml:space="preserve"><value>El cambio de idioma se aplica al volver a abrir la aplicación.</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>Pulsa Guardar para aplicar el idioma.</value></data>
   <data name="Guides" xml:space="preserve"><value>Guías</value></data>
   <data name="LoginGuide" xml:space="preserve"><value>Guía de inicio de sesión</value></data>
   <data name="DashboardGuide" xml:space="preserve"><value>Guía de recolección</value></data>

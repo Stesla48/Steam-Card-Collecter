@@ -132,7 +132,7 @@
   <data name="DropsLeft" xml:space="preserve"><value>{0} drops left</value></data>
   <data name="Settings" xml:space="preserve"><value>Settings</value></data>
   <data name="Language" xml:space="preserve"><value>Language</value></data>
-  <data name="LanguageHint" xml:space="preserve"><value>Language changes take effect the next time you open the app.</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>Select Save to apply the language.</value></data>
   <data name="Guides" xml:space="preserve"><value>Guides</value></data>
   <data name="LoginGuide" xml:space="preserve"><value>Sign-in guide</value></data>
   <data name="DashboardGuide" xml:space="preserve"><value>Collection guide</value></data>

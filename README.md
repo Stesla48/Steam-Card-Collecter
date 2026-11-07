@@ -13,7 +13,7 @@ A Windows x64 desktop app that reads Steam trading card eligibility and uses you
 5. After sign-in, follow the collection guide. When the Steam IDs match and eligible games are available, select **Start**. Automatic start is off by default.
 6. Use **Activity log** to follow progress, **Refresh** to check card counts and **Stop** to end collection. Sign in again to load newly acquired games.
 
-Open **Settings** from either screen to replay either guide or choose the language for the next launch. Language and guide completion are stored in `%LOCALAPPDATA%\SteamCardCollector\preferences.json`.
+Open **Settings** from either screen to replay either guide or change the interface language immediately. Language and guide completion are stored in `%LOCALAPPDATA%\SteamCardCollector\preferences.json`.
 
 ## How collection works
 

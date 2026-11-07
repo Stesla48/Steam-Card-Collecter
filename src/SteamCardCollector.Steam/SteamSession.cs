@@ -132,8 +132,7 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
         UpdateCookie(result.AccessToken);
         await LoadLibraryAsync(token);
         try { await LoadProfileAsync(token); }
-        catch (OperationCanceledException) { throw; }
-        catch (Exception) { }
+        catch (Exception) when (!token.IsCancellationRequested) { }
     }
 
     private async Task LoadLibraryAsync(CancellationToken token)
@@ -185,10 +184,34 @@ public sealed class SteamSession : ICardSource, IAsyncDisposable
 
     private async Task LoadProfileAsync(CancellationToken cancellationToken)
     {
+        try
+        {
+            var player = client.GetHandler<SteamUnifiedMessages>()!.CreateService<Player>();
+            var request = new CPlayer_GetPlayerLinkDetails_Request { steamids = { SteamId } };
+            var reply = await player.GetPlayerLinkDetails(request).ToTask()
+                .WaitAsync(TimeSpan.FromSeconds(8), cancellationToken);
+            var profile = reply.Body.accounts.Select(account => account.public_data)
+                .FirstOrDefault(data => data?.steamid == SteamId);
+            if (reply.Result == EResult.OK && profile != null)
+            {
+                PersonaName = profile.persona_name?.Trim() ?? "";
+                if (profile.sha_digest_avatar is { Length: 20 } hash && hash.Any(value => value != 0))
+                {
+                    var hex = Convert.ToHexString(hash).ToLowerInvariant();
+                    AvatarBytes = await SteamImages.TryAvatarAsync(new Uri($"https://avatars.steamstatic.com/{hex}_medium.jpg"), cancellationToken);
+                }
+                if (PersonaName.Length > 0 && AvatarBytes != null) return;
+            }
+        }
+        catch (Exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            // The Community profile can supply fields the player service could not return.
+        }
+        cancellationToken.ThrowIfCancellationRequested();
         var xml = await GetTextAsync(new Uri($"https://steamcommunity.com/profiles/{SteamId}/?xml=1"), SteamWeb.IsCommunityProfile, 200_000, cancellationToken);
         if (!SteamWeb.TryReadProfile(xml, SteamId, out var persona, out var avatar)) return;
         if (!string.IsNullOrWhiteSpace(persona)) PersonaName = persona;
-        if (avatar is not null)
+        if (AvatarBytes == null && avatar is not null)
             AvatarBytes = await SteamImages.TryAvatarAsync(avatar, cancellationToken);
     }
 

@@ -132,7 +132,7 @@
   <data name="DropsLeft" xml:space="preserve"><value>{0} cartes restantes</value></data>
   <data name="Settings" xml:space="preserve"><value>Paramètres</value></data>
   <data name="Language" xml:space="preserve"><value>Langue</value></data>
-  <data name="LanguageHint" xml:space="preserve"><value>La langue changera à la prochaine ouverture de l’application.</value></data>
+  <data name="LanguageHint" xml:space="preserve"><value>Sélectionnez Enregistrer pour appliquer la langue.</value></data>
   <data name="Guides" xml:space="preserve"><value>Guides</value></data>
   <data name="LoginGuide" xml:space="preserve"><value>Guide de connexion</value></data>
   <data name="DashboardGuide" xml:space="preserve"><value>Guide de collecte</value></data>

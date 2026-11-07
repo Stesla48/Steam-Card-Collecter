@@ -1,6 +1,7 @@
 using SteamCardCollector.Core;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace SteamCardCollector.Steam;
 
@@ -42,18 +43,26 @@ public static class SteamWeb
     {
         persona = null;
         avatar = null;
-        var id = Regex.Match(xml, @"<steamID64>\s*(\d+)\s*</steamID64>", RegexOptions.IgnoreCase);
-        if (!id.Success || id.Groups[1].Value != expectedSteamId.ToString()) return false;
-        var name = Regex.Match(xml, @"<steamID>\s*<!\[CDATA\[(?<name>[\s\S]*?)\]\]>\s*</steamID>", RegexOptions.IgnoreCase);
-        if (name.Success)
+        if (xml.Length > 200_000) return false;
+        try
         {
-            var text = name.Groups["name"].Value.Trim();
-            if (text.Length is > 0 and <= 128) persona = text;
+            using var reader = XmlReader.Create(new StringReader(xml), new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit });
+            var root = XDocument.Load(reader).Root;
+            if (root?.Name != "profile" || !ulong.TryParse(root.Element("steamID64")?.Value, out var id) || id != expectedSteamId)
+                return false;
+            var name = root.Element("steamID")?.Value.Trim();
+            if (name?.Length is > 0 and <= 128) persona = name;
+            foreach (var field in new[] { "avatarMedium", "avatarFull", "avatarIcon" })
+            {
+                if (Uri.TryCreate(root.Element(field)?.Value.Trim(), UriKind.Absolute, out var uri) && IsSteamImage(uri))
+                {
+                    avatar = uri;
+                    break;
+                }
+            }
+            return persona != null || avatar != null;
         }
-        var image = Regex.Match(xml, @"<avatarMedium>\s*<!\[CDATA\[(?<url>https://[^\]\s]+)\]\]>\s*</avatarMedium>", RegexOptions.IgnoreCase);
-        if (image.Success && Uri.TryCreate(image.Groups["url"].Value, UriKind.Absolute, out var uri) && IsSteamImage(uri))
-            avatar = uri;
-        return persona is not null || avatar is not null;
+        catch (XmlException) { return false; }
     }
 
     public static async Task<byte[]?> ReadBoundedBytesAsync(Stream stream, int maxBytes, CancellationToken cancellationToken)

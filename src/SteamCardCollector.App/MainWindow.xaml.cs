@@ -115,8 +115,19 @@ public partial class MainWindow : Window
     {
         var settings = new WelcomeWindow(WelcomePage.Settings, preferences.Language)
         { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner, ShowInTaskbar = false };
-        if (settings.ShowDialog() == true)
+        if (settings.ShowDialog() == true && settings.SelectedLanguage != preferences.Language)
+        {
             SavePreferences(preferences with { Language = settings.SelectedLanguage });
+            ChangeLanguage(preferences.Language);
+        }
+    }
+
+    internal void ChangeLanguage(string? language)
+    {
+        App.ApplyLanguage(language);
+        AccountLabel.Text = session?.IsConnected == true
+            ? string.Format(Strings.WebSteamId, session.SteamId) : Strings.WebAccountDisconnected;
+        UpdateButtons();
     }
 
     internal void SetGuardOverlay(bool visible)
@@ -344,7 +355,7 @@ public partial class MainWindow : Window
             MatchBadge.Text = "";
             MatchDot.Visibility = Visibility.Collapsed;
         }
-        var account = string.IsNullOrWhiteSpace(session?.PersonaName) ? session?.AccountName : session.PersonaName;
+        var account = session?.PersonaName;
         SidebarName.Text = string.IsNullOrWhiteSpace(account) ? "Steam" : account;
         ShowAvatar(connected);
         SidebarPresence.Text = !connected ? Strings.Offline : accountsMatch ? Strings.Online : Strings.Connected;
@@ -581,7 +592,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void QrCancel_Click(object sender, RoutedEventArgs e) => qrCancel?.Cancel();
+    private void QrCancel_Click(object sender, RoutedEventArgs e) => ShowPassword_Click(sender, e);
 
     private async Task QrConnectAsync(CancellationToken cancellationToken)
     {
@@ -601,7 +612,11 @@ public partial class MainWindow : Window
             UpdateButtons();
         }));
         StatusLabel.Text = Strings.QrPreparing;
-        var progress = new Progress<string>(ShowQrCode);
+        var progress = new Progress<string>(url =>
+        {
+            if (qrMode && session == current && !cancellationToken.IsCancellationRequested && !closing)
+                ShowQrCode(url);
+        });
         try
         {
             await current.LoginWithQrAsync(progress, cancellationToken);

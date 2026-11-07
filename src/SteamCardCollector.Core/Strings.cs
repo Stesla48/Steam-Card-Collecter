@@ -5,7 +5,7 @@ namespace SteamCardCollector.Core;
 public static class Strings
 {
     private static readonly ResourceManager Messages = new("SteamCardCollector.Core.Messages", typeof(Strings).Assembly);
-    private static string Get(string key) => Messages.GetString(key) ?? throw new MissingManifestResourceException(key);
+    private static string Get(string key) => Messages.GetString(key, System.Globalization.CultureInfo.DefaultThreadCurrentUICulture) ?? throw new MissingManifestResourceException(key);
 
     public static string SteamDisconnectedSignInAgain => Get(nameof(SteamDisconnectedSignInAgain));
     public static string SteamSignedOutSignInAgain => Get(nameof(SteamSignedOutSignInAgain));
