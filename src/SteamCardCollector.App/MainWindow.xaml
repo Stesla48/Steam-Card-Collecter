@@ -3,7 +3,7 @@
         xmlns:i="clr-namespace:SteamCardCollector.Core;assembly=SteamCardCollector.Core"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
-        Icon="Assets/PocketCard.ico" Title="Steam Card Collector · 0.5.0"
+        Icon="Assets/PocketCard.ico" Title="Steam Card Collector · 1.0.0"
         Width="1040" Height="740" MinWidth="740" MinHeight="650"
         WindowStyle="None" ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
@@ -25,7 +25,7 @@
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,0,0">
           <Image Source="Assets/PocketCard.ico" Width="22" Height="22" Margin="0,0,8,0"/>
           <TextBlock Text="STEAM CARD COLLECTOR" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="#D5DDE6"/>
-          <TextBlock Text="0.5.0" Margin="8,0,0,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource SteamCyan}"/>
+          <TextBlock Text="1.0.0" Margin="8,0,0,0" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource SteamCyan}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
           <Button x:Name="SettingsButton" shell:WindowChrome.IsHitTestVisibleInChrome="True" Content="{DynamicResource Text.Settings}" Style="{StaticResource TextButton}" Margin="0,0,10,0" Click="Settings_Click"/>
