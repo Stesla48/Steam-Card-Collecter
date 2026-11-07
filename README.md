@@ -1,6 +1,6 @@
-# Steam Card Collector 0.4.0
+# Steam Card Collector 0.5.0
 
-A Windows x64 desktop app that reads Steam trading card eligibility and uses your local Steam client to show one eligible game as playing.
+A Windows x64 desktop app that reads Steam trading card eligibility and uses your local Steam client to run up to 32 selected eligible games concurrently.
 
 **Residual risk.** This is third-party software, not a Valve product. You enter your Steam password into this app. A process running as the same Windows user may be able to read your password while it is in memory.
 
@@ -21,7 +21,7 @@ SteamKit2 reads your library and badges. Steamworks.NET 20.2.0 and the Steam SDK
 
 The collector reads the active Steam process and account. The worker also verifies the actual Steam ID, App ID, online session and game ownership. Closing or restarting Steam, switching accounts, or losing the local connection stops collection. Stop and shutdown end the worker. It also exits when the parent connection closes or its five-second heartbeat expires.
 
-The queue refreshes every three minutes. Unknown individual card counts stay unresolved while verified games proceed. A failed badge page or ownership check stops collection. Drop timing is controlled by Steam. A user observed a real drop with the 0.2.0 local client flow.
+Every three minutes the collector releases games with no verified drops left and fills open slots from the selection. Select only one game for solo collection. Concurrent play can build playtime, but Steam determines card drops. Unknown individual card counts stay unresolved while verified games proceed. An ownership or initialization failure skips that game for the current run. A failed badge scan or account change stops all workers. A user observed a real drop with the 0.2.0 local client flow.
 
 ## Build and test
 
@@ -34,10 +34,10 @@ dotnet run --project src/SteamCardCollector.App -c Release
 powershell -ExecutionPolicy Bypass -File scripts/Publish-Release.ps1
 ```
 
-The packaging script builds a self-contained x64 app with .NET 8.0.33, runs the queue, account, parser, WPF, onboarding and native checks, and rejects a mismatched worker request. It writes the Windows ZIP, source ZIP and SHA-256 checksums under `dist/0.4.0`. Native DLL integrity is verified before loading. For bundled licenses and the corresponding SteamKit2 source, see [third-party notices](THIRD-PARTY-NOTICES.md).
+The packaging script builds a self-contained x64 app with .NET 8.0.33, runs the queue, account, parser, WPF, onboarding and native checks, and rejects a mismatched worker request. It writes the Windows ZIP, source ZIP and SHA-256 checksums under `dist/0.5.0`. Native DLL integrity is verified before loading. For bundled licenses and the corresponding SteamKit2 source, see [third-party notices](THIRD-PARTY-NOTICES.md).
 
 ## GitHub builds and releases
 
 Pushes to main or master and pull requests produce downloadable Actions artifacts. To test another branch, open **Actions → Build and release Windows ZIP → Run workflow**, select the branch and leave the release tag empty.
 
-To publish, set the app project version, commit it, then publish a release targeting that commit with a matching tag (for example, `v0.4.0`). The workflow attaches the Windows ZIP, source ZIP and checksums to the release using GitHub's temporary token. To rebuild an existing release, supply its tag when running the workflow manually. The workflow checks out that tag and replaces the matching assets.
+To publish, set the app project version, commit it, then publish a release targeting that commit with a matching tag (for example, `v0.5.0`). The workflow attaches the Windows ZIP, source ZIP and checksums to the release using GitHub's temporary token. To rebuild an existing release, supply its tag when running the workflow manually. The workflow checks out that tag and replaces the matching assets.

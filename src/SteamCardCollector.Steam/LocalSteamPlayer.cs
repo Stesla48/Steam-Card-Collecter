@@ -56,6 +56,8 @@ public sealed class LocalSteamPlayer : ILocalSteamPlayer
             await worker.StandardInput.WriteLineAsync("ping".AsMemory(), timeout.Token);
             var line = await worker.StandardOutput.ReadLineAsync(timeout.Token);
             var reply = ReadReply(line);
+            if (reply is { Ready: false, GameUnavailable: true } && reply.AppId == appId && reply.SteamId == expectedSteamId)
+                throw new GameUnavailableException(reply.Message);
             if (reply is null || !reply.Ready || reply.AppId != appId || reply.SteamId != expectedSteamId)
                 throw new InvalidOperationException(reply?.Message ?? Strings.WorkerHandshakeFailed);
             if (ReadIdentity() != identity) throw new InvalidOperationException(Strings.TheLocalSteamSessionChanged);

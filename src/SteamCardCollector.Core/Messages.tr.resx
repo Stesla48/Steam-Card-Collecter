@@ -118,7 +118,7 @@
   <data name="YourLibraryIsEmpty" xml:space="preserve"><value>Kütüphanede oyun yok.</value></data>
   <data name="NoActivityYet" xml:space="preserve"><value>Henüz durum mesajı yok.</value></data>
   <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>Şifre kaydedilmez.</value></data>
-  <data name="QueueTimingNote" xml:space="preserve"><value>Oyunlar tek tek işlenir · haklar 3 dk'da bir kontrol edilir</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>Aynı anda en fazla 32 oyun · haklar 3 dakikada bir yenilenir</value></data>
   <data name="Cancel" xml:space="preserve"><value>İptal</value></data>
   <data name="VerificationCode" xml:space="preserve"><value>Doğrulama kodu</value></data>
   <data name="Confirm" xml:space="preserve"><value>ONAYLA</value></data>
@@ -150,7 +150,7 @@
   <data name="DashGamesTitle" xml:space="preserve"><value>Kart hakkı olan oyunlara bak</value></data>
   <data name="DashGamesBody" xml:space="preserve"><value>Kart hakkı kalanlar bölümünde doğrulanmış oyunları görürsün. Yenile ile tekrar kontrol et. Sayacı okunamayan bir oyun diğerlerini bekletmez.</value></data>
   <data name="DashStartTitle" xml:space="preserve"><value>Toplamayı başlat</value></data>
-  <data name="DashStartBody" xml:space="preserve"><value>ID’ler eşleştiğinde ve uygun bir oyun olduğunda Başlat’a bas. Uygulama oyunları sırayla çalıştırırken Steam’i çevrimiçi tut.</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>Steam ID’leri eşleştiğinde oyunları seçip Başlat’a bas. Aynı anda 32 oyun çalışabilir. Tek oyunla toplamak için yalnızca onu seç.</value></data>
   <data name="DashLogTitle" xml:space="preserve"><value>İlerlemeyi takip et</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>Durum günlüğünden gelişmeleri takip et. Toplamayı bitirmek için Durdur’a bas. İki rehberi de Ayarlar’dan tekrar açabilirsin.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Tercihler kaydedilemedi. Yerel uygulama verileri klasörünün yazma iznini kontrol et.</value></data>

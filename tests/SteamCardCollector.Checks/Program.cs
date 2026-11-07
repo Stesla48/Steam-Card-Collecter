@@ -4,7 +4,7 @@ using SteamCardCollector.Steam;
 
 var checkCount = 0;
 void Check(bool condition, string message) { checkCount++; if (!condition) throw new Exception(message); }
-var session = new TestSession();
+var session = new TestSession { AssertParallel = true };
 await new CardFarmer(session, TimeSpan.FromMilliseconds(1)).RunAsync(null, CancellationToken.None);
 Check(session.Played.SequenceEqual(new uint?[] { 10, 20, null }), "Queue must skip zero drops, keep current game, advance, and stop.");
 var failure = new TestSession { Fail = true };
@@ -62,26 +62,26 @@ async Task Reject(Func<Task> action, string message)
 }
 var web = new FakeCards { SteamId = steamId };
 var local = new FakeLocalPlayer { Identity = new(steamId + 1, 100) };
-var mismatch = new LocalFarmingSession(web, local);
+var mismatch = new LocalFarmingSession(web, local.ReadIdentity, () => local);
 await Reject(() => mismatch.GetCardGamesAsync(default), "Different accounts must block card farming before any read.");
-await Reject(() => mismatch.SetPlayingAsync(10, default), "Different accounts must never launch a game worker.");
+await Reject(() => mismatch.StartGameAsync(10, default), "Different accounts must never launch a game worker.");
 Check(local.Started.Count == 0 && web.Reads == 0, "Mismatched accounts reached a side effect.");
 
 local.Identity = new(steamId, 100);
-var matched = new LocalFarmingSession(web, local);
-await Reject(() => matched.SetPlayingAsync(10, default), "A game must have a verified card counter before launch.");
+var matched = new LocalFarmingSession(web, local.ReadIdentity, () => local);
+await Reject(() => matched.StartGameAsync(10, default), "A game must have a verified card counter before launch.");
 await matched.GetCardGamesAsync(default);
-await Reject(() => matched.SetPlayingAsync(20, default), "An unverified AppID must not launch.");
-await matched.SetPlayingAsync(10, default);
+await Reject(() => matched.StartGameAsync(20, default), "An unverified AppID must not launch.");
+await matched.StartGameAsync(10, default);
 Check(local.Started.SequenceEqual(new uint[] { 10 }) && local.ExpectedAccount == steamId, "Matched local play must receive the verified web SteamID.");
 
 local.Identity = new(steamId, 101);
-await Reject(() => matched.SetPlayingAsync(10, default), "A restarted client must invalidate the captured session even for the same account.");
-await matched.SetPlayingAsync(null, new CancellationToken(true));
+await Reject(() => matched.StartGameAsync(10, default), "A restarted client must invalidate the captured session even for the same account.");
+await matched.StopAllAsync();
 Check(local.Stops == 1, "Cleanup must work after the identity changes and with a cancelled token.");
 
 local.Identity = new(steamId + 1, 100);
-await Reject(() => matched.SetPlayingAsync(10, default), "A changed local account must invalidate previously verified candidates.");
+await Reject(() => matched.StartGameAsync(10, default), "A changed local account must invalidate previously verified candidates.");
 local.Identity = new(steamId, 100);
 web.SteamId = 0;
 await Reject(() => matched.GetCardGamesAsync(default), "A missing web account must block farming.");
@@ -93,10 +93,10 @@ local.Offline = false;
 web.OnRead = () => local.Identity = new(steamId + 1, 100);
 await Reject(() => matched.GetCardGamesAsync(default), "An account switch during a card HTTP request must reject its result.");
 local.Identity = new(steamId, 100); web.OnRead = null;
-await Reject(() => matched.SetPlayingAsync(10, default), "A rejected card scan must invalidate earlier candidates.");
+await Reject(() => matched.StartGameAsync(10, default), "A rejected card scan must invalidate earlier candidates.");
 await matched.GetCardGamesAsync(default);
 local.OnStart = () => local.Identity = new(steamId + 1, 100);
-await Reject(() => matched.SetPlayingAsync(10, default), "An account switch during worker startup must be detected and cleaned up.");
+await Reject(() => matched.StartGameAsync(10, default), "An account switch during worker startup must be detected and cleaned up.");
 Check(local.Stops == 2, "Worker startup identity changes must stop the launched worker.");
 Console.WriteLine("PASS: local/web identity mismatch, missing login, client restart, scan/start races, verified candidates and unconditional cleanup.");
 
@@ -105,7 +105,7 @@ var partialLocal = new FakeLocalPlayer { Identity = new(steamId, 200) };
 partialWeb.OnRead = () => { if (partialWeb.Reads > 1) partialWeb.Games = Array.Empty<CardGame>(); };
 try
 {
-    await new CardFarmer(new LocalFarmingSession(partialWeb, partialLocal), TimeSpan.FromMilliseconds(1)).RunAsync(null, default);
+    await new CardFarmer(new LocalFarmingSession(partialWeb, partialLocal.ReadIdentity, () => partialLocal), TimeSpan.FromMilliseconds(1)).RunAsync(null, default);
     throw new Exception("A partial scan reported completion.");
 }
 catch (InvalidDataException) { Check(partialLocal.Started.SequenceEqual(new uint[] { 10 }) && partialLocal.Stops == 1, "Unknown counters must not block a valid game; an incomplete tail must stop without claiming completion."); }
@@ -113,8 +113,47 @@ catch (InvalidDataException) { Check(partialLocal.Started.SequenceEqual(new uint
 var changedWeb = new FakeCards { SteamId = steamId };
 var changedLocal = new FakeLocalPlayer { Identity = new(steamId, 300) };
 changedWeb.OnRead = () => { if (changedWeb.Reads > 1) changedLocal.Identity = new(steamId + 1, 300); };
-await Reject(() => new CardFarmer(new LocalFarmingSession(changedWeb, changedLocal), TimeSpan.FromMilliseconds(1)).RunAsync(null, default), "An active account change must stop farming.");
+await Reject(() => new CardFarmer(new LocalFarmingSession(changedWeb, changedLocal.ReadIdentity, () => changedLocal), TimeSpan.FromMilliseconds(1)).RunAsync(null, default), "An active account change must stop farming.");
 Check(changedLocal.Started.Count == 1 && changedLocal.Stops == 1, "An account switch must clear local play and never launch the next game.");
+
+var batchCards = new FakeCards { SteamId = steamId };
+var batchWorkers = new List<FakeLocalPlayer>();
+var batchIds = Enumerable.Range(1, 35).Select(i => new CardGame((uint)i, $"Game {i}", 1)).ToArray();
+batchCards.Games = batchIds;
+var batchIdentity = new LocalSteamIdentity(steamId, 501);
+FakeLocalPlayer CreateBatchWorker()
+{
+    var worker = new FakeLocalPlayer { Identity = batchIdentity };
+    worker.OnStart = () =>
+    {
+        if (worker.Started.Single() == 2) throw new GameUnavailableException("Unavailable test game");
+    };
+    batchWorkers.Add(worker);
+    return worker;
+}
+uint[] RunningGames() => batchWorkers.Where(w => w.Stops == 0).SelectMany(w => w.Started).Order().ToArray();
+batchCards.OnRead = () =>
+{
+    if (batchCards.Reads == 2)
+    {
+        Check(RunningGames().Length == 32 && !RunningGames().Contains(2u), "An unavailable game must leave room for 32 other verified games.");
+        batchCards.Games = batchIds.Skip(3).ToArray();
+    }
+    if (batchCards.Reads == 3)
+    {
+        Check(RunningGames().SequenceEqual(batchIds.Skip(3).Select(g => g.AppId)), "Completed games must yield their slots to queued games.");
+        throw new IOException("Test connection lost");
+    }
+};
+try
+{
+    await new CardFarmer(new LocalFarmingSession(batchCards, () => batchIdentity, CreateBatchWorker), TimeSpan.Zero).RunAsync(null, default);
+    throw new Exception("Expected disconnection");
+}
+catch (IOException)
+{
+    Check(batchWorkers.Count == 35 && batchWorkers.All(w => w.Stops == 1), "All workers must be released on a scan failure, without restarting surviving games.");
+}
 
 var invalidCount = BadgePageParser.Parse(Page(Row(10, "99999999999999999999999 card drops remaining") + Row(20, "2 card drops remaining")), steamId);
 Check(invalidCount.Games.Single().AppId == 20 && invalidCount.UnresolvedAppIds.SequenceEqual(new uint[] { 10 }), "An overflowing counter must not block valid games or be treated as zero.");
@@ -180,7 +219,7 @@ sealed class FakeLocalPlayer : ILocalSteamPlayer
  public LocalSteamIdentity ReadIdentity() => Offline ? throw new InvalidOperationException("Steam offline") : Identity;
  public Task StartAsync(uint appId, ulong expectedSteamId, CancellationToken cancellationToken) { ExpectedAccount = expectedSteamId; Started.Add(appId); OnStart?.Invoke(); return Task.CompletedTask; }
  public Task StopAsync(CancellationToken cancellationToken) { Stops++; return Task.CompletedTask; }
- public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+ public ValueTask DisposeAsync() { Stops++; return ValueTask.CompletedTask; }
 }
 
 sealed class ActiveSession : ISteamSession
@@ -188,7 +227,9 @@ sealed class ActiveSession : ISteamSession
  public TaskCompletionSource Started { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
  public List<uint?> Played { get; } = new();
  public Task<IReadOnlyList<CardGame>> GetCardGamesAsync(CancellationToken cancellationToken) => Task.FromResult<IReadOnlyList<CardGame>>(new[] { new CardGame(10, "Active", 1) });
- public Task SetPlayingAsync(uint? appId, CancellationToken cancellationToken) { Played.Add(appId); if (appId is not null) Started.TrySetResult(); return Task.CompletedTask; }
+ public Task StartGameAsync(uint appId, CancellationToken cancellationToken) { Played.Add(appId); Started.TrySetResult(); return Task.CompletedTask; }
+ public Task StopGameAsync(uint id) => Task.CompletedTask;
+ public Task StopAllAsync() { Played.Add(null); return Task.CompletedTask; }
  public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }
 
@@ -197,18 +238,23 @@ sealed class IncompleteSession : ISteamSession
  public IReadOnlyList<uint> UnresolvedAppIds => new uint[] {1245620};
  public bool Cleared { get; private set; }
  public Task<IReadOnlyList<CardGame>> GetCardGamesAsync(CancellationToken cancellationToken) => Task.FromResult<IReadOnlyList<CardGame>>(Array.Empty<CardGame>());
- public Task SetPlayingAsync(uint? appId, CancellationToken cancellationToken) { Cleared = appId is null; return Task.CompletedTask; }
+ public Task StartGameAsync(uint id, CancellationToken token) => throw new InvalidOperationException();
+ public Task StopGameAsync(uint id) => Task.CompletedTask;
+ public Task StopAllAsync() { Cleared = true; return Task.CompletedTask; }
  public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }
 
 sealed class TestSession : ISteamSession
 {
  public List<uint?> Played { get; } = new();
+ public bool AssertParallel { get; init; }
  public bool Fail { get; init; }
  private int reads;
  public Task<IReadOnlyList<CardGame>> GetCardGamesAsync(CancellationToken cancellationToken)
  {
   if (Fail) throw new IOException("Offline");
+  if (AssertParallel && reads == 1 && !Active.SequenceEqual(new uint[] {10, 20})) throw new Exception("Expected both games to be active before the second scan.");
+  if (AssertParallel && reads == 3 && !Active.SequenceEqual(new uint[] {20})) throw new Exception("Expected only the remaining game to stay active.");
   IReadOnlyList<CardGame> games = reads++ switch {
    0 => new[] { new CardGame(1,"No drops",0), new CardGame(10,"First",2), new CardGame(20,"Second",1) },
    1 => new[] { new CardGame(10,"First",1), new CardGame(20,"Second",1) },
@@ -216,6 +262,9 @@ sealed class TestSession : ISteamSession
    _ => Array.Empty<CardGame>() };
   return Task.FromResult(games);
  }
- public Task SetPlayingAsync(uint? appId, CancellationToken cancellationToken) { Played.Add(appId); return Task.CompletedTask; }
+ public List<uint> Active { get; } = new();
+ public Task StartGameAsync(uint id, CancellationToken token) { Played.Add(id); Active.Add(id); return Task.CompletedTask; }
+ public Task StopGameAsync(uint id) { Active.Remove(id); return Task.CompletedTask; }
+ public Task StopAllAsync() { Active.Clear(); Played.Add(null); return Task.CompletedTask; }
  public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }
