@@ -118,7 +118,7 @@
   <data name="YourLibraryIsEmpty" xml:space="preserve"><value>Deine Bibliothek ist leer.</value></data>
   <data name="NoActivityYet" xml:space="preserve"><value>Noch keine Aktivität.</value></data>
   <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>Dein Passwort bleibt im Arbeitsspeicher.</value></data>
-  <data name="QueueTimingNote" xml:space="preserve"><value>Ein Spiel nach dem anderen · Prüfung alle 3 Minuten</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>Bis zu 32 Spiele gleichzeitig · Prüfung alle 3 Minuten</value></data>
   <data name="Cancel" xml:space="preserve"><value>Abbrechen</value></data>
   <data name="VerificationCode" xml:space="preserve"><value>Bestätigungscode</value></data>
   <data name="Confirm" xml:space="preserve"><value>BESTÄTIGEN</value></data>
@@ -150,7 +150,7 @@
   <data name="DashGamesTitle" xml:space="preserve"><value>Berechtigte Spiele prüfen</value></data>
   <data name="DashGamesBody" xml:space="preserve"><value>Berechtigte Spiele zeigt bestätigte Kartenfunde. Wähle Aktualisieren, um erneut zu prüfen. Spiele mit unbekannter Kartenzahl warten, während andere laufen.</value></data>
   <data name="DashStartTitle" xml:space="preserve"><value>Sammlung starten</value></data>
-  <data name="DashStartBody" xml:space="preserve"><value>Stimmen die IDs überein und ist ein Spiel berechtigt, wähle Start. Lass Steam online, während die App die Spiele nacheinander ausführt.</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>Wenn die Steam-IDs übereinstimmen, wähle Spiele und drücke Start. Bis zu 32 laufen gleichzeitig. Für ein einzelnes Spiel wähle nur dieses aus.</value></data>
   <data name="DashLogTitle" xml:space="preserve"><value>Fortschritt verfolgen</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>Im Aktivitätsprotokoll siehst du den Fortschritt. Wähle Stopp, um die Sammlung zu beenden. Beide Anleitungen findest du in den Einstellungen.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Einstellungen konnten nicht gespeichert werden. Prüfe die Schreibrechte im lokalen Anwendungsdatenordner.</value></data>

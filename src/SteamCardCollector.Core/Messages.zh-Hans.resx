@@ -118,7 +118,7 @@
   <data name="YourLibraryIsEmpty" xml:space="preserve"><value>游戏库为空。</value></data>
   <data name="NoActivityYet" xml:space="preserve"><value>暂无活动。</value></data>
   <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>密码仅保存在内存中。</value></data>
-  <data name="QueueTimingNote" xml:space="preserve"><value>每次运行一款游戏 · 每 3 分钟刷新掉卡数</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>最多同时运行 32 款游戏 · 每 3 分钟刷新</value></data>
   <data name="Cancel" xml:space="preserve"><value>取消</value></data>
   <data name="VerificationCode" xml:space="preserve"><value>验证码</value></data>
   <data name="Confirm" xml:space="preserve"><value>确认</value></data>
@@ -150,7 +150,7 @@
   <data name="DashGamesTitle" xml:space="preserve"><value>查看可掉卡游戏</value></data>
   <data name="DashGamesBody" xml:space="preserve"><value>可掉卡游戏列表显示已确认有剩余掉卡次数的游戏。选择刷新可重新检查。掉卡数未知的游戏不会阻止其他游戏运行。</value></data>
   <data name="DashStartTitle" xml:space="preserve"><value>开始收集</value></data>
-  <data name="DashStartBody" xml:space="preserve"><value>当 ID 一致且有可掉卡游戏时，选择开始。应用将逐个运行游戏，请保持桌面 Steam 在线。</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>Steam ID 一致后，勾选游戏并点击开始。最多可同时运行 32 款游戏。只勾选一款即可单独收集。</value></data>
   <data name="DashLogTitle" xml:space="preserve"><value>查看进度</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>打开活动日志查看进度。选择停止可结束收集。在设置中可重新打开任一指南。</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>无法保存偏好设置。请检查本地应用数据文件夹的写入权限。</value></data>

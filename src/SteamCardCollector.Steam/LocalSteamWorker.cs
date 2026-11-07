@@ -5,7 +5,7 @@ using Steamworks;
 
 namespace SteamCardCollector.Steam;
 
-public sealed record WorkerReply(bool Ready, uint AppId, ulong SteamId, string Message);
+public sealed record WorkerReply(bool Ready, uint AppId, ulong SteamId, string Message, bool GameUnavailable = false);
 
 public static class LocalSteamWorker
 {
@@ -23,7 +23,7 @@ public static class LocalSteamWorker
                 !int.TryParse(args[3], out var expectedPid) || expectedPid <= 0)
                 throw new InvalidOperationException(Strings.InvalidLocalSteamRequest);
 
-            using var sessionLock = new Mutex(false, @"Local\SteamCardCollector.Playing");
+            using var sessionLock = new Mutex(false, $@"Local\SteamCardCollector.Game.{appId}");
             bool acquired;
             try { acquired = sessionLock.WaitOne(0); }
             catch (AbandonedMutexException) { acquired = true; }
@@ -38,7 +38,7 @@ public static class LocalSteamWorker
                 Environment.SetEnvironmentVariable("SteamAppId", appId.ToString(CultureInfo.InvariantCulture));
                 Environment.SetEnvironmentVariable("SteamGameId", appId.ToString(CultureInfo.InvariantCulture));
                 if (!SteamAPI.Init())
-                    throw new InvalidOperationException(Strings.LocalConnectionFailed);
+                    throw new GameUnavailableException(Strings.LocalConnectionFailed);
                 initialized = true;
 
                 void VerifySession()
@@ -49,7 +49,7 @@ public static class LocalSteamWorker
                 }
                 VerifySession();
                 if (!SteamApps.BIsSubscribed())
-                    throw new InvalidOperationException(Strings.GameOwnershipUnverified);
+                    throw new GameUnavailableException(Strings.GameOwnershipUnverified);
 
                 var lastPing = Environment.TickCount64;
                 var stopped = 0;
@@ -84,7 +84,7 @@ public static class LocalSteamWorker
         {
             var message = ex is IOException or InvalidOperationException ? ex.Message :
                 string.Format(Strings.NativeComponentStartupFailed, ex.GetType().Name);
-            Reply(new(false, appId, expectedId, message));
+            Reply(new(false, appId, expectedId, message, ex is GameUnavailableException));
             return 1;
         }
         finally { if (initialized) SteamAPI.Shutdown(); }

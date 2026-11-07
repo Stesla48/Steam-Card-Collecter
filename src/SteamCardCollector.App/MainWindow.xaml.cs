@@ -20,7 +20,6 @@ public partial class MainWindow : Window
     public ObservableCollection<string> StatusLog { get; } = new();
     private readonly CancellationTokenSource lifetime = new();
     private SteamSession? session;
-    private readonly LocalSteamPlayer localPlayer = new();
     private readonly DispatcherTimer identityTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private bool accountsMatch;
     private string? interruption;
@@ -57,12 +56,12 @@ public partial class MainWindow : Window
         set => SetValue(IsFarmingProperty, value);
     }
 
-    public static readonly DependencyProperty CurrentFarmAppIdProperty =
-        DependencyProperty.Register(nameof(CurrentFarmAppId), typeof(uint?), typeof(MainWindow), new PropertyMetadata(null));
-    public uint? CurrentFarmAppId
+    public static readonly DependencyProperty ActiveFarmIdsProperty =
+        DependencyProperty.Register(nameof(ActiveFarmIds), typeof(IReadOnlySet<uint>), typeof(MainWindow), new PropertyMetadata(null));
+    public IReadOnlySet<uint>? ActiveFarmIds
     {
-        get => (uint?)GetValue(CurrentFarmAppIdProperty);
-        set => SetValue(CurrentFarmAppIdProperty, value);
+        get => (IReadOnlySet<uint>?)GetValue(ActiveFarmIdsProperty);
+        set => SetValue(ActiveFarmIdsProperty, value);
     }
 
     public static readonly DependencyProperty ImageRevisionProperty =
@@ -85,14 +84,6 @@ public partial class MainWindow : Window
         DependencyPropertyDescriptor.FromProperty(TextBlock.TextProperty, typeof(TextBlock))
             .AddValueChanged(StatusLabel, (_, _) => MirrorStatus(log: true));
         MirrorStatus(log: false);
-        localPlayer.Interrupted += message => Dispatcher.BeginInvoke(new Action(() =>
-        {
-            if (closing || farmTask is not { IsCompleted: false }) return;
-            interruption = message;
-            farmCancellation?.Cancel();
-            StatusLabel.Text = message;
-            UpdateButtons();
-        }));
         identityTimer.Tick += (_, _) => UpdateButtons();
         identityTimer.Start();
         UpdateButtons();
@@ -166,7 +157,7 @@ public partial class MainWindow : Window
         Password.Clear();
         try
         {
-            await localPlayer.StopAsync(CancellationToken.None);
+
             if (session is not null) await session.DisposeAsync();
             Games.Clear(); Library.Clear(); CountLabel.Text = ""; hasCountWarning = false;
             ResetAccountVisuals();
@@ -269,16 +260,25 @@ public partial class MainWindow : Window
                     dropText = DescribeDrops(status.Games);
                     SetGames(status.Games);
                 }
-                StatusLabel.Text = dropText ?? (status.CurrentGame is null ? status.Message : $"{status.CurrentGame.Name} · {status.Message}");
+                StatusLabel.Text = dropText ?? status.Message;
                 if (dropText is not null) ShowDropBanner(dropText);
-                if (status.CurrentGame is { } game) CurrentFarmAppId = game.AppId;
-                else ClearValue(CurrentFarmAppIdProperty);
+                ActiveFarmIds = status.ActiveIds;
             });
-            var localSession = new LocalFarmingSession(current, localPlayer);
-            localSession.EnsureSameAccount();
-            ISteamSession farming = localSession;
-            if (selected.Count != Games.Count) farming = new GameSelectionSession(localSession, selected);
-            await new CardFarmer(farming).RunAsync(progress, token);
+            using var collectionLock = new Mutex(false, @"Local\SteamCardCollector.Playing", out var firstCollector);
+            if (!firstCollector) throw new InvalidOperationException(Strings.AnotherCollectorIsAlreadyRunning);
+            LocalSteamPlayer CreatePlayer()
+            {
+                var player = new LocalSteamPlayer();
+                player.Interrupted += message => Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (closing || token.IsCancellationRequested || session != current) return;
+                    interruption = message;
+                    farmCancellation?.Cancel();
+                }));
+                return player;
+            }
+            await using var localSession = new LocalFarmingSession(current, LocalSteamAccount.Read, CreatePlayer);
+            await new CardFarmer(localSession).RunAsync(progress, token, selected);
         }
         catch (OperationCanceledException) { StatusLabel.Text = interruption ?? Strings.CollectionStopped; }
         catch (Exception ex) { ShowError(ex); }
@@ -296,7 +296,7 @@ public partial class MainWindow : Window
         accountsMatch = false;
         try
         {
-            var local = localPlayer.ReadIdentity();
+            var local = LocalSteamAccount.Read();
             LocalAccountLabel.Text = $"Steam ID: {local.SteamId}";
             DashboardLocalId.Text = string.Format(Strings.LocalSteamIdLabel, local.SteamId);
             LocalChipTitle.Text = Strings.LocalSteamConnected;
@@ -324,7 +324,7 @@ public partial class MainWindow : Window
         StartButton.IsEnabled = !closing && !busy && !farming && connected && accountsMatch && anySelected;
         StopButton.IsEnabled = !closing && farming && farmCancellation?.IsCancellationRequested == false;
         IsFarming = farming;
-        if (!farming) ClearValue(CurrentFarmAppIdProperty);
+        if (!farming) ClearValue(ActiveFarmIdsProperty);
         if (!connected) preferLogin = false;
         var showDashboard = connected && !preferLogin;
         LoginView.Visibility = showDashboard ? Visibility.Collapsed : Visibility.Visible;
@@ -412,7 +412,7 @@ public partial class MainWindow : Window
         {
             if (operation is not null) await operation;
             if (farmTask is not null) await farmTask;
-            await localPlayer.DisposeAsync();
+
             if (session is not null) await session.DisposeAsync();
         }
         finally
@@ -596,7 +596,7 @@ public partial class MainWindow : Window
 
     private async Task QrConnectAsync(CancellationToken cancellationToken)
     {
-        await localPlayer.StopAsync(CancellationToken.None);
+
         if (session is not null) await session.DisposeAsync();
         Games.Clear(); Library.Clear(); CountLabel.Text = "";
         ResetAccountVisuals();

@@ -118,7 +118,7 @@
   <data name="YourLibraryIsEmpty" xml:space="preserve"><value>Votre bibliothèque est vide.</value></data>
   <data name="NoActivityYet" xml:space="preserve"><value>Aucune activité pour le moment.</value></data>
   <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>Votre mot de passe reste en mémoire.</value></data>
-  <data name="QueueTimingNote" xml:space="preserve"><value>Un jeu à la fois · vérification toutes les 3 minutes</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>Jusqu’à 32 jeux à la fois · vérification toutes les 3 minutes</value></data>
   <data name="Cancel" xml:space="preserve"><value>Annuler</value></data>
   <data name="VerificationCode" xml:space="preserve"><value>Code de vérification</value></data>
   <data name="Confirm" xml:space="preserve"><value>CONFIRMER</value></data>
@@ -150,7 +150,7 @@
   <data name="DashGamesTitle" xml:space="preserve"><value>Consultez les jeux admissibles</value></data>
   <data name="DashGamesBody" xml:space="preserve"><value>Les jeux admissibles ont des cartes disponibles confirmées. Sélectionnez Actualiser pour vérifier à nouveau. Un jeu au nombre de cartes inconnu laisse les autres avancer.</value></data>
   <data name="DashStartTitle" xml:space="preserve"><value>Démarrez la collecte</value></data>
-  <data name="DashStartBody" xml:space="preserve"><value>Lorsque les identifiants correspondent et qu’un jeu est admissible, sélectionnez Démarrer. Gardez Steam en ligne pendant que les jeux passent un par un.</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>Lorsque les identifiants Steam correspondent, choisissez vos jeux et cliquez sur Démarrer. Jusqu’à 32 jeux peuvent tourner ensemble. Sélectionnez un seul jeu pour une collecte individuelle.</value></data>
   <data name="DashLogTitle" xml:space="preserve"><value>Suivez la progression</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>Ouvrez le journal d’activité pour suivre la collecte. Sélectionnez Arrêter pour terminer. Les deux guides sont accessibles dans les paramètres.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Impossible d’enregistrer vos préférences. Vérifiez les droits d’écriture du dossier local des données d’application.</value></data>

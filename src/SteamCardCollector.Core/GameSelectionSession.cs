@@ -10,7 +10,9 @@ public sealed class GameSelectionSession(ISteamSession inner, IReadOnlySet<uint>
         return games.Where(game => selected.Contains(game.AppId)).ToArray();
     }
 
-    public Task SetPlayingAsync(uint? appId, CancellationToken cancellationToken) => inner.SetPlayingAsync(appId, cancellationToken);
+    public Task StartGameAsync(uint appId, CancellationToken cancellationToken) => inner.StartGameAsync(appId, cancellationToken);
+    public Task StopGameAsync(uint appId) => inner.StopGameAsync(appId);
+    public Task StopAllAsync() => inner.StopAllAsync();
 
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }

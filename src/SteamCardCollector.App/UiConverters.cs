@@ -79,7 +79,8 @@ public sealed class FarmBadgeConverter : IMultiValueConverter
     {
         if (values is not { Length: >= 3 } || values[0] is not uint appId || values[2] is not true)
             return "";
-        return values[1] is uint current && current == appId ? Strings.Playing : Strings.Queued;
+        if (values[1] is IReadOnlySet<uint> active && active.Contains(appId)) return Strings.Playing;
+        return Application.Current?.MainWindow is MainWindow window && window.IsGameSelected(appId) ? Strings.Queued : "";
     }
 
     public object[] ConvertBack(object? value, Type[] targetTypes, object? parameter, CultureInfo culture) =>

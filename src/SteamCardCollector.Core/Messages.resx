@@ -118,7 +118,7 @@
   <data name="YourLibraryIsEmpty" xml:space="preserve"><value>Your library is empty.</value></data>
   <data name="NoActivityYet" xml:space="preserve"><value>No activity yet.</value></data>
   <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>Your password stays in memory.</value></data>
-  <data name="QueueTimingNote" xml:space="preserve"><value>Games run one at a time · drop counts refresh every 3 minutes</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>Up to 32 games at once · counts refresh every 3 minutes</value></data>
   <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="VerificationCode" xml:space="preserve"><value>Verification code</value></data>
   <data name="Confirm" xml:space="preserve"><value>CONFIRM</value></data>
@@ -150,7 +150,7 @@
   <data name="DashGamesTitle" xml:space="preserve"><value>Check eligible games</value></data>
   <data name="DashGamesBody" xml:space="preserve"><value>Eligible games lists titles with verified card drops. Select Refresh to check again. A game with an unknown count can wait while other games run.</value></data>
   <data name="DashStartTitle" xml:space="preserve"><value>Start collecting</value></data>
-  <data name="DashStartBody" xml:space="preserve"><value>When the IDs match and a game is eligible, select Start. Keep desktop Steam online while the app plays one game at a time.</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>When the Steam IDs match, select games and press Start. Up to 32 run together. Select one for solo collection.</value></data>
   <data name="DashLogTitle" xml:space="preserve"><value>Follow progress</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>Open Activity log to see updates. Select Stop to end the session. You can reopen either guide from Settings.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>Could not save your preferences. Check write access to your local application data folder.</value></data>

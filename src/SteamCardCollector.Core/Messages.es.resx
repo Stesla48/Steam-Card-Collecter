@@ -118,7 +118,7 @@
   <data name="YourLibraryIsEmpty" xml:space="preserve"><value>Tu biblioteca está vacía.</value></data>
   <data name="NoActivityYet" xml:space="preserve"><value>Aún no hay actividad.</value></data>
   <data name="YourPasswordStaysInMemory" xml:space="preserve"><value>Tu contraseña se mantiene en memoria.</value></data>
-  <data name="QueueTimingNote" xml:space="preserve"><value>Un juego a la vez · cromos actualizados cada 3 minutos</value></data>
+  <data name="QueueTimingNote" xml:space="preserve"><value>Hasta 32 juegos a la vez · revisión cada 3 minutos</value></data>
   <data name="Cancel" xml:space="preserve"><value>Cancelar</value></data>
   <data name="VerificationCode" xml:space="preserve"><value>Código de verificación</value></data>
   <data name="Confirm" xml:space="preserve"><value>CONFIRMAR</value></data>
@@ -150,7 +150,7 @@
   <data name="DashGamesTitle" xml:space="preserve"><value>Consulta los juegos aptos</value></data>
   <data name="DashGamesBody" xml:space="preserve"><value>En Juegos aptos aparecen los juegos con cromos verificados. Pulsa Actualizar para comprobarlos de nuevo. Un juego sin datos no impide recolectar en los demás.</value></data>
   <data name="DashStartTitle" xml:space="preserve"><value>Empieza a recolectar</value></data>
-  <data name="DashStartBody" xml:space="preserve"><value>Cuando los ID coincidan y haya un juego apto, pulsa Iniciar. Mantén Steam en línea mientras la app ejecuta un juego cada vez.</value></data>
+  <data name="DashStartBody" xml:space="preserve"><value>Cuando coincidan los ID de Steam, selecciona los juegos y pulsa Iniciar. Pueden ejecutarse hasta 32 a la vez. Para jugar solo a uno, selecciona únicamente ese juego.</value></data>
   <data name="DashLogTitle" xml:space="preserve"><value>Sigue el progreso</value></data>
   <data name="DashLogBody" xml:space="preserve"><value>Abre el Registro de actividad para ver el progreso. Pulsa Detener para finalizar. Puedes volver a abrir ambas guías en Ajustes.</value></data>
   <data name="SaveFailed" xml:space="preserve"><value>No se pudieron guardar tus preferencias. Comprueba los permisos de escritura de la carpeta de datos locales de la aplicación.</value></data>

@@ -3,15 +3,16 @@ using SteamCardCollector.Core;
 namespace SteamCardCollector.Steam;
 
 // Account checks are enforced here, not only by disabled UI buttons.
-public sealed class LocalFarmingSession(ICardSource cards, ILocalSteamPlayer player) : ISteamSession
+public sealed class LocalFarmingSession(ICardSource cards, Func<LocalSteamIdentity> readIdentity, Func<ILocalSteamPlayer> createPlayer) : ISteamSession
 {
-    private readonly LocalSteamIdentity identity = player.ReadIdentity();
+    private readonly LocalSteamIdentity identity = readIdentity();
+    private readonly Dictionary<uint, ILocalSteamPlayer> players = new();
     private HashSet<uint> verifiedCandidates = new();
     public IReadOnlyList<uint> UnresolvedAppIds => cards.UnresolvedAppIds;
 
     public void EnsureSameAccount()
     {
-        var local = player.ReadIdentity();
+        var local = readIdentity();
         if (cards.SteamId == 0 || local.SteamId != cards.SteamId)
             throw new InvalidOperationException(string.Format(Strings.AccountMismatchDetails, local.SteamId, cards.SteamId));
         if (local != identity)
@@ -28,16 +29,38 @@ public sealed class LocalFarmingSession(ICardSource cards, ILocalSteamPlayer pla
         return games;
     }
 
-    public async Task SetPlayingAsync(uint? appId, CancellationToken cancellationToken)
+    public async Task StartGameAsync(uint appId, CancellationToken cancellationToken)
     {
-        if (appId is null) { await player.StopAsync(cancellationToken); return; }
         EnsureSameAccount();
-        if (!verifiedCandidates.Contains(appId.Value))
+        if (!verifiedCandidates.Contains(appId))
             throw new InvalidOperationException(Strings.CardEligibilityIsUnverifiedSelectRefreshFirst);
-        await player.StartAsync(appId.Value, cards.SteamId, cancellationToken);
-        try { EnsureSameAccount(); }
-        catch { await player.StopAsync(CancellationToken.None); throw; }
+        if (players.ContainsKey(appId)) return;
+        var player = createPlayer();
+        try
+        {
+            await player.StartAsync(appId, cards.SteamId, cancellationToken);
+            EnsureSameAccount();
+            players.Add(appId, player);
+        }
+        catch
+        {
+            await player.DisposeAsync();
+            EnsureSameAccount();
+            throw;
+        }
     }
 
-    public ValueTask DisposeAsync() => player.DisposeAsync();
+    public async Task StopGameAsync(uint appId)
+    {
+        if (players.Remove(appId, out var player)) await player.DisposeAsync();
+    }
+
+    public async Task StopAllAsync()
+    {
+        var workers = players.Values.ToArray();
+        players.Clear();
+        await Task.WhenAll(workers.Select(worker => worker.DisposeAsync().AsTask()));
+    }
+
+    public ValueTask DisposeAsync() => new(StopAllAsync());
 }
